@@ -10,21 +10,25 @@ const uploadImages = asyncHandler(async (req, res) => {
     const uploader = (path) => cloudinaryUploadImg(path, "images");
     const urls = [];
     const files = req.files;
+
     for (const file of files) {
       const { path } = file;
       const newpath = await uploader(path);
       console.log(newpath);
       urls.push(newpath);
-      fs.unlinkSync(path);
+
+      fs.unlink(path, (err) => {
+        if (err) console.error(`Failed to delete file: ${path}`, err);
+      });
     }
-    const images = urls.map((file) => {
-      return file;
-    });
-    res.json(images);
+
+    res.json(urls);
   } catch (error) {
-    throw new Error(error);
+    console.error(error);  // In chi tiết lỗi ra console
+    res.status(500).json({ message: "Image upload failed", error: error.message });
   }
 });
+
 const deleteImages = asyncHandler(async (req, res) => {
   const { id } = req.params;
   try {

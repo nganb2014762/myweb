@@ -13,16 +13,16 @@ import CustomModal from "../components/CustomModal";
 
 const columns = [
   {
-    title: "SNo",
+    title: "STT",
     dataIndex: "key",
   },
   {
-    title: "Name",
+    title: "Tên thương hiệu",
     dataIndex: "name",
     sorter: (a, b) => a.name.length - b.name.length,
   },
   {
-    title: "Action",
+    title: "Thêm/Xóa",
     dataIndex: "action",
   },
 ];
@@ -53,7 +53,7 @@ const Brandlist = () => {
         <>
           <Link
             to={`/admin/brand/${brandState[i]._id}`}
-            className=" fs-3 text-danger"
+            className=" fs-3 text-success"
           >
             <BiEdit />
           </Link>

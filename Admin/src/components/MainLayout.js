@@ -7,33 +7,37 @@ import {
   AiOutlineBgColors,
   AiOutlineLogout,
 } from "react-icons/ai";
-
 import { RiCouponLine } from "react-icons/ri";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import { ImBlog } from "react-icons/im";
-import { IoIosNotifications } from "react-icons/io";
 import { FaClipboardList, FaBloggerB } from "react-icons/fa";
 import { SiBrandfolder } from "react-icons/si";
 import { BiCategoryAlt } from "react-icons/bi";
 import { Layout, Menu, theme } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux"; // Import useSelector
+
 const { Header, Sider, Content } = Layout;
+
 const MainLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
   const navigate = useNavigate();
+  
+  const authState = useSelector((state) => state?.auth);
+  
   return (
-    <Layout /* onContextMenu={(e) => e.preventDefault()} */>
+    <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="logo">
           <h2 className="text-white fs-5 text-center py-3 mb-0">
-            <span className="sm-logo">CC</span>
-            <span className="lg-logo">Cart Corner</span>
+            <span className="sm-logo">AG</span>
+            <span className="lg-logo">AgriGreen</span>
           </h2>
         </div>
         <Menu
@@ -52,47 +56,47 @@ const MainLayout = () => {
             {
               key: "",
               icon: <AiOutlineDashboard className="fs-4" />,
-              label: "Dashboard",
+              label: "Doanh thu",
             },
             {
               key: "customers",
               icon: <AiOutlineUser className="fs-4" />,
-              label: "Customers",
+              label: "Khách hàng",
             },
             {
               key: "Catalog",
               icon: <AiOutlineShoppingCart className="fs-4" />,
-              label: "Catalog",
+              label: "Danh mục",
               children: [
                 {
                   key: "product",
                   icon: <AiOutlineShoppingCart className="fs-4" />,
-                  label: "Add Product",
+                  label: "Thêm sản phẩm",
                 },
                 {
                   key: "list-product",
                   icon: <AiOutlineShoppingCart className="fs-4" />,
-                  label: "Product List",
+                  label: "Danh sách sản phẩm",
                 },
                 {
                   key: "brand",
                   icon: <SiBrandfolder className="fs-4" />,
-                  label: "Brand",
+                  label: "Thêm thương hiệu",
                 },
                 {
                   key: "list-brand",
                   icon: <SiBrandfolder className="fs-4" />,
-                  label: "Brand List ",
+                  label: "Danh sách thương hiệu ",
                 },
                 {
                   key: "category",
                   icon: <BiCategoryAlt className="fs-4" />,
-                  label: "Category",
+                  label: "Thêm loại",
                 },
                 {
                   key: "list-category",
                   icon: <BiCategoryAlt className="fs-4" />,
-                  label: "Category List",
+                  label: "Danh sách loại",
                 },
                 {
                   key: "color",
@@ -109,7 +113,7 @@ const MainLayout = () => {
             {
               key: "orders",
               icon: <FaClipboardList className="fs-4" />,
-              label: "Orders",
+              label: "Đơn hàng",
             },
             {
               key: "marketing",
@@ -119,12 +123,12 @@ const MainLayout = () => {
                 {
                   key: "coupon",
                   icon: <ImBlog className="fs-4" />,
-                  label: "Add Coupon",
+                  label: "Thêm phiếu giảm giá",
                 },
                 {
                   key: "coupon-list",
                   icon: <RiCouponLine className="fs-4" />,
-                  label: "Coupon List",
+                  label: "Danh sách phiếu giảm giá",
                 },
               ],
             },
@@ -136,34 +140,34 @@ const MainLayout = () => {
                 {
                   key: "blog",
                   icon: <ImBlog className="fs-4" />,
-                  label: "Add Blog",
+                  label: "Thêm Blog",
                 },
                 {
                   key: "blog-list",
                   icon: <FaBloggerB className="fs-4" />,
-                  label: "Blog List",
+                  label: "Danh sách Blog",
                 },
                 {
                   key: "blog-category",
                   icon: <ImBlog className="fs-4" />,
-                  label: "Add Blog Category",
+                  label: "Thể loại Blog",
                 },
                 {
                   key: "blog-category-list",
                   icon: <FaBloggerB className="fs-4" />,
-                  label: "Blog Category List",
+                  label: "Danh sách thể loại Blog",
                 },
               ],
             },
             {
               key: "enquiries",
               icon: <FaClipboardList className="fs-4" />,
-              label: "Enquiries",
+              label: "Yêu cầu từ khách hàng",
             },
             {
               key: "signout",
               icon: <AiOutlineLogout className="fs-4" />,
-              label: "Sign Out",
+              label: "Đăng xuất",
             },
           ]}
         />
@@ -189,8 +193,8 @@ const MainLayout = () => {
                 <img
                   width={32}
                   height={32}
-                  src="https://stroyka-admin.html.themeforest.scompiler.ru/variants/ltr/images/customers/customer-4-64x64.jpg"
-                  alt=""
+                  src="https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg"
+                  alt="User avatar"
                 />
               </div>
               <div
@@ -199,8 +203,9 @@ const MainLayout = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <h5 className="mb-0">Dev</h5>
-                <p className="mb-0">devjariwala8444@gmail.com</p>
+                {/* Hiển thị tên và email người dùng */}
+                <h5 className="mb-0">{authState?.user?.firstname || "Guest"}</h5>
+                <p className="mb-0">{authState?.user?.email || "guest@example.com"}</p>
               </div>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <li>
@@ -209,7 +214,7 @@ const MainLayout = () => {
                     style={{ height: "auto", lineHeight: "20px" }}
                     to="/"
                   >
-                    View Profile
+                    Thông tin
                   </Link>
                 </li>
                 <li>
@@ -218,7 +223,7 @@ const MainLayout = () => {
                     style={{ height: "auto", lineHeight: "20px" }}
                     to="/"
                   >
-                    Signout
+                    Đăng xuất
                   </Link>
                 </li>
               </div>
@@ -250,4 +255,5 @@ const MainLayout = () => {
     </Layout>
   );
 };
+
 export default MainLayout;

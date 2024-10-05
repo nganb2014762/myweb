@@ -20,6 +20,19 @@ import { getAllProducts } from "../features/products/productSlilce";
 import ReactStars from "react-rating-stars-component";
 import { addToWishlist } from "../features/products/productSlilce";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+const settings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 1500,
+};
 
 const Home = () => {
   const blogState = useSelector((state) => state?.blog?.blog);
@@ -46,7 +59,7 @@ const Home = () => {
   };
   return (
     <>
-      <Container class1="home-wrapper-1 py-5">
+      {/* <Container class1="home-wrapper-1 py-5">
         <div className="row">
           <div className="col-6">
             <div className="main-banner position-relative ">
@@ -124,7 +137,61 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </Container>
+      </Container> */}
+
+<Container class1="home-wrapper-1 py-5">
+  <div className="row">
+    <div className="col-12">
+      <Slider {...settings}>
+        {/* Slide 1 */}
+        <div>
+          <div className="main-banner position-relative">
+            <img
+              src="images/banner.jpg"
+              className="img-fluid rounded-3 custom-banner-img"
+              alt="main banner"
+            />
+            
+          </div>
+        </div>
+        {/* Slide 2 */}
+        <div>
+          <div className="main-banner position-relative">
+            <img
+              src="images/banner1.jpg"
+              className="img-fluid rounded-3 custom-banner-img"
+              alt="main banner"
+            />
+            
+          </div>
+        </div>
+        {/* Slide 3 */}
+        <div>
+          <div className="main-banner position-relative">
+            <img
+              src="images/banner2.jpg"
+              className="img-fluid rounded-3 custom-banner-img"
+              alt="main banner"
+            />
+            
+          </div>
+        </div>
+        <div>
+          <div className="main-banner position-relative">
+            <img
+              src="images/banner3.jpg"
+              className="img-fluid rounded-3 custom-banner-img"
+              alt="main banner"
+            />
+            
+          </div>
+        </div>
+      </Slider>
+    </div>
+  </div>
+</Container>
+
+
       <Container class1="home-wrapper-2 py-5">
         <div className="row">
           <div className="col-12">
@@ -144,70 +211,6 @@ const Home = () => {
           </div>
         </div>
       </Container>
-      {/* <Container class1="home-wrapper-2 py-5">
-        <div className="row">
-          <div className="col-12">
-            <div className="categories d-flex justify-content-between flex-wrap align-items-center">
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Music & Gaming</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/camera.jpg" alt="camera" />
-              </div>
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Cameras</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/camera.jpg" alt="camera" />
-              </div>
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Smart Tv</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/tv.jpg" alt="camera" />
-              </div>
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Smart Watches</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/headphone.jpg" alt="camera" />
-              </div>
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Music & Gaming</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/camera.jpg" alt="camera" />
-              </div>
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Cameras</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/camera.jpg" alt="camera" />
-              </div>
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Smart Tv</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/tv.jpg" alt="camera" />
-              </div>
-              <div className="d-flex gap align-items-center">
-                <div>
-                  <h6>Smart Watches</h6>
-                  <p>10 Items</p>
-                </div>
-                <img src="images/headphone.jpg" alt="camera" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </Container> */}
       <Container class1="featured-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
@@ -264,21 +267,7 @@ const Home = () => {
                         <p className="price">Rs. {item?.price}</p>
                       </div>
                       <div className="action-bar position-absolute">
-                        <div className="d-flex flex-column gap-15">
-                          {/* <button className="border-0 bg-transparent">
-                            <img src={prodcompare} alt="compare" />
-                          </button>
-                          <button className="border-0 bg-transparent">
-                            <img
-                              onClick={() => navigate("/product/" + item?._id)}
-                              src={view}
-                              alt="view"
-                            />
-                          </button> */}
-                          {/* <button className="border-0 bg-transparent">
-                            <img src={addcart} alt="addcart" />
-                          </button> */}
-                        </div>
+                        <div className="d-flex flex-column gap-15"></div>
                       </div>
                     </div>
                   </div>
@@ -435,21 +424,7 @@ const Home = () => {
                         <p className="price">Rs. {item?.price}</p>
                       </div>
                       <div className="action-bar position-absolute">
-                        <div className="d-flex flex-column gap-15">
-                          {/* <button className="border-0 bg-transparent">
-                            <img src={prodcompare} alt="compare" />
-                          </button> */}
-                          {/* <button className="border-0 bg-transparent">
-                            <img
-                              onClick={() => navigate("/product/" + item?._id)}
-                              src={view}
-                              alt="view"
-                            />
-                          </button> */}
-                          {/* <button className="border-0 bg-transparent">
-                            <img src={addcart} alt="addcart" />
-                          </button> */}
-                        </div>
+                        <div className="d-flex flex-column gap-15"></div>
                       </div>
                     </div>
                   </div>
@@ -464,28 +439,28 @@ const Home = () => {
             <div className="marquee-inner-wrapper card-wrapper">
               <Marquee className="d-flex">
                 <div className="mx-4 w-25">
-                  <img src="images/brand-01.png" alt="brand" />
+                  <img src="images/brand1.webp" alt="brand" />
                 </div>
                 <div className="mx-4 w-25">
-                  <img src="images/brand-02.png" alt="brand" />
+                  <img src="images/brand2.webp" alt="brand" />
                 </div>
                 <div className="mx-4 w-25">
-                  <img src="images/brand-03.png" alt="brand" />
+                  <img src="images/brand3.webp" alt="brand" />
                 </div>
                 <div className="mx-4 w-25">
-                  <img src="images/brand-04.png" alt="brand" />
+                  <img src="images/brand4.webp" alt="brand" />
                 </div>
                 <div className="mx-4 w-25">
-                  <img src="images/brand-05.png" alt="brand" />
+                  <img src="images/brand5.webp" alt="brand" />
                 </div>
                 <div className="mx-4 w-25">
-                  <img src="images/brand-06.png" alt="brand" />
+                  <img src="images/brand6.webp" alt="brand" />
                 </div>
                 <div className="mx-4 w-25">
-                  <img src="images/brand-07.png" alt="brand" />
+                  <img src="images/brand7.webp" alt="brand" />
                 </div>
                 <div className="mx-4 w-25">
-                  <img src="images/brand-08.png" alt="brand" />
+                  <img src="images/brand8.webp" alt="brand" />
                 </div>
               </Marquee>
             </div>

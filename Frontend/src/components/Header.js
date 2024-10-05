@@ -61,31 +61,14 @@ const Header = () => {
     window.location.reload();
   };
   return (
-    <>
-      <header className="header-top-strip py-3">
-        <div className="container-xxl">
-          <div className="row">
-            <div className="col-6">
-              <p className="text-white mb-0">Free Shipping Over Rs.100</p>
-            </div>
-            <div className="col-6">
-              <p className="text-end text-white mb-0">
-                Hotline:
-                <a className="text-white" href="tel:+91 8264954234">
-                  +91 8264954234
-                </a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <>      
       <header className="header-upper py-3">
         <div className="container-xxl">
           <div className="row align-items-center">
             <div className="col-2">
               <h2>
                 <Link className="text-white" to="/ ">
-                  Cart Corner
+                AgriGreen
                 </Link>
               </h2>
             </div>
@@ -101,7 +84,7 @@ const Header = () => {
                   options={productOpt}
                   paginate={paginate}
                   labelKey={"name"}
-                  placeholder="Search for Products here"
+                  placeholder="Tìm kiếm sản phẩm"
                 />
                 <span className="input-group-text p-3" id="basic-addon2">
                   <BsSearch className="fs-6" />
@@ -128,7 +111,7 @@ const Header = () => {
                   >
                     <img src={wishlist} alt="wishlist" />
                     <p className="mb-0">
-                      Favourite <br /> wishlist
+                     
                     </p>
                   </Link>
                 </div>
@@ -140,11 +123,11 @@ const Header = () => {
                     <img src={user} alt="user" />
                     {authState?.user === null ? (
                       <p className="mb-0">
-                        Log in <br /> My Account
+                        Đăng nhập 
                       </p>
                     ) : (
                       <p className="mb-0">
-                        Welcome {authState?.user?.firstname}
+                        {authState?.user?.firstname}
                       </p>
                     )}
                   </Link>
@@ -165,6 +148,19 @@ const Header = () => {
                     </div>
                   </Link>
                 </div>
+
+                {authState?.user !== null ? (
+                      <button
+                        className="border border-0 bg-trasparent text-white text-uppercase"
+                        type="button"
+                        style={{ backgroundColor: "#077a33" }}
+                        onClick={handleLogout}
+                      >
+                        Thoát
+                      </button>
+                    ) : (
+                      ""
+                    )}
               </div>
             </div>
           </div>
@@ -186,7 +182,7 @@ const Header = () => {
                     >
                       <img src={menu} alt="" />
                       <span className="me-5 d-inline-block">
-                        Shop Categories
+                        Danh mục
                       </span>
                     </button>
                     <ul
@@ -208,11 +204,11 @@ const Header = () => {
                 </div>
                 <div className="menu-links">
                   <div className="d-flex align-items-center gap-15">
-                    <NavLink to="/">Home</NavLink>
-                    <NavLink to="/product">Our Store</NavLink>
-                    <NavLink to="/my-orders">My Orders</NavLink>
-                    <NavLink to="/blogs">Blogs</NavLink>
-                    <NavLink to="/contact">Contact</NavLink>
+                    <NavLink to="/">Trang chủ</NavLink>
+                    <NavLink to="/product">Sản phẩm</NavLink>
+                    <NavLink to="/my-orders">Đơn hàng</NavLink>
+                    <NavLink to="/blogs">Tin tức</NavLink>
+                    <NavLink to="/contact">Liên hệ</NavLink>
                     {authState?.user !== null ? (
                       <button
                         className="border border-0 bg-trasparent text-white text-uppercase"
@@ -220,7 +216,7 @@ const Header = () => {
                         style={{ backgroundColor: "#232f3e" }}
                         onClick={handleLogout}
                       >
-                        LogOut
+                        Thoát
                       </button>
                     ) : (
                       ""

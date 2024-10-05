@@ -9,36 +9,36 @@ import { delImg } from "../features/upload/uploadSlice";
 import CustomModal from "../components/CustomModal";
 const columns = [
   {
-    title: "SNo",
+    title: "STT",
     dataIndex: "key",
   },
   {
-    title: "Title",
+    title: "Tên sản phẩm",
     dataIndex: "title",
     sorter: (a, b) => a.title.length - b.title.length,
   },
   {
-    title: "Brand",
+    title: "Thương hiệu",
     dataIndex: "brand",
     sorter: (a, b) => a.brand.length - b.brand.length,
   },
   {
-    title: "Category",
+    title: "Loại",
     dataIndex: "category",
     sorter: (a, b) => a.category.length - b.category.length,
   },
 
   {
-    title: "Quantity",
+    title: "Số lượng",
     dataIndex: "quantity",
   },
   {
-    title: "Price",
+    title: "Giá",
     dataIndex: "price",
     sorter: (a, b) => a.price - b.price,
   },
   {
-    title: "Action",
+    title: "Thêm/Xóa",
     dataIndex: "action",
   },
 ];
@@ -99,7 +99,7 @@ const Productlist = () => {
   console.log(data1);
   return (
     <div>
-      <h3 className="mb-4 title">Products</h3>
+      <h3 className="mb-4 title">Danh sách sản phẩm</h3>
       <div>
         <Table columns={columns} dataSource={data1} />
       </div>
@@ -109,7 +109,7 @@ const Productlist = () => {
         performAction={() => {
           deleteProduct(productId);
         }}
-        title="Are you sure you want to delete this Product?"
+        title="Bạn có chắc chắn muốn xóa sản phẩm này ?"
       />
     </div>
   );

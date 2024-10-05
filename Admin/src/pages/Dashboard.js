@@ -11,27 +11,27 @@ import {
 
 const columns = [
   {
-    title: "SNo",
+    title: "STT",
     dataIndex: "key",
   },
   {
-    title: "Name",
+    title: "Tên sản phẩm",
     dataIndex: "name",
   },
   {
-    title: "Product Count",
+    title: "Số lượng",
     dataIndex: "product",
   },
   {
-    title: "Total Price",
+    title: "Giá gốc",
     dataIndex: "price",
   },
   {
-    title: "Total Price After Discount",
+    title: "Giá sau khuyến mãi",
     dataIndex: "dprice",
   },
   {
-    title: "Status",
+    title: "Trạng thái",
     dataIndex: "staus",
   },
 ];
@@ -69,18 +69,18 @@ const Dashboard = () => {
 
   useEffect(() => {
     let monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7",
+      "T8",
+      "T9",
+      "T10",
+      "T11",
+      "T12",
     ];
     let data = [];
 
@@ -177,47 +177,47 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h3 className="mb-4 title">Dashboard</h3>
+      <h3 className="mb-4 title">Doanh thu</h3>
       <div className="d-flex justify-content-between align-items-center gap-3">
         <div className="d-flex p-3 justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
           <div>
-            <p className="desc">Total Income</p>
+            <p className="desc">Tổng doanh thu</p>
             <h4 className="mb-0 sub-title">
               Rs.{yearlyDataState && yearlyDataState[0]?.amount}
             </h4>
           </div>
           <div className="d-flex flex-column align-items-end">
-            <p className="mb-0  desc">Income in Last Year from Today</p>
+            <p className="mb-0  desc">Thu nhập năm ngoái tính từ hôm nay</p>
           </div>
         </div>
         <div className="d-flex p-3 justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
           <div>
-            <p className="desc">Total Sales</p>
+            <p className="desc">Tổng doanh số</p>
             <h4 className="mb-0 sub-title">
               {yearlyDataState && yearlyDataState[0]?.count}
             </h4>
           </div>
           <div className="d-flex flex-column align-items-end">
-            <p className="mb-0  desc">Sales in Last Year from Today</p>
+            <p className="mb-0  desc">Doanh thu năm ngoái tính từ hôm nay</p>
           </div>
         </div>
       </div>
       <div className="d-flex justify-content-between align-items gap-3">
         <div className="mt-4 flex-grow-1 w-50">
-          <h3 className="mb-5 title">Income in Last Year from Today</h3>
+          <h3 className="mb-5 title">Thu nhập năm ngoái tính từ hôm nay</h3>
           <div>
             <Column {...config} />
           </div>
         </div>
         <div className="mt-4 flex-grow-1 ">
-          <h3 className="mb-5 title">Sales in Last Year from Today </h3>
+          <h3 className="mb-5 title">Doanh thu năm ngoái tính từ hôm nay </h3>
           <div>
             <Column {...config2} />
           </div>
         </div>
       </div>
       <div className="mt-4">
-        <h3 className="mb-5 title">Recent Orders</h3>
+        <h3 className="mb-5 title">Đơn hàng</h3>
         <div>
           <Table columns={columns} dataSource={orderData} />
         </div>
