@@ -143,7 +143,7 @@ const Header = () => {
                         {cartState?.length ? cartState?.length : 0}
                       </span>
                       <p className="mb-0">
-                        Rs. {!cartState?.length ? 0 : total ? total : 0}
+                        {!cartState?.length ? 0 : total ? total : 0}000 VND
                       </p>
                     </div>
                   </Link>
@@ -213,7 +213,7 @@ const Header = () => {
                       <button
                         className="border border-0 bg-trasparent text-white text-uppercase"
                         type="button"
-                        style={{ backgroundColor: "#232f3e" }}
+                        style={{ backgroundColor: "#077a33" }}
                         onClick={handleLogout}
                       >
                         Thoát

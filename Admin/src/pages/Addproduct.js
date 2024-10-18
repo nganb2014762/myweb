@@ -25,11 +25,6 @@ let schema = yup.object().shape({
   price: yup.number().required("Vui lòng nhập giá"),
   brand: yup.string().required("Vui lòng nhập tên thương hiệu"),
   category: yup.string().required("Vui lòng nhập loại"),
-  tags: yup.string().required("Vui lòng nhập màu sắc"),
-  color: yup
-    .array()
-    .min(1, "Pick at least one color")
-    .required("Color is Required"),
   quantity: yup.number().required("Vui lòng nhập số lượng"),
 });
 
@@ -100,31 +95,8 @@ const Addproduct = () => {
               height: "20px",
               marginBottom: "10px",
               backgroundColor: i.title,
-              borderRadius: "50%", // Added inline style for rounded shape
-              listStyle: "none", // Hide bullet points
-              border: "2px solid transparent",
-            }}
-          ></ul>
-        </div>
-      ),
-      value: i._id,
-    });
-  });
-
-  const productcolor = [];
-  productColors?.forEach((i) => {
-    productcolor.push({
-      label: (
-        <div className="col-3">
-          <ul
-            className="colors ps-0"
-            style={{
-              width: "20px",
-              height: "20px",
-              marginBottom: "10px",
-              backgroundColor: i.title,
-              borderRadius: "50%", // Added inline style for rounded shape
-              listStyle: "none", // Hide bullet points
+              borderRadius: "50%", 
+              listStyle: "none", 
               border: "2px solid transparent",
             }}
           ></ul>
@@ -162,7 +134,7 @@ const Addproduct = () => {
       brand: productBrand || "",
       category: productCategory || "",
       tags: productTag || "",
-      color: productColors || "",
+      // color: productColors || "",
       quantity: productQuantity || "",
       images: productImages || "",
     },
@@ -214,6 +186,9 @@ const Addproduct = () => {
               name="description"
               onChange={formik.handleChange("description")}
               value={formik.values.description}
+              modules={{
+                clipboard: { matchVisual: false }, 
+              }}
             />
           </div>
           <div className="error">
@@ -289,15 +264,7 @@ const Addproduct = () => {
             {formik.touched.tags && formik.errors.tags}
           </div>
 
-          <Select
-            mode="multiple"
-            allowClear
-            className="w-100"
-            placeholder="Chọn màu sắc"
-            defaultValue={productcolor || color}
-            onChange={(i) => handleColors(i)}
-            options={coloropt}
-          />
+         
           <div className="error">
             {formik.touched.color && formik.errors.color}
           </div>

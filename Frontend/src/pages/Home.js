@@ -59,138 +59,53 @@ const Home = () => {
   };
   return (
     <>
-      {/* <Container class1="home-wrapper-1 py-5">
+      <Container class1="home-wrapper-1 py-5">
         <div className="row">
-          <div className="col-6">
-            <div className="main-banner position-relative ">
-              <img
-                src="images/main-banner-1.jpg"
-                className="img-fluid rounded-3"
-                alt="main banner"
-              />
-              <div className="main-banner-content position-absolute">
-                <h4>SUPERCHARGED FOR PROS.</h4>
-                <h5>iPad S13+ Pro.</h5>
-                <p>From Rs. 81,900.00 </p>
-                <Link className="button">BUY NOW</Link>
-              </div>
-            </div>
-          </div>
-          <div className="col-6">
-            <div className="d-flex flex-wrap gap-10 justify-content-between align-items-center">
-              <div className="small-banner position-relative">
-                <img
-                  src="images/catbanner-01.jpg"
-                  className="img-fluid rounded-3"
-                  alt="main banner"
-                />
-                <div className="small-banner-content position-absolute">
-                  <h4>Best Sake</h4>
-                  <h5>MacBook Pro.</h5>
-                  <p>
-                    From Rs. 1,29,900.00 <br />
-                  </p>
+          <div className="col-12">
+            <Slider {...settings}>
+              {/* Slide 1 */}
+              <div>
+                <div className="main-banner position-relative">
+                  <img
+                    src="images/banner.jpg"
+                    className="img-fluid rounded-3 custom-banner-img"
+                    alt="main banner"
+                  />
                 </div>
               </div>
-              <div className="small-banner position-relative">
-                <img
-                  src="images/catbanner-02.jpg"
-                  className="img-fluid rounded-3"
-                  alt="main banner"
-                />
-                <div className="small-banner-content position-absolute">
-                  <h4>NEW ARRIVAL</h4>
-                  <h5>But IPad Air</h5>
-                  <p>
-                    From Rs. 21,625.00 <br />
-                  </p>
+              {/* Slide 2 */}
+              <div>
+                <div className="main-banner position-relative">
+                  <img
+                    src="images/banner1.jpg"
+                    className="img-fluid rounded-3 custom-banner-img"
+                    alt="main banner"
+                  />
                 </div>
               </div>
-              <div className="small-banner position-relative ">
-                <img
-                  src="images/catbanner-03.jpg"
-                  className="img-fluid rounded-3"
-                  alt="main banner"
-                />
-                <div className="small-banner-content position-absolute">
-                  <h4>NEW ARRIVAL</h4>
-                  <h5>But IPad Air</h5>
-                  <p>
-                    From Rs. 41,900.00 <br />
-                  </p>
+              {/* Slide 3 */}
+              <div>
+                <div className="main-banner position-relative">
+                  <img
+                    src="images/banner2.jpg"
+                    className="img-fluid rounded-3 custom-banner-img"
+                    alt="main banner"
+                  />
                 </div>
               </div>
-              <div className="small-banner position-relative ">
-                <img
-                  src="images/catbanner-04.jpg"
-                  className="img-fluid rounded-3"
-                  alt="main banner"
-                />
-                <div className="small-banner-content position-absolute">
-                  <h4>NEW ARRIVAL</h4>
-                  <h5>But Headphone</h5>
-                  <p>
-                    From Rs. 41,000.00 <br />
-                  </p>
+              <div>
+                <div className="main-banner position-relative">
+                  <img
+                    src="images/banner3.jpg"
+                    className="img-fluid rounded-3 custom-banner-img"
+                    alt="main banner"
+                  />
                 </div>
               </div>
-            </div>
+            </Slider>
           </div>
         </div>
-      </Container> */}
-
-<Container class1="home-wrapper-1 py-5">
-  <div className="row">
-    <div className="col-12">
-      <Slider {...settings}>
-        {/* Slide 1 */}
-        <div>
-          <div className="main-banner position-relative">
-            <img
-              src="images/banner.jpg"
-              className="img-fluid rounded-3 custom-banner-img"
-              alt="main banner"
-            />
-            
-          </div>
-        </div>
-        {/* Slide 2 */}
-        <div>
-          <div className="main-banner position-relative">
-            <img
-              src="images/banner1.jpg"
-              className="img-fluid rounded-3 custom-banner-img"
-              alt="main banner"
-            />
-            
-          </div>
-        </div>
-        {/* Slide 3 */}
-        <div>
-          <div className="main-banner position-relative">
-            <img
-              src="images/banner2.jpg"
-              className="img-fluid rounded-3 custom-banner-img"
-              alt="main banner"
-            />
-            
-          </div>
-        </div>
-        <div>
-          <div className="main-banner position-relative">
-            <img
-              src="images/banner3.jpg"
-              className="img-fluid rounded-3 custom-banner-img"
-              alt="main banner"
-            />
-            
-          </div>
-        </div>
-      </Slider>
-    </div>
-  </div>
-</Container>
-
+      </Container>
 
       <Container class1="home-wrapper-2 py-5">
         <div className="row">
@@ -211,10 +126,11 @@ const Home = () => {
           </div>
         </div>
       </Container>
+
       <Container class1="featured-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 className="section-heading">Featured Collection</h3>
+            <h3 className="section-heading">Bán chạy nhất</h3>
           </div>
           {productState &&
             productState?.map((item, index) => {
@@ -259,12 +175,12 @@ const Home = () => {
                         <ReactStars
                           count={5}
                           size={24}
-                          value={item?.totalrating.toString()}
+                          value={item?.totalrating}
                           edit={false}
                           activeColor="#ffd700"
                         />
 
-                        <p className="price">Rs. {item?.price}</p>
+                        <p className="price">Giá {item?.price} 000 VND</p>
                       </div>
                       <div className="action-bar position-absolute">
                         <div className="d-flex flex-column gap-15"></div>
@@ -277,71 +193,10 @@ const Home = () => {
         </div>
       </Container>
 
-      <Container class1="famous-wrapper py-5 home-wrapper-2">
-        <div className="row">
-          <div className="col-3">
-            <div className="famous-card position-relative">
-              <img
-                src="images/famous-1.webp"
-                className="img-fluid"
-                alt="famous"
-              />
-              <div className="famous-content position-absolute">
-                <h5>Big Screen</h5>
-                <h6>Smart Watch Series 7</h6>
-                <p>From Rs. 399</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-3">
-            <div className="famous-card position-relative">
-              <img
-                src="images/famous-2.webp"
-                className="img-fluid"
-                alt="famous"
-              />
-              <div className="famous-content position-absolute">
-                <h5 className="text-dark">Studio Display</h5>
-                <h6 className="text-dark">600 nits of brightness.</h6>
-                <p className="text-dark">27-inch 5K Retina display</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-3">
-            <div className="famous-card position-relative">
-              <img
-                src="images/famous-3.webp"
-                className="img-fluid"
-                alt="famous"
-              />
-              <div className="famous-content position-absolute">
-                <h5 className="text-dark">smartphones</h5>
-                <h6 className="text-dark">Iphone 14 Pro.</h6>
-                <p className="text-dark">Now in Green. From Rs. 61,000.00</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-3">
-            <div className="famous-card position-relative">
-              <img
-                src="images/famous-3.webp"
-                className="img-fluid"
-                alt="famous"
-              />
-              <div className="famous-content position-absolute">
-                <h5 className="text-dark">home speakers</h5>
-                <h6 className="text-dark">Room-filling sound.</h6>
-                <p className="text-dark">From Rs. 699</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Container>
-
       <Container class1="special-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 className="section-heading">Special Products</h3>
+            <h3 className="section-heading">Được tìm kiếm nhiều nhất</h3>
           </div>
         </div>
         <div className="row">
@@ -350,17 +205,57 @@ const Home = () => {
               if (item.tags === "special") {
                 //console.log(item?._id);
                 return (
-                  <SpecialProduct
-                    key={index}
-                    id={item?._id}
-                    title={item?.title}
-                    brand={item?.brand}
-                    totalrating={item?.totalrating.toString()}
-                    price={item?.price}
-                    img={item?.images[0].url}
-                    sold={item?.sold}
-                    quantity={item?.quantity}
-                  />
+                  <div key={index} className={"col-3"}>
+                    <div className="product-card position-relative">
+                      <div className="wishlist-icon position-absolute">
+                        <button className="border-0 bg-transparent">
+                          <img
+                            src={wish}
+                            alt="wishlist"
+                            onClick={(e) => {
+                              addToWish(item?._id);
+                            }}
+                          />
+                        </button>
+                      </div>
+                      <div className="product-image">
+                        <img
+                          src={item?.images[0]?.url}
+                          //className="img-fluid d"
+                          alt="product image"
+                          height={"250px"}
+                          width={"260px"}
+                          onClick={() => navigate("/product/" + item?._id)}
+                        />
+                        <img
+                          src={item?.images[0]?.url}
+                          //className="img-fluid d"
+                          alt="product image"
+                          height={"250px"}
+                          width={"260px"}
+                          onClick={() => navigate("/product/" + item?._id)}
+                        />
+                      </div>
+                      <div className="product-details">
+                        <h6 className="brand">{item?.brand}</h6>
+                        <h5 className="product-title">
+                          {item?.title?.substr(0, 70) + "..."}
+                        </h5>
+                        <ReactStars
+                          count={5}
+                          size={24}
+                          value={item?.totalrating}
+                          edit={false}
+                          activeColor="#ffd700"
+                        />
+
+                        <p className="price">Giá {item?.price} 000 VND</p>
+                      </div>
+                      <div className="action-bar position-absolute">
+                        <div className="d-flex flex-column gap-15"></div>
+                      </div>
+                    </div>
+                  </div>
                 );
               }
             })}
@@ -369,7 +264,7 @@ const Home = () => {
       <Container class1="popular-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 className="section-heading">Our Popular Products</h3>
+            <h3 className="section-heading">Phổ biến nhất</h3>
           </div>
         </div>
         <div className="row">
@@ -416,12 +311,12 @@ const Home = () => {
                         <ReactStars
                           count={5}
                           size={24}
-                          value={item?.totalrating.toString()}
+                          value={item?.totalrating} 
                           edit={false}
                           activeColor="#ffd700"
                         />
 
-                        <p className="price">Rs. {item?.price}</p>
+                        <p className="price">Giá {item?.price} 000 VND</p>
                       </div>
                       <div className="action-bar position-absolute">
                         <div className="d-flex flex-column gap-15"></div>

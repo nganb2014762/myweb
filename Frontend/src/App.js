@@ -25,6 +25,8 @@ import { PrivateRoutes } from "./routing/PrivateRoutes";
 import { OpenRoutes } from "./routing/OpenRoutes";
 import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
+import Success from './pages/Success';
+import Cancel from './pages/Cancel';
 
 function App() {
   return (
@@ -102,6 +104,8 @@ function App() {
             <Route path="refund-policy" element={<RefundPloicy />} />
             <Route path="shipping-policy" element={<ShippingPolicy />} />
             <Route path="term-conditions" element={<TermAndContions />} />
+            <Route path="success" element={<Success />} /> 
+            <Route path="cancel" element={<Cancel />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -7,28 +7,28 @@ import { Link } from "react-router-dom";
 import { getOrders, updateAOrder } from "../features/auth/authSlice";
 const columns = [
   {
-    title: "SNo",
+    title: "STT",
     dataIndex: "key",
   },
   {
-    title: "Name",
+    title: "Tên khách hàng",
     dataIndex: "name",
   },
   {
-    title: "Product",
+    title: "Sản phẩm",
     dataIndex: "product",
   },
   {
-    title: "Amount",
+    title: "Số tiền",
     dataIndex: "amount",
   },
   {
-    title: "Date",
+    title: "Ngày đặt",
     dataIndex: "date",
   },
 
   {
-    title: "Action",
+    title: "Trạng thái",
     dataIndex: "action",
   },
 ];
@@ -46,17 +46,8 @@ const Orders = () => {
       key: i + 1,
       name: orderState[i]?.user?.firstname,
 
-      // product: orderState[i].products.map((i, j) => {
-      //   return (
-      //     <>
-      //       <ul>
-      //         <li>{i.product.title}</li>
-      //       </ul>
-      //     </>
-      //   );
-      // }),
       product: (
-        <Link to={`/admin/order/${orderState[i]?._id}`}>View Orders</Link>
+        <Link to={`/admin/order/${orderState[i]?._id}`}>Chi tiết</Link>
       ),
       amount: orderState[i]?.totalPrice,
       date: new Date(orderState[i]?.createdAt).toLocaleString(),
@@ -72,13 +63,13 @@ const Orders = () => {
             id=""
           >
             <option value="Ordered" disabled selected>
-              Ordered
+              Đã đặt
             </option>
 
-            <option value="Processed">Processed</option>
-            <option value="Shipped">Shipped</option>
-            <option value="Out for Delivery">Out for Delivery</option>
-            <option value="Delivered">Delivered</option>
+            <option value="Processed">Đang chuẩn bị hàng</option>
+            <option value="Shipped">Đang vận chuyển</option>
+            <option value="Out for Delivery">Hủy</option>
+            <option value="Delivered">Thành công</option>
           </select>
         </>
       ),
@@ -90,7 +81,7 @@ const Orders = () => {
   };
   return (
     <div>
-      <h3 className="mb-4 title">Orders</h3>
+      <h3 className="mb-4 title">Đơn hàng</h3>
       <div>{<Table columns={columns} dataSource={data1} />}</div>
     </div>
   );

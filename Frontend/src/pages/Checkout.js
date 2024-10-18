@@ -18,10 +18,10 @@ let shippingSchema = yup.object({
   firstname: yup.string().required("First Name is Required"),
   lastname: yup.string().required("Last Name is Required"),
   address: yup.string().required("Address Details are Required"),
-  state: yup.string().required("S tate is Required"),
-  city: yup.string().required("city is Required"),
-  country: yup.string().required("country is Required"),
-  pincode: yup.number("Pincode No is Required").required().positive().integer(),
+  state: yup.string().required("State is Required"),
+  city: yup.string().required("City is Required"),
+  country: yup.string().required("Country is Required"),
+  pincode: yup.number("Pincode is Required").required().positive().integer(),
 });
 
 const Checkout = () => {
@@ -30,10 +30,7 @@ const Checkout = () => {
   const authState = useSelector((state) => state?.auth);
   const [totalAmount, setTotalAmount] = useState(null);
   const [shippingInfo, setShippingInfo] = useState(null);
-  const [paymentInfo, setPaymentInfo] = useState({
-    razorpayPaymentId: "",
-    razorpayOrderId: "",
-  });
+  const [paymentMethod, setPaymentMethod] = useState("PayPal"); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,6 +56,23 @@ const Checkout = () => {
 
   useEffect(() => {
     dispatch(getUserCart(config2));
+  }, []);
+
+  useEffect(() => {
+    const loadPayPalScript = () => {
+      if (window.paypal) return;
+      const script = document.createElement("script");
+      script.src = `https://www.paypal.com/sdk/js?client-id=AUKZzmdy6bbvA0y6Ct1CktKtkXZd-_IFGsdkVCNtW8ot-G66-AWjDmUjknHvBwbd1_ujwWeL8jCzHLwU`; 
+      script.async = true;
+      script.onload = () => {
+        console.log("PayPal SDK loaded successfully");
+      };
+      document.body.appendChild(script);
+    };
+  
+    if (!window.paypal) {
+      loadPayPalScript();
+    }
   }, []);
 
   useEffect(() => {
@@ -88,24 +102,14 @@ const Checkout = () => {
       setShippingInfo(values);
       localStorage.setItem("address", JSON.stringify(values));
       setTimeout(() => {
-        checkOutHandler();
+        if (paymentMethod === "COD") {
+          handleCODOrder();
+        } else {
+          checkOutHandler();
+        }
       }, 300);
     },
   });
-
-  const loadScript = (src) => {
-    return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = src;
-      script.onload = () => {
-        resolve(true);
-      };
-      script.onerror = () => {
-        resolve(false);
-      };
-      document.body.appendChild(script);
-    });
-  };
 
   useEffect(() => {
     let items = [];
@@ -113,130 +117,99 @@ const Checkout = () => {
       items.push({
         product: cartState[index].productId._id,
         quantity: cartState[index].quantity,
-        color: cartState[index].color._id,
         price: cartState[index].price,
       });
     }
     setCartProductState(items);
-  }, []);
+  }, [cartState]);
 
   const checkOutHandler = async () => {
-    const res = await loadScript(
-      "https://checkout.razorpay.com/v1/checkout.js"
-    );
+    try {
+      const result = await axios.post(
+        "http://localhost:5000/api/user/order/create-paypal-order",
+        { amount: (totalAmount + 100).toString() }, 
+        config
+      );
 
-    if (!res) {
-      alert("Razorpay SDK faild to Load");
-      return;
+      if (!result.data.success) {
+        alert("Something went wrong");
+        return;
+      }
+  
+      const { orderId } = result.data; 
+
+      if (window.paypal) {
+        window.paypal
+  .Buttons({
+    createOrder: (data, actions) => {
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: (totalAmount + 100).toString(), 
+          },
+        }],
+      }).then((orderId) => {
+        return orderId; 
+      });
+    },
+    onApprove: async (data, actions) => {
+      const details = await actions.order.capture();
+      
+      dispatch(
+        createAnOrder({
+          totalPrice: totalAmount + 100, // Cập nhật tổng giá
+          totalPriceAfterDiscount: totalAmount + 100,
+          orderItems: cartProductState,
+          paymentInfo: details,
+          shippingInfo: JSON.parse(localStorage.getItem("address")),
+        })
+      );
+      dispatch(deleteUserCart(config2));
+      localStorage.removeItem("address");
+      dispatch(resetState());
+    },
+    onError: (err) => {
+      console.error("PayPal Checkout onError", err);
+    },
+  })
+  .render("#paypal-button-container");
+
+      } else {
+        console.error("PayPal SDK chưa được tải");
+      }
+    } catch (error) {
+      console.error("Error creating PayPal order", error);
+      alert("Something went wrong");
     }
-    const result = await axios.post(
-      "http://localhost:5000/api/user/order/checkout",
-      { amount: totalAmount + 100 },
-      config
-    );
-
-    if (!result) {
-      alert("Something Went Wrong");
-      return;
-    }
-
-    const { amount, id: order_id, currency } = result.data.order;
-
-    const options = {
-      key: "rzp_test_HSSeDI22muUrLR", // Enter the Key ID generated from the Dashboard
-      amount: amount,
-      currency: currency,
-      name: "Cart's corner",
-      description: "Test Transaction",
-
-      order_id: order_id,
-      handler: async function (response) {
-        const data = {
-          orderCreationId: order_id,
-          razorpayPaymentId: response.razorpay_payment_id,
-          razorpayOrderId: response.razorpay_order_id,
-        };
-
-        const result = await axios.post(
-          "http://localhost:5000/api/user/order/paymentVerification",
-          data,
-          config
-        );
-
-        dispatch(
-          createAnOrder({
-            totalPrice: totalAmount,
-            totalPriceAfterDiscount: totalAmount,
-            orderItems: cartProductState,
-            paymentInfo: result.data,
-            shippingInfo: JSON.parse(localStorage.getItem("address")),
-          })
-        );
-        dispatch(deleteUserCart(config2));
-        localStorage.removeItem("address");
-        dispatch(resetState());
-      },
-      prefill: {
-        name: "Dev Corner",
-        email: "devcorner@example.com",
-        contact: "9999999999",
-      },
-      notes: {
-        address: "developer's cornor office",
-      },
-      theme: {
-        color: "#61dafb",
-      },
-    };
-
-    const paymentObject = new window.Razorpay(options);
-    paymentObject.open();
   };
+
+  const handleCODOrder = () => {
+    dispatch(
+      createAnOrder({
+        totalPrice: totalAmount + 100, // Cập nhật tổng giá
+        totalPriceAfterDiscount: totalAmount + 100,
+        orderItems: cartProductState,
+        paymentInfo: {
+          method: "COD",
+          status: "Pending",
+        },
+        shippingInfo: JSON.parse(localStorage.getItem("address")),
+      })
+    );
+    dispatch(deleteUserCart(config2));
+    localStorage.removeItem("address");
+    dispatch(resetState());
+  };
+
   return (
     <>
       <Container class1="checkout-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-7">
             <div className="checkout-left-data">
-              <h3 className="website-name">Cart Corner</h3>
-              <nav
-                style={{ "--bs-breadcrumb-divider": ">" }}
-                aria-label="breadcrumb"
-              >
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link className="text-dark total-price" to="/cart">
-                      Cart
-                    </Link>
-                  </li>
-                  &nbsp; /&nbsp;
-                  <li
-                    className="breadcrumb-ite total-price active"
-                    aria-current="page"
-                  >
-                    Information
-                  </li>
-                  &nbsp; /
-                  <li className="breadcrumb-item total-price active">
-                    Shipping
-                  </li>
-                  &nbsp; /
-                  <li
-                    className="breadcrumb-item total-price active"
-                    aria-current="page"
-                  >
-                    Payment
-                  </li>
-                </ol>
-              </nav>
-              <h4 className="title total">Contact Information</h4>
-              <p className="user-details total">
-                Dev Jariwala (devjariwala8444@gmail.com)
-              </p>
-              <h4 className="mb-3">Shipping Address</h4>
+              <h4 className="mb-3">Địa chỉ giao hàng</h4>
               <form
                 onSubmit={formik.handleSubmit}
-                action=""
                 className="d-flex gap-15 flex-wrap justify-content-between"
               >
                 <div className="w-100">
@@ -357,24 +330,26 @@ const Checkout = () => {
                   </div>
                 </div>
                 <div className="w-100">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <Link to="/cart" className="text-dark">
-                      <BiArrowBack className="me-2" />
-                      Return to Cart
-                    </Link>
-                    <Link to="/cart" className="button">
-                      Continue to Shipping
-                    </Link>
-                    <button className="button" type="submit">
-                      Place Order
-                    </button>
-                  </div>
+                  <label htmlFor="paymentMethod">Payment Method</label>
+                  <select
+                    className="form-control form-select"
+                    name="paymentMethod"
+                    value={paymentMethod}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                  >
+                    <option value="PayPal">PayPal</option>
+                    <option value="COD">Cash on Delivery</option>
+                  </select>
                 </div>
+
+                <button type="submit" className="btn btn-primary">
+                  Continue to Payment
+                </button>
               </form>
             </div>
           </div>
           <div className="col-5">
-            <div className="border-bottom py-4">
+          <div className="border-bottom py-4">
               {cartState &&
                 cartState?.map((item, index) => {
                   return (
@@ -401,7 +376,7 @@ const Checkout = () => {
                           <h5 className="total-price">
                             {item?.productId?.title}
                           </h5>
-                          <p className="total-price">{item?.color?.title}</p>
+                          {/* <p className="total-price">{item?.color?.title}</p> */}
                         </div>
                       </div>
                       <div className="flex-grow-1">

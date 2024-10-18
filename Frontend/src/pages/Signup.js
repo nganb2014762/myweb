@@ -33,16 +33,11 @@ const Signup = () => {
       password: "",
     },
     validationSchema: signUpSchema,
-    onSubmit: (values) => {
+    onSubmit: (values, { resetForm }) => {
       dispatch(registerUser(values));
+      resetForm(); // Làm mới form sau khi đăng ký thành công
     },
-  });
-
-  // useEffect(() => {
-  //   if (authState.createdUser !== null && authState.isError === false) {
-  //     navigate("/login");
-  //   }
-  // }, [authState]);
+  });  
 
   return (
     <>
@@ -52,7 +47,7 @@ const Signup = () => {
         <div className="row">
           <div className="col-12">
             <div className="auth-card">
-              <h3 className="text-center mb-3">Sign Up</h3>
+              <h3 className="text-center mb-3">Đăng ký</h3>
               <form
                 action=""
                 className="d-flex flex-column gap-15"
@@ -61,7 +56,7 @@ const Signup = () => {
                 <CustomInput
                   type="text"
                   name="firstname"
-                  placeholder="FirstName"
+                  placeholder="Họ"
                   value={formik.values.firstname}
                   onChange={formik.handleChange("firstname")}
                   onBlur={formik.handleBlur("firstname")}
@@ -72,7 +67,7 @@ const Signup = () => {
                 <CustomInput
                   type="text"
                   name="lastname"
-                  placeholder="LastName"
+                  placeholder="Tên"
                   value={formik.values.lastname}
                   onChange={formik.handleChange("lastname")}
                   onBlur={formik.handleBlur("lastname")}
@@ -94,7 +89,7 @@ const Signup = () => {
                 <CustomInput
                   type="tel"
                   name="mobile"
-                  placeholder="Mobile Number"
+                  placeholder="Số điện thoại"
                   value={formik.values.mobile}
                   onChange={formik.handleChange("mobile")}
                   onBlur={formik.handleBlur("mobile")}
@@ -105,7 +100,7 @@ const Signup = () => {
                 <CustomInput
                   type="password"
                   name="password"
-                  placeholder="Password"
+                  placeholder="Mật khẩu"
                   value={formik.values.password}
                   onChange={formik.handleChange("password")}
                   onBlur={formik.handleBlur("password")}
@@ -115,7 +110,11 @@ const Signup = () => {
                 </div>
                 <div>
                   <div className="mt-3 d-flex justify-content-center gap-15 align-items-center">
-                    <button className="button border-0">Sign Up</button>
+                    <button className="button border-0 w-100">Đăng ký</button>
+                  </div>
+                  <div className="mt-3 d-flex justify-content-center gap-15 align-items-center">
+                    Bạn đã có tài khoản? <Link to="/login" c>Đăng nhập
+                    </Link>
                   </div>
                 </div>
               </form>

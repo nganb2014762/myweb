@@ -1,31 +1,89 @@
-const Razorpay = require("razorpay");
-const instance = new Razorpay({
-  key_id: "rzp_test_HSSeDI22muUrLR",
-  key_secret: "sRO0YkBxvgMg0PvWHJN16Uf7",
+// paymentCtrl.js
+
+// Import PayPal SDK hoặc thư viện cần thiết
+const paypal = require('paypal-rest-sdk');
+
+// Configure PayPal SDK
+paypal.configure({
+  mode: 'sandbox', // Change to 'live' for production
+  client_id: 'AUKZzmdy6bbvA0y6Ct1CktKtkXZd-_IFGsdkVCNtW8ot-G66-AWjDmUjknHvBwbd1_ujwWeL8jCzHLwU',
+  client_secret: 'ENeaAxtZgKbGBZA1BerODSDp9e9SJwvpvMcnONpRw01Dn9AZUxfBR4lus4Er8AO8IPRVk3JEVa0k4kWt',
 });
 
-const checkout = async (req, res) => {
+// Hàm xử lý khi người dùng thực hiện thanh toán (checkout)
+const paypalCheckout = async (req, res) => {
   const { amount } = req.body;
-  const option = {
-    amount: amount * 100,
-    currency: "INR",
+
+  const create_payment_json = {
+    intent: 'sale',
+    payer: {
+      payment_method: 'paypal',
+    },
+    transactions: [
+      {
+        amount: {
+          currency: 'USD',
+          total: amount,
+        },
+        description: 'Payment for your order',
+      },
+    ],
+    redirect_urls: {
+      return_url: 'http://localhost:3000/success', 
+      cancel_url: 'http://localhost:3000/cancel',  
+    },
   };
-  const order = await instance.orders.create(option);
-  res.json({
-    success: true,
-    order,
+
+  paypal.payment.create(create_payment_json, function (error, payment) {
+    if (error) {
+      console.error('Error creating payment:', error);
+      res.status(500).json({ error });
+    } else {
+      const approvalUrl = payment.links.find(link => link.rel === 'approval_url');
+      res.status(200).json({ success: true, approvalUrl: approvalUrl.href }); 
+    }
   });
 };
 
-const paymentVerification = async (req, res) => {
-  const { razorpayOrderId, razorpayPaymentId } = req.body;
-  res.json({
-    razorpayOrderId,
-    razorpayPaymentId,
+
+// Hàm xử lý xác nhận thanh toán
+const paypalPaymentVerification = async (req, res) => {
+  const { paymentId, PayerID } = req.body;
+
+  paypal.payment.get(paymentId, function (error, payment) {
+    if (error) {
+      console.error('Error getting payment details:', error);
+      res.status(500).json({ error });
+      return;
+    }
+
+    const amount = payment.transactions[0].amount.total; // Lấy giá trị thực tế từ payment
+
+    const execute_payment_json = {
+      payer_id: PayerID,
+      transactions: [
+        {
+          amount: {
+            currency: 'USD',
+            total: amount, // Sử dụng giá trị thực tế
+          },
+        },
+      ],
+    };
+
+    paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+      if (error) {
+        console.error('Error executing payment:', error);
+        res.status(500).json({ error });
+      } else {
+        res.status(200).json({ success: true, payment });
+      }
+    });
   });
 };
+
 
 module.exports = {
-  checkout,
-  paymentVerification,
+  paypalCheckout,
+  paypalPaymentVerification,
 };

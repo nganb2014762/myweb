@@ -51,7 +51,7 @@ const Login = () => {
         <div className="row">
           <div className="col-12">
             <div className="auth-card">
-              <h3 className="text-center mb-3">Login</h3>
+              <h3 className="text-center mb-3">Đăng nhập</h3>
               <form
                 action=""
                 onSubmit={formik.handleSubmit}
@@ -71,7 +71,7 @@ const Login = () => {
                 <CustomInput
                   type="password"
                   name="password"
-                  placeholder="Password"
+                  placeholder="Mật khẩu"
                   value={formik.values.password}
                   onChange={formik.handleChange("password")}
                   onBlur={formik.handleBlur("password")}
@@ -80,14 +80,17 @@ const Login = () => {
                   {formik.touched.password && formik.errors.password}
                 </div>
                 <div>
-                  <Link to="/forgot-password">Forgot Password?</Link>
+                  <Link to="/forgot-password">Quên mật khẩu?</Link>
 
                   <div className="mt-3 d-flex justify-content-center gap-15 align-items-center">
-                    <button className="button border-0" type="submit">
-                      Login
+                    <button className="button border-0 w-100" type="submit">
+                      Đăng nhập
                     </button>
-                    <Link to="/signup" className="button signup">
-                      SignUp
+                    
+                  </div>
+                  <div className="mt-3 d-flex justify-content-center gap-15 align-items-center">
+                    Bạn chưa có tài khoản?
+                    <Link to="/signup" c>Đăng ký
                     </Link>
                   </div>
                 </div>

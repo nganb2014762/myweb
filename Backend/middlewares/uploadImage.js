@@ -45,12 +45,27 @@ const blogImgResize = async (req, res, next) => {
   if (!req.files) return next();
   await Promise.all(
     req.files.map(async (file) => {
-      await sharp(file.path)
-        .resize(300, 300)
-        .toFormat("jpeg")
-        .jpeg({ quality: 90 })
-        .toFile(`public/images/blogs/${file.filename}`);
-      fs.unlinkSync(`public/images/blogs/${file.filename}`);
+      try {
+        // Resize và lưu tệp ảnh
+        await sharp(file.path)
+          .resize(300, 300)
+          .toFormat("jpeg")
+          .jpeg({ quality: 90 })
+          .toFile(`public/images/blogs/${file.filename}`);
+
+        // Trì hoãn xóa tệp để tránh lỗi EBUSY
+        setTimeout(async () => {
+          try {
+            await fs.promises.unlink(file.path);
+            console.log(`Successfully deleted file: ${file.path}`);
+          } catch (err) {
+            console.error(`Failed to delete file: ${file.path}`, err);
+          }
+        }, 500); // Trì hoãn 500ms trước khi xóa tệp
+
+      } catch (err) {
+        console.error(`Failed to process file: ${file.path}`, err);
+      }
     })
   );
   next();

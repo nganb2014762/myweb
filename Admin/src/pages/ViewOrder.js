@@ -7,27 +7,27 @@ import { Link, useLocation } from "react-router-dom";
 import { getaOrder } from "../features/auth/authSlice";
 const columns = [
   {
-    title: "SNo",
+    title: "STT",
     dataIndex: "key",
   },
   {
-    title: "Product Name",
+    title: "Tên sản phẩm",
     dataIndex: "name",
   },
   {
-    title: "Brand",
+    title: "Thương hiệu",
     dataIndex: "brand",
   },
   {
-    title: "Count",
+    title: "Số lượng",
     dataIndex: "count",
   },
+  // {
+  //   title: "Color",
+  //   dataIndex: "color",
+  // },
   {
-    title: "Color",
-    dataIndex: "color",
-  },
-  {
-    title: "Amount",
+    title: "Giá tiền",
     dataIndex: "amount",
   },
 ];
@@ -49,21 +49,21 @@ const ViewOrder = () => {
       brand: orderState?.orderItems[i]?.product?.brand,
       count: orderState?.orderItems[i]?.quantity,
       amount: orderState?.orderItems[i]?.price,
-      color: (
-        <div className="col-3">
-          <ul
-            className="colors ps-0"
-            style={{
-              width: "30px",
-              height: "30px",
-              borderRadius: "50%",
-              marginBottom: "10px",
+      // color: (
+      //   <div className="col-3">
+      //     <ul
+      //       className="colors ps-0"
+      //       style={{
+      //         width: "30px",
+      //         height: "30px",
+      //         borderRadius: "50%",
+      //         marginBottom: "10px",
 
-              backgroundColor: orderState?.orderItems[i]?.color?.title,
-            }}
-          ></ul>
-        </div>
-      ),
+      //         backgroundColor: orderState?.orderItems[i]?.color?.title,
+      //       }}
+      //     ></ul>
+      //   </div>
+      // ),
     });
   }
   return (

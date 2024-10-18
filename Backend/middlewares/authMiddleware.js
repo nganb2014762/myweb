@@ -1,5 +1,4 @@
 const User = require("../models/userModel");
-
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 
@@ -11,16 +10,22 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
     try {
       if (token) {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        // console.log(decoded);
+        console.log(decoded); // Log decoded để kiểm tra
+
         const user = await User.findById(decoded?.id);
+        if (!user) {
+          return res.status(404).json({ message: "Người dùng không tồn tại." });
+        }
+
         req.user = user;
         next();
       }
     } catch (error) {
-      throw new Error("Not Authorized token expired,Please Login again");
+      console.error("Lỗi khi xác thực:", error); // Log lỗi
+      throw new Error("Not Authorized token expired, Please Login again");
     }
   } else {
-    throw new Error("THere is no token attached to header");
+    throw new Error("There is no token attached to header");
   }
 });
 
@@ -28,8 +33,8 @@ const isAdmin = asyncHandler(async (req, res, next) => {
   const { email } = req.user;
   const adminUser = await User.findOne({ email });
 
-  if (adminUser.role !== "admin") {
-    throw new Error("Your are not an admin");
+  if (!adminUser || adminUser.role !== "admin") {
+    throw new Error("You are not an admin");
   } else {
     next();
   }

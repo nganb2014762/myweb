@@ -9,6 +9,7 @@ const createBlog = asyncHandler(async (req, res) => {
     const newBlog = await Blog.create(req.body);
     res.json(newBlog);
   } catch (error) {
+    console.log("Error creating blog:", error);
     throw new Error(error);
   }
 });
@@ -165,13 +166,16 @@ const uploadImages = asyncHandler(async (req, res) => {
     const uploader = (path) => cloudinaryUploadImg(path, "images");
     const urls = [];
     const files = req.files;
+
+    console.log("Starting image upload..."); 
     for (const file of files) {
       const { path } = file;
       const newpath = await uploader(path);
-      console.log(newpath);
+      console.log(`Uploaded: ${newpath}`);
       urls.push(newpath);
       fs.unlinkSync(path);
     }
+    
     const findBlog = await Blog.findByIdAndUpdate(
       id,
       {
@@ -183,11 +187,15 @@ const uploadImages = asyncHandler(async (req, res) => {
         new: true,
       }
     );
+    
+    console.log("Images uploaded and blog updated.");
     res.json(findBlog);
   } catch (error) {
+    console.error("Error during image upload:", error);
     throw new Error(error);
   }
 });
+
 
 module.exports = {
   createBlog,
@@ -197,5 +205,5 @@ module.exports = {
   deleteBlog,
   liketheBlog,
   disliketheBlog,
-  uploadImages,
+  // uploadImages,
 };

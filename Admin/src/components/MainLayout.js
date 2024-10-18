@@ -91,23 +91,14 @@ const MainLayout = () => {
                 {
                   key: "category",
                   icon: <BiCategoryAlt className="fs-4" />,
-                  label: "Thêm loại",
+                  label: "Thêm phân loại",
                 },
                 {
                   key: "list-category",
                   icon: <BiCategoryAlt className="fs-4" />,
-                  label: "Danh sách loại",
+                  label: "Danh sách phân loại",
                 },
-                {
-                  key: "color",
-                  icon: <AiOutlineBgColors className="fs-4" />,
-                  label: "Color",
-                },
-                {
-                  key: "list-color",
-                  icon: <AiOutlineBgColors className="fs-4" />,
-                  label: "Color List",
-                },
+                
               ],
             },
             {
