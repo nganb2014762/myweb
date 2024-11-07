@@ -41,7 +41,7 @@ const Contact = () => {
         <div className="row">
           <div className="col-12">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6986.771103663534!2d76.99275607711007!3d28.886888929272477!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390da5e51463d4c9%3A0xe5a485e2ac7c3d4a!2sMandaura%2C%20Haryana%20131103!5e0!3m2!1sen!2sin!4v1669909087902!5m2!1sen!2sin"
+              src="https://www.google.com/maps/d/embed?mid=1lwC6zzYh_Pn4DOM2AZwAVGf5yEw&ll=10.028582380505522%2C105.76912632054248&z=15"
               width="600"
               height="450"
               className="border-0 w-100"
@@ -53,7 +53,7 @@ const Contact = () => {
           <div className="col-12 mt-5">
             <div className="contact-inner-wrapper d-flex justify-content-between ">
               <div>
-                <h3 className="contact-title mb-4">Contact</h3>
+                <h3 className="contact-title mb-4">Liên hệ</h3>
                 <form
                   action=""
                   onSubmit={formik.handleSubmit}
@@ -63,7 +63,7 @@ const Contact = () => {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Name"
+                      placeholder="Tên"
                       name="name"
                       onChange={formik.handleChange("name")}
                       onBlur={formik.handleBlur("name")}
@@ -92,7 +92,7 @@ const Contact = () => {
                     <input
                       type="tel"
                       className="form-control"
-                      placeholder="Mobile Number"
+                      placeholder="SĐT"
                       name="mobile"
                       onChange={formik.handleChange("mobile")}
                       onBlur={formik.handleBlur("mobile")}
@@ -108,7 +108,7 @@ const Contact = () => {
                       className="w-100 form-control"
                       cols="30"
                       rows="4"
-                      placeholder="Comments"
+                      placeholder="Nhập"
                       name="comment"
                       onChange={formik.handleChange("comment")}
                       onBlur={formik.handleBlur("comment")}
@@ -119,34 +119,33 @@ const Contact = () => {
                     </div>
                   </div>
                   <div>
-                    <button className="button border-0">Submit</button>
+                    <button className="button border-0">Gửi</button>
                   </div>
                 </form>
               </div>
               <div>
-                <h3 className="contact-title mb-4">Get in touch with us</h3>
+                <h3 className="contact-title mb-4">Liên hệ với chúng tôi</h3>
                 <div>
                   <ul className="ps-0">
                     <li className="mb-3 d-flex gap-15 align-items-center">
                       <AiOutlineHome className="fs-5" />
                       <address className="mb-0">
-                        Hno : Daiict college, Reliance Cross Rd,
-                        Gandhinagar,Gujarat, 382007
+                        Đường 30/4, Hưng Lợi, Ninh Kiều, Cần Thơ
                       </address>
                     </li>
                     <li className="mb-3 d-flex gap-15 align-items-center">
                       <BiPhoneCall className="fs-5" />
-                      <a href="tel:+91 8264954234">+91 8264954234</a>
+                      <a href="tel:+91 8264954234">012345678</a>
                     </li>
                     <li className="mb-3 d-flex gap-15 align-items-center">
                       <AiOutlineMail className="fs-5" />
                       <a href="mailto:devjariwala8444@gmail.com">
-                        devjariwala8444@gmail.com
+                        nganb2014762@student.ctu.edu.vn
                       </a>
                     </li>
                     <li className="mb-3 d-flex gap-15 align-items-center">
                       <BiInfoCircle className="fs-5" />
-                      <p className="mb-0">Monday – Friday 10 AM – 8 PM</p>
+                      <p className="mb-0">Thứ 2 – Thứ 6 10 AM – 8 PM</p>
                     </li>
                   </ul>
                 </div>

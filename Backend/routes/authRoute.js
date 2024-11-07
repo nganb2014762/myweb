@@ -31,12 +31,14 @@ const {
   getAllOrders,
   getsingleOrder,
   updateOrder,
+  cancelOrder,
 } = require("../controller/userCtrl");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 
 const { paypalCheckout, paypalPaymentVerification } = require("../controller/paymentCtrl");
 
 const router = express.Router();
+
 
 router.post("/register", createUser);
 router.post("/forgot-password-token", forgotPasswordToken);
@@ -85,5 +87,7 @@ router.put("/edit-user", authMiddleware, updatedUser);
 router.put("/save-address", authMiddleware, saveAddress);
 router.put("/block-user/:id", authMiddleware, isAdmin, blockUser);
 router.put("/unblock-user/:id", authMiddleware, isAdmin, unblockUser);
+
+
 
 module.exports = router;

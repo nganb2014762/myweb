@@ -105,24 +105,11 @@ const ProductCard = (props) => {
                   activeColor="#ffd700"
                 />
 
-                <p className="price">Rs.{item?.price}</p>
+                <p className="price">{item?.price} 000</p>
               </div>
               <div className="action-bar position-absolute">
                 <div className="d-flex flex-column gap-15">
-                  {/* <button className="border-0 bg-transparent">
-                    <img src={prodcompare} alt="compare" />
-                  </button> */}
-
-                  {/* <button className="border-0 bg-transparent">
-                    <img
-                      onClick={() => navigate("/product/" + item?._id)}
-                      src={view}
-                      alt="view"
-                    />
-                  </button> */}
-                  {/* <button className="border-0 bg-transparent">
-                    <img src={addcart} alt="addcart" />
-                  </button> */}
+                  
                 </div>
               </div>
             </div>

@@ -26,46 +26,51 @@ const Cart = () => {
   };
 
   const dispatch = useDispatch();
-
-  const [productupdateDetail, setProductupdateDetail] = useState(null);
+  const [updatedQuantity, setUpdatedQuantity] = useState({});
   const [totalAmount, setTotalAmount] = useState(null);
   const userCartState = useSelector((state) => state.auth.cartProducts);
+  const isFirstRender = React.useRef(true);
 
   useEffect(() => {
-    dispatch(getUserCart(config2));
-  }, [dispatch]); 
-  
-
-  useEffect(() => {
-    if (productupdateDetail !== null) {
-      dispatch(
-        updateCartProduct({
-          cartItemId: productupdateDetail?.cartItemId,
-          quantity: productupdateDetail?.quantity,
-        })
-      );
-      setTimeout(() => {
-        dispatch(getUserCart(config2));
-      }, 200);
-    }
-  }, [productupdateDetail, dispatch, config2]);
-
-  const deleteACartProduct = (id) => {
-    dispatch(deleteCartProduct({ id: id, config2: config2 }));
-    setTimeout(() => {
+    if (isFirstRender.current) {
       dispatch(getUserCart(config2));
-    }, 200);
-  };
+      isFirstRender.current = false;
+    }
+  }, [dispatch, config2]);
 
   useEffect(() => {
     let sum = 0;
-    for (let index = 0; index < userCartState?.length; index++) {
-      sum =
-        sum +
-        Number(userCartState[index].quantity) * userCartState[index].price;
-      setTotalAmount(sum);
-    }
+    userCartState?.forEach((item) => {
+      sum += Number(item.quantity) * item.price;
+    });
+    setTotalAmount(sum);
   }, [userCartState]);
+
+  const handleQuantityChange = (itemId, quantity) => {
+    setUpdatedQuantity((prev) => ({
+      ...prev,
+      [itemId]: quantity,
+    }));
+  };
+
+  const handleUpdateQuantity = (cartItemId) => {
+    if (updatedQuantity[cartItemId] !== undefined) {
+      dispatch(
+        updateCartProduct({
+          cartItemId: cartItemId,
+          quantity: updatedQuantity[cartItemId],
+        })
+      ).then(() => {
+        dispatch(getUserCart(config2));
+      });
+    }
+  };
+
+  const deleteACartProduct = (id) => {
+    dispatch(deleteCartProduct({ id: id, config2: config2 })).then(() => {
+      dispatch(getUserCart(config2));
+    });
+  };
 
   return (
     <>
@@ -103,7 +108,6 @@ const Cart = () => {
                             ? item?.productId?.title
                             : "Unknown Product"}
                         </p>
-                        
                       </div>
                     </div>
                     <div className="cart-col-2">
@@ -114,31 +118,25 @@ const Cart = () => {
                         <input
                           className="form-control"
                           type="number"
-                          name={"quantity" + item?._id}
                           min={1}
                           max={10}
-                          id={"card" + item?._id}
-                          value={item?.quantity}
-                          onChange={(e) => {
-                            setProductupdateDetail({
-                              cartItemId: item?._id,
-                              quantity: e.target.value,
-                            });
-                          }}
+                          value={updatedQuantity[item._id] || item.quantity}
+                          onChange={(e) =>
+                            handleQuantityChange(item._id, e.target.value)
+                          }
+                          onBlur={() => handleUpdateQuantity(item._id)}
                         />
                       </div>
                       <div>
                         <AiFillDelete
-                          onClick={() => {
-                            deleteACartProduct(item?._id);
-                          }}
-                          className="text-danger "
+                          onClick={() => deleteACartProduct(item._id)}
+                          className="text-danger"
                         />
                       </div>
                     </div>
                     <div className="cart-col-4">
                       <h5 className="price">
-                        {item?.quantity * item?.price} 000 VND
+                        {item.quantity * item.price} 000 VND
                       </h5>
                     </div>
                   </div>
@@ -150,17 +148,9 @@ const Cart = () => {
               <Link to="/product" className="button">
                 Về trang sản phẩm
               </Link>
-              {(totalAmount !== null || totalAmount !== 0) && (
+              {totalAmount !== null && (
                 <div className="d-flex flex-column align-items-end">
-                  <h4>
-                    Tổng{" "}
-                    {!userCartState?.length
-                      ? 0
-                      : totalAmount
-                      ? totalAmount
-                      : 0} 000 VND
-                  </h4>
-                  
+                  <h4>Tổng: {totalAmount || 0} 000 VND</h4>
                   <Link to="/checkout" className="button">
                     Mua hàng
                   </Link>

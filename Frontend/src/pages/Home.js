@@ -134,7 +134,7 @@ const Home = () => {
           </div>
           {productState &&
             productState?.map((item, index) => {
-              if (item.tags === "featured") {
+              if (item.tags === "Bán chạy nhất") {
                 return (
                   <div key={index} className={"col-3"}>
                     <div className="product-card position-relative">
@@ -202,8 +202,8 @@ const Home = () => {
         <div className="row">
           {productState &&
             productState?.map((item, index) => {
-              if (item.tags === "special") {
-                //console.log(item?._id);
+              if (item.tags === "Được tìm kiếm nhiều nhất") {
+   
                 return (
                   <div key={index} className={"col-3"}>
                     <div className="product-card position-relative">
@@ -270,7 +270,7 @@ const Home = () => {
         <div className="row">
           {productState &&
             productState?.map((item, index) => {
-              if (item.tags === "popular") {
+              if (item.tags === "Phổ biến") {
                 return (
                   <div key={index} className={"col-3"}>
                     <div className="product-card position-relative">
@@ -366,7 +366,7 @@ const Home = () => {
       <Container class1="blog-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 className="section-heading">Our Latest Blogs</h3>
+            <h3 className="section-heading">Tin tức</h3>
           </div>
         </div>
         <div className="row">

@@ -15,7 +15,7 @@ const columns = [
     dataIndex: "key",
   },
   {
-    title: "Tên sản phẩm",
+    title: "Tên khách hàng",
     dataIndex: "name",
   },
   {
@@ -104,7 +104,7 @@ const Dashboard = () => {
 
     for (let i = 0; i < orderState?.length; i++) {
       data1.push({
-        key: i,
+        key: i+1,
         name: orderState[i].user.firstname + " " + orderState[i].user.lastname,
         product: orderState[i].orderItems?.length,
         price: orderState[i]?.totalPrice,
@@ -183,34 +183,34 @@ const Dashboard = () => {
           <div>
             <p className="desc">Tổng doanh thu</p>
             <h4 className="mb-0 sub-title">
-              Rs.{yearlyDataState && yearlyDataState[0]?.amount}
+              {yearlyDataState && yearlyDataState[0]?.amount}000
             </h4>
           </div>
-          <div className="d-flex flex-column align-items-end">
+          {/* <div className="d-flex flex-column align-items-end">
             <p className="mb-0  desc">Thu nhập năm ngoái tính từ hôm nay</p>
-          </div>
+          </div> */}
         </div>
         <div className="d-flex p-3 justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
           <div>
-            <p className="desc">Tổng doanh số</p>
+            <p className="desc">Tổng đơn hàng</p>
             <h4 className="mb-0 sub-title">
               {yearlyDataState && yearlyDataState[0]?.count}
             </h4>
           </div>
-          <div className="d-flex flex-column align-items-end">
+          {/* <div className="d-flex flex-column align-items-end">
             <p className="mb-0  desc">Doanh thu năm ngoái tính từ hôm nay</p>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="d-flex justify-content-between align-items gap-3">
         <div className="mt-4 flex-grow-1 w-50">
-          <h3 className="mb-5 title">Thu nhập năm ngoái tính từ hôm nay</h3>
+          <h3 className="mb-5 title">Thu nhập </h3>
           <div>
             <Column {...config} />
           </div>
         </div>
         <div className="mt-4 flex-grow-1 ">
-          <h3 className="mb-5 title">Doanh thu năm ngoái tính từ hôm nay </h3>
+          <h3 className="mb-5 title">Doanh thu  </h3>
           <div>
             <Column {...config2} />
           </div>

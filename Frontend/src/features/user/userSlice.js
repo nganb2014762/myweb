@@ -2,6 +2,26 @@ import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import { authService } from "./userService";
 import { toast } from "react-toastify";
 
+export const cancelOrder = createAsyncThunk(
+  "order/cancelOrder",
+  async ({ orderId, config }) => {
+    const url = `http://localhost:5000/api/orders/cancel/${orderId}`; // Thêm cổng vào URL
+    console.log(`Requesting cancel at URL: ${url}`); // Log URL
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: config.headers,
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to cancel order");
+    }
+
+    return await response.json();
+  }
+);
+
+
+
 export const registerUser = createAsyncThunk(
   "auth/register",
   async (userData, thunkAPI) => {

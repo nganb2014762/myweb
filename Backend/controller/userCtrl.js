@@ -350,7 +350,7 @@ const userCart = asyncHandler(async (req, res) => {
     let newCart = await new Cart({
       userId: _id,
       productId,
-      color,
+      // color,
       price,
       quantity,
     }).save();
@@ -453,7 +453,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find({ user: _id })
       .populate("user")
       .populate("orderItems.product")
-      .populate("orderItems.color");
+      // .populate("orderItems.color");
     res.json({
       orders,
     });
@@ -482,7 +482,7 @@ const getsingleOrder = asyncHandler(async (req, res) => {
     const orders = await Order.findOne({ _id: id })
       .populate("user")
       .populate("orderItems.product")
-      .populate("orderItems.color");
+      // .populate("orderItems.color");
     res.json({
       orders,
     });
@@ -591,6 +591,8 @@ const getYearlyTotalOrder = asyncHandler(async (req, res) => {
   ]);
   res.json(data);
 });
+
+
 
 module.exports = {
   createUser,

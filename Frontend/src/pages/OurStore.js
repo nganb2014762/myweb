@@ -16,8 +16,6 @@ const OurStore = () => {
   const [categories, setCategories] = useState([]);
 
   const [tags, setTags] = useState([]);
-
-  //filter state
   const [tag, setTag] = useState(null);
   const [category, setCategory] = useState(null);
   const [brand, setBrand] = useState(null);
@@ -59,7 +57,7 @@ const OurStore = () => {
         <div className="row">
           <div className="col-3">
             <div className="filter-card mb-3">
-              <h3 className="filter-title">Shop By Categories</h3>
+              <h3 className="filter-title">Phân loại</h3>
               <div>
                 <ul className="ps-0">
                   <a
@@ -82,9 +80,9 @@ const OurStore = () => {
               </div>
             </div>
             <div className="filter-card mb-3">
-              <h3 className="filter-title">Filter By</h3>
+              <h3 className="filter-title">Lọc</h3>
               <div>
-                <h5 className="sub-title">Price</h5>
+                <h5 className="sub-title">Giá</h5>
                 <div className="d-flex align-items-center gap-10">
                   <div className="form-floating">
                     <input
@@ -94,7 +92,7 @@ const OurStore = () => {
                       placeholder="From"
                       onChange={(e) => setminPrice(e.target.value)}
                     />
-                    <label htmlFor="floatingInput">From</label>
+                    <label htmlFor="floatingInput">Từ</label>
                   </div>
                   <div className="form-floating">
                     <input
@@ -104,16 +102,12 @@ const OurStore = () => {
                       placeholder="To"
                       onChange={(e) => setmaxPrice(e.target.value)}
                     />
-                    <label htmlFor="floatingInput1">To</label>
+                    <label htmlFor="floatingInput1">Đến</label>
                   </div>
                 </div>
-                {/* <h5 className="sub-title">Colors</h5>
-                <div>
-                  <Color />
-                </div> */}
               </div>
               <div className="mt-4 mb-3">
-                <h3 className="sub-title">Product Tags</h3>
+                <h3 className="sub-title">Tags</h3>
                 <div>
                   <div className="product-tags d-flex flex-wrap align-items-center gap-10">
                     {tags &&
@@ -132,7 +126,7 @@ const OurStore = () => {
                 </div>
               </div>
               <div className="mt-4 mb-3">
-                <h3 className="sub-title">Product Brands</h3>
+                <h3 className="sub-title">Thương hiệu</h3>
                 <div>
                   <div className="product-tags d-flex flex-wrap align-items-center gap-10">
                     {brands &&
@@ -157,7 +151,7 @@ const OurStore = () => {
               <div className="d-flex justify-content-between align-items-center">
                 <div className="d-flex align-items-center gap-10">
                   <p className="mb-0 d-block" style={{ width: "100px" }}>
-                    Sort By:
+                    Sắp xếp:
                   </p>
                   <select
                     name=""
@@ -166,17 +160,16 @@ const OurStore = () => {
                     id=""
                     onChange={(e) => setSort(e.target.value)}
                   >
-                    <option value="title">Alphabetically, A-Z</option>
-                    <option value="-title">Alphabetically, Z-A</option>
-                    <option value="price">Price, low to high</option>
-                    <option value="-price">Price, high to low</option>
-                    <option value="createdAt">Date, old to new</option>
-                    <option value="-createdAt">Date, new to old</option>
+                    <option value="title">A-Z</option>
+                    <option value="-title">Z-A</option>
+                    <option value="price">Giá từ thấp đến cao</option>
+                    <option value="-price">Giá từ cao đến thấp</option>
+                    
                   </select>
                 </div>
                 <div className="d-flex align-items-center gap-10">
                   <p className="totalproducts mb-0">
-                    {productState?.length} Products
+                    {productState?.length} Sản phẩm
                   </p>
                   <div className="d-flex gap-10 align-items-center grid">
                     <img

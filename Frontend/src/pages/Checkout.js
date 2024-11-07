@@ -15,13 +15,11 @@ import {
 } from "../features/user/userSlice";
 
 let shippingSchema = yup.object({
-  firstname: yup.string().required("First Name is Required"),
-  lastname: yup.string().required("Last Name is Required"),
-  address: yup.string().required("Address Details are Required"),
-  state: yup.string().required("State is Required"),
-  city: yup.string().required("City is Required"),
-  country: yup.string().required("Country is Required"),
-  pincode: yup.number("Pincode is Required").required().positive().integer(),
+  firstname: yup.string().required("Vui lòng nhập dữ liệu"),
+  lastname: yup.string().required("Vui lòng nhập dữ liệu"),
+  address: yup.string().required("Vui lòng nhập dữ liệu"),
+  city: yup.string().required("Vui lòng nhập dữ liệu"),
+  pincode: yup.number("Vui lòng nhập dữ liệu").required().positive().integer(),
 });
 
 const Checkout = () => {
@@ -91,11 +89,8 @@ const Checkout = () => {
       firstname: "",
       lastname: "",
       address: "",
-      state: "",
       city: "",
-      country: "",
       pincode: "",
-      other: "",
     },
     validationSchema: shippingSchema,
     onSubmit: (values) => {
@@ -213,19 +208,7 @@ const Checkout = () => {
                 className="d-flex gap-15 flex-wrap justify-content-between"
               >
                 <div className="w-100">
-                  <select
-                    className="form-control form-select"
-                    id=""
-                    name="country"
-                    value={formik.values.country}
-                    onChange={formik.handleChange("country")}
-                    onBlur={formik.handleChange("country")}
-                  >
-                    <option value="" selected disabled>
-                      Select Country
-                    </option>
-                    <option value="India">India</option>
-                  </select>
+                  
                   <div className="error ms-2 my-1">
                     {formik.touched.country && formik.errors.country}
                   </div>
@@ -233,7 +216,7 @@ const Checkout = () => {
                 <div className="flex-grow-1">
                   <input
                     type="text"
-                    placeholder="First Name"
+                    placeholder="Họ"
                     className="form-control"
                     name="firstname"
                     value={formik.values.firstname}
@@ -247,7 +230,7 @@ const Checkout = () => {
                 <div className="flex-grow-1">
                   <input
                     type="text"
-                    placeholder="Last Name"
+                    placeholder="Tên"
                     className="form-control"
                     name="lastname"
                     value={formik.values.lastname}
@@ -258,10 +241,11 @@ const Checkout = () => {
                     {formik.touched.lastname && formik.errors.lastname}
                   </div>
                 </div>
+                
                 <div className="w-100">
                   <input
                     type="text"
-                    placeholder="Address"
+                    placeholder="Số nhà, tên đường"
                     className="form-control"
                     name="address"
                     value={formik.values.address}
@@ -272,53 +256,11 @@ const Checkout = () => {
                     {formik.touched.address && formik.errors.address}
                   </div>
                 </div>
-                <div className="w-100">
-                  <input
-                    type="text"
-                    placeholder="Apartment, Suite ,etc"
-                    className="form-control"
-                    name="other"
-                    value={formik.values.other}
-                    onChange={formik.handleChange("other")}
-                    onBlur={formik.handleBlur("other")}
-                  />
-                </div>
+
                 <div className="flex-grow-1">
                   <input
                     type="text"
-                    placeholder="City"
-                    className="form-control"
-                    name="city"
-                    value={formik.values.city}
-                    onChange={formik.handleChange("city")}
-                    onBlur={formik.handleBlur("city")}
-                  />
-                  <div className="error ms-2 my-1">
-                    {formik.touched.city && formik.errors.city}
-                  </div>
-                </div>
-                <div className="flex-grow-1">
-                  <select
-                    className="form-control form-select"
-                    id=""
-                    name="state"
-                    value={formik.values.state}
-                    onChange={formik.handleChange("state")}
-                    onBlur={formik.handleChange("state")}
-                  >
-                    <option value="" selected disabled>
-                      Select State
-                    </option>
-                    <option value="Gujarat">Gujarat</option>
-                  </select>
-                  <div className="error ms-2 my-1">
-                    {formik.touched.state && formik.errors.state}
-                  </div>
-                </div>
-                <div className="flex-grow-1">
-                  <input
-                    type="text"
-                    placeholder="Pincode"
+                    placeholder="Số điện thoại"
                     className="form-control"
                     name="pincode"
                     value={formik.values.pincode}
@@ -329,8 +271,24 @@ const Checkout = () => {
                     {formik.touched.pincode && formik.errors.pincode}
                   </div>
                 </div>
+                
+                <div className="flex-grow-1">
+                  <input
+                    type="text"
+                    placeholder="Tỉnh/Thành phố"
+                    className="form-control"
+                    name="city"
+                    value={formik.values.city}
+                    onChange={formik.handleChange("city")}
+                    onBlur={formik.handleBlur("city")}
+                  />
+                  <div className="error ms-2 my-1">
+                    {formik.touched.city && formik.errors.city}
+                  </div>
+                </div>
+
                 <div className="w-100">
-                  <label htmlFor="paymentMethod">Payment Method</label>
+                  <label htmlFor="paymentMethod">Phương thức thanh toán</label>
                   <select
                     className="form-control form-select"
                     name="paymentMethod"
@@ -338,12 +296,12 @@ const Checkout = () => {
                     onChange={(e) => setPaymentMethod(e.target.value)}
                   >
                     <option value="PayPal">PayPal</option>
-                    <option value="COD">Cash on Delivery</option>
+                    <option value="COD">Thanh toán khi nhận hàng</option>
                   </select>
                 </div>
 
                 <button type="submit" className="btn btn-primary">
-                  Continue to Payment
+                  Nhấn để tiếp tục
                 </button>
               </form>
             </div>
@@ -376,12 +334,12 @@ const Checkout = () => {
                           <h5 className="total-price">
                             {item?.productId?.title}
                           </h5>
-                          {/* <p className="total-price">{item?.color?.title}</p> */}
+                          
                         </div>
                       </div>
                       <div className="flex-grow-1">
                         <h5 className="total">
-                          Rs. {item?.price * item?.quantity}
+                          {item?.price * item?.quantity} 000
                         </h5>
                       </div>
                     </div>
@@ -390,20 +348,20 @@ const Checkout = () => {
             </div>
             <div className="border-bottom py-4">
               <div className="d-flex justify-content-between align-items-center">
-                <p className="total">Subtotal</p>
+                <p className="total">Tổng phụ</p>
                 <p className="total-price">
-                  Rs. {totalAmount ? totalAmount : "0"}
+                  {totalAmount ? totalAmount : "0"} 000
                 </p>
               </div>
               <div className="d-flex justify-content-between align-items-center">
-                <p className="mb-0 total">Shipping</p>
-                <p className="mb-0 total-price">Rs. 100</p>
+                <p className="mb-0 total">Phí vận chuyển</p>
+                <p className="mb-0 total-price">100 000</p>
               </div>
             </div>
             <div className="d-flex justify-content-between align-items-center border-bootom py-4">
-              <h4 className="total">Total</h4>
+              <h4 className="total">Tổng</h4>
               <h5 className="total-price">
-                Rs. {totalAmount ? totalAmount + 100 : "0"}
+                {totalAmount ? totalAmount + 100 : "0"} 000
               </h5>
             </div>
           </div>

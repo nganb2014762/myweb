@@ -68,7 +68,7 @@ const Orders = () => {
 
             <option value="Processed">Đang chuẩn bị hàng</option>
             <option value="Shipped">Đang vận chuyển</option>
-            <option value="Out for Delivery">Hủy</option>
+            <option value="Cancelled">Hủy</option>
             <option value="Delivered">Thành công</option>
           </select>
         </>
