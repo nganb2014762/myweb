@@ -128,18 +128,25 @@ const Addproduct = () => {
     },
     validationSchema: schema,
     onSubmit: (values) => {
+      console.log("Dữ liệu gửi lên server: ", values);
+      const dataToSend = {
+        ...values,  // Các thông tin khác của sản phẩm
+        images: img,  // Hình ảnh đã upload
+      };
+    
       if (getProductId) {
-        const data = { id: getProductId, productData: values };
+        const data = { id: getProductId, productData: dataToSend };
         dispatch(updateAProduct(data));
       } else {
-        dispatch(createProducts(values));
+        dispatch(createProducts(dataToSend));
         formik.resetForm();
-
+    
         setTimeout(() => {
           dispatch(resetState());
         }, 3000);
       }
-    },
+    }
+    
   });
 
   return (

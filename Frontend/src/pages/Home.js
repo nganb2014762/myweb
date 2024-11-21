@@ -150,22 +150,29 @@ const Home = () => {
                         </button>
                       </div>
                       <div className="product-image">
-                        <img
-                          src={item?.images[0]?.url}
-                          //className="img-fluid d"
-                          alt="product image"
-                          height={"250px"}
-                          width={"260px"}
-                          onClick={() => navigate("/product/" + item?._id)}
-                        />
-                        <img
-                          src={item?.images[0]?.url}
-                          //className="img-fluid d"
-                          alt="product image"
-                          height={"250px"}
-                          width={"260px"}
-                          onClick={() => navigate("/product/" + item?._id)}
-                        />
+                        {item?.images?.[0]?.url ? (
+                          <img
+                            src={item.images[0].url}
+                            alt="product image"
+                            height={"250px"}
+                            width={"260px"}
+                            onClick={() => navigate("/product/" + item?._id)}
+                          />
+                        ) : (
+                          <p>Hình ảnh không khả dụng</p> // Hoặc hình ảnh mặc định
+                        )}
+
+                        {item?.images?.[0]?.url ? (
+                          <img
+                            src={item.images[0].url}
+                            alt="product image"
+                            height={"250px"}
+                            width={"260px"}
+                            onClick={() => navigate("/product/" + item?._id)}
+                          />
+                        ) : (
+                          <p>Hình ảnh không khả dụng</p> // Hoặc hình ảnh mặc định
+                        )}
                       </div>
                       <div className="product-details">
                         <h6 className="brand">{item?.brand}</h6>
@@ -203,7 +210,6 @@ const Home = () => {
           {productState &&
             productState?.map((item, index) => {
               if (item.tags === "Được tìm kiếm nhiều nhất") {
-   
                 return (
                   <div key={index} className={"col-3"}>
                     <div className="product-card position-relative">
@@ -219,22 +225,29 @@ const Home = () => {
                         </button>
                       </div>
                       <div className="product-image">
-                        <img
-                          src={item?.images[0]?.url}
-                          //className="img-fluid d"
-                          alt="product image"
-                          height={"250px"}
-                          width={"260px"}
-                          onClick={() => navigate("/product/" + item?._id)}
-                        />
-                        <img
-                          src={item?.images[0]?.url}
-                          //className="img-fluid d"
-                          alt="product image"
-                          height={"250px"}
-                          width={"260px"}
-                          onClick={() => navigate("/product/" + item?._id)}
-                        />
+                        {item?.images?.[0]?.url ? (
+                          <img
+                            src={item.images[0].url}
+                            alt="product image"
+                            height={"250px"}
+                            width={"260px"}
+                            onClick={() => navigate("/product/" + item?._id)}
+                          />
+                        ) : (
+                          <p>Hình ảnh không khả dụng</p> // Hoặc hình ảnh mặc định
+                        )}
+
+                        {item?.images?.[0]?.url ? (
+                          <img
+                            src={item.images[0].url}
+                            alt="product image"
+                            height={"250px"}
+                            width={"260px"}
+                            onClick={() => navigate("/product/" + item?._id)}
+                          />
+                        ) : (
+                          <p>Hình ảnh không khả dụng</p> // Hoặc hình ảnh mặc định
+                        )}
                       </div>
                       <div className="product-details">
                         <h6 className="brand">{item?.brand}</h6>
@@ -286,22 +299,29 @@ const Home = () => {
                         </button>
                       </div>
                       <div className="product-image">
-                        <img
-                          src={item?.images[0].url}
-                          // className="img-fluid d"
-                          alt="product image"
-                          height={"250px"}
-                          width={"100%"}
-                          onClick={() => navigate("/product/" + item?._id)}
-                        />
-                        <img
-                          src={item?.images[0].url}
-                          // className="img-fluid d"
-                          alt="product image"
-                          height={"250px"}
-                          width={"100%"}
-                          onClick={() => navigate("/product/" + item?._id)}
-                        />
+                        {item?.images?.[0]?.url ? (
+                          <img
+                            src={item.images[0].url}
+                            alt="product image"
+                            height={"250px"}
+                            width={"260px"}
+                            onClick={() => navigate("/product/" + item?._id)}
+                          />
+                        ) : (
+                          <p>Hình ảnh không khả dụng</p> // Hoặc hình ảnh mặc định
+                        )}
+
+                        {item?.images?.[0]?.url ? (
+                          <img
+                            src={item.images[0].url}
+                            alt="product image"
+                            height={"250px"}
+                            width={"260px"}
+                            onClick={() => navigate("/product/" + item?._id)}
+                          />
+                        ) : (
+                          <p>Hình ảnh không khả dụng</p> // Hoặc hình ảnh mặc định
+                        )}
                       </div>
                       <div className="product-details">
                         <h6 className="brand">{item?.brand}</h6>
@@ -311,7 +331,7 @@ const Home = () => {
                         <ReactStars
                           count={5}
                           size={24}
-                          value={item?.totalrating} 
+                          value={item?.totalrating}
                           edit={false}
                           activeColor="#ffd700"
                         />

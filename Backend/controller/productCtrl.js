@@ -6,15 +6,20 @@ const validateMongoDbId = require("../utils/validateMongodbId");
 
 const createProduct = asyncHandler(async (req, res) => {
   try {
+    console.log("Dữ liệu sản phẩm nhận được từ frontend: ", req.body);
+    
     if (req.body.title) {
       req.body.slug = slugify(req.body.title);
     }
+
     const newProduct = await Product.create(req.body);
     res.json(newProduct);
   } catch (error) {
+    console.error("Lỗi khi tạo sản phẩm: ", error);
     throw new Error(error);
   }
 });
+
 
 const updateProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
