@@ -420,32 +420,34 @@ const updateProductQuantityFromCart = asyncHandler(async (req, res) => {
   }
 });
 
-const createOrder = asyncHandler(async (req, res) => {
-  const {
-    shippingInfo,
-    orderItems,
-    totalPrice,
-    totalPriceAfterDiscount,
-    paymentInfo,
-  } = req.body;
-  const { _id } = req.user;
+const createOrder = async (req, res) => {
+  console.log("Dữ liệu nhận từ frontend:", req.body);
+
+  const { shippingInfo, paymentInfo, orderItems, totalPrice, totalPriceAfterDiscount } = req.body;
+
+  if (!shippingInfo || !paymentInfo || !orderItems || !totalPrice || !totalPriceAfterDiscount) {
+    return res.status(400).json({ success: false, message: "Thiếu thông tin bắt buộc" });
+  }
+
   try {
-    const order = await Order.create({
+    const newOrder = await Order.create({
+      user: req.user._id,
       shippingInfo,
+      paymentInfo,
       orderItems,
       totalPrice,
       totalPriceAfterDiscount,
-      paymentInfo,
-      user: _id,
+      paidAt: paymentInfo.method === "PayPal" ? new Date() : null,
     });
-    res.json({
-      order,
-      success: true,
-    });
+
+    res.status(201).json({ success: true, order: newOrder });
   } catch (error) {
-    throw new Error(error);
+    console.error("Lỗi tạo đơn hàng:", error);
+    res.status(500).json({ success: false, message: "Không thể tạo đơn hàng" });
   }
-});
+};
+
+
 
 const getMyOrders = asyncHandler(async (req, res) => {
   const { _id } = req.user;

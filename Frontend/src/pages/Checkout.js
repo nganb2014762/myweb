@@ -28,7 +28,8 @@ const Checkout = () => {
   const authState = useSelector((state) => state?.auth);
   const [totalAmount, setTotalAmount] = useState(null);
   const [shippingInfo, setShippingInfo] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState("PayPal"); 
+  const [paymentMethod, setPaymentMethod] = useState("PayPal");
+  const [isPayPalReady, setIsPayPalReady] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,19 +59,21 @@ const Checkout = () => {
 
   useEffect(() => {
     const loadPayPalScript = () => {
-      if (window.paypal) return;
+      if (window.paypal) {
+        setIsPayPalReady(true);
+        return;
+      }
       const script = document.createElement("script");
-      script.src = `https://www.paypal.com/sdk/js?client-id=AUKZzmdy6bbvA0y6Ct1CktKtkXZd-_IFGsdkVCNtW8ot-G66-AWjDmUjknHvBwbd1_ujwWeL8jCzHLwU`; 
+      script.src = `https://www.paypal.com/sdk/js?client-id=AUKZzmdy6bbvA0y6Ct1CktKtkXZd-_IFGsdkVCNtW8ot-G66-AWjDmUjknHvBwbd1_ujwWeL8jCzHLwU`;
       script.async = true;
       script.onload = () => {
         console.log("PayPal SDK loaded successfully");
+        setIsPayPalReady(true);
       };
       document.body.appendChild(script);
     };
-  
-    if (!window.paypal) {
-      loadPayPalScript();
-    }
+
+    loadPayPalScript();
   }, []);
 
   useEffect(() => {
@@ -119,10 +122,15 @@ const Checkout = () => {
   }, [cartState]);
 
   const checkOutHandler = async () => {
+    if (!isPayPalReady) {
+      console.error("PayPal SDK chưa được tải");
+      return;
+    }
+
     try {
       const result = await axios.post(
         "http://localhost:5000/api/user/order/create-paypal-order",
-        { amount: (totalAmount + 100).toString() }, 
+        { amount: (totalAmount + 100).toString() },
         config
       );
 
@@ -130,47 +138,50 @@ const Checkout = () => {
         alert("Something went wrong");
         return;
       }
-  
-      const { orderId } = result.data; 
 
-      if (window.paypal) {
+      const { orderId } = result.data;
+
+      if (document.getElementById("paypal-button-container")) {
         window.paypal
-  .Buttons({
-    createOrder: (data, actions) => {
-      return actions.order.create({
-        purchase_units: [{
-          amount: {
-            value: (totalAmount + 100).toString(), 
-          },
-        }],
-      }).then((orderId) => {
-        return orderId; 
-      });
-    },
-    onApprove: async (data, actions) => {
-      const details = await actions.order.capture();
-      
-      dispatch(
-        createAnOrder({
-          totalPrice: totalAmount + 100, // Cập nhật tổng giá
-          totalPriceAfterDiscount: totalAmount + 100,
-          orderItems: cartProductState,
-          paymentInfo: details,
-          shippingInfo: JSON.parse(localStorage.getItem("address")),
-        })
-      );
-      dispatch(deleteUserCart(config2));
-      localStorage.removeItem("address");
-      dispatch(resetState());
-    },
-    onError: (err) => {
-      console.error("PayPal Checkout onError", err);
-    },
-  })
-  .render("#paypal-button-container");
+          .Buttons({
+            createOrder: (data, actions) => {
+              return actions.order.create({
+                purchase_units: [
+                  {
+                    amount: {
+                      value: (totalAmount + 100).toString(),
+                    },
+                  },
+                ],
+              });
+            },
+            onApprove: async (data, actions) => {
+              const details = await actions.order.capture();
 
+              dispatch(
+                createAnOrder({
+                  totalPrice: totalAmount + 100,
+                  totalPriceAfterDiscount: totalAmount + 100,
+                  orderItems: cartProductState,
+                  paymentInfo: {
+                    method: "PayPal", // Thêm trường này
+                    ...details, // Các thông tin khác từ PayPal
+                  },
+                  shippingInfo: JSON.parse(localStorage.getItem("address")),
+                })
+              );
+              
+              dispatch(deleteUserCart(config2));
+              localStorage.removeItem("address");
+              dispatch(resetState());
+            },
+            onError: (err) => {
+              console.error("PayPal Checkout onError", err);
+            },
+          })
+          .render("#paypal-button-container");
       } else {
-        console.error("PayPal SDK chưa được tải");
+        console.error("Container của nút PayPal không tồn tại");
       }
     } catch (error) {
       console.error("Error creating PayPal order", error);
@@ -181,20 +192,22 @@ const Checkout = () => {
   const handleCODOrder = () => {
     dispatch(
       createAnOrder({
-        totalPrice: totalAmount + 100, // Cập nhật tổng giá
+        totalPrice: totalAmount + 100,
         totalPriceAfterDiscount: totalAmount + 100,
         orderItems: cartProductState,
         paymentInfo: {
-          method: "COD",
-          status: "Pending",
+          method: "COD", // Định nghĩa phương thức thanh toán
         },
         shippingInfo: JSON.parse(localStorage.getItem("address")),
       })
     );
+    
+  
     dispatch(deleteUserCart(config2));
     localStorage.removeItem("address");
     dispatch(resetState());
   };
+  
 
   return (
     <>
@@ -207,12 +220,7 @@ const Checkout = () => {
                 onSubmit={formik.handleSubmit}
                 className="d-flex gap-15 flex-wrap justify-content-between"
               >
-                <div className="w-100">
-                  
-                  <div className="error ms-2 my-1">
-                    {formik.touched.country && formik.errors.country}
-                  </div>
-                </div>
+                {/* Các trường nhập thông tin */}
                 <div className="flex-grow-1">
                   <input
                     type="text"
@@ -241,7 +249,7 @@ const Checkout = () => {
                     {formik.touched.lastname && formik.errors.lastname}
                   </div>
                 </div>
-                
+
                 <div className="w-100">
                   <input
                     type="text"
@@ -271,7 +279,7 @@ const Checkout = () => {
                     {formik.touched.pincode && formik.errors.pincode}
                   </div>
                 </div>
-                
+
                 <div className="flex-grow-1">
                   <input
                     type="text"
@@ -299,7 +307,6 @@ const Checkout = () => {
                     <option value="COD">Thanh toán khi nhận hàng</option>
                   </select>
                 </div>
-
                 <button type="submit" className="btn btn-primary">
                   Nhấn để tiếp tục
                 </button>
@@ -307,62 +314,63 @@ const Checkout = () => {
             </div>
           </div>
           <div className="col-5">
-          <div className="border-bottom py-4">
-              {cartState &&
-                cartState?.map((item, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="d-flex gap-10 mb-2 align-align-items-center"
-                    >
-                      <div className="w-75 d-flex gap-10">
-                        <div className="w-25 position-relative">
-                          <span
-                            style={{ top: "-10px", right: "2px" }}
-                            className="badge bg-secondary text-white rounded-circle p-2 position-absolute"
-                          >
-                            {item?.quantity}
-                          </span>
-                          <img
-                            src={item?.productId?.images[0]?.url}
-                            width={100}
-                            height={100}
-                            alt="product"
-                          />
+            <div id="paypal-button-container">
+              <div className="border-bottom py-4">
+                {cartState &&
+                  cartState?.map((item, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="d-flex gap-10 mb-2 align-align-items-center"
+                      >
+                        <div className="w-75 d-flex gap-10">
+                          <div className="w-25 position-relative">
+                            <span
+                              style={{ top: "-10px", right: "2px" }}
+                              className="badge bg-secondary text-white rounded-circle p-2 position-absolute"
+                            >
+                              {item?.quantity}
+                            </span>
+                            <img
+                              src={item?.productId?.images[0]?.url}
+                              width={100}
+                              height={100}
+                              alt="product"
+                            />
+                          </div>
+                          <div>
+                            <h5 className="total-price">
+                              {item?.productId?.title}
+                            </h5>
+                          </div>
                         </div>
-                        <div>
-                          <h5 className="total-price">
-                            {item?.productId?.title}
+                        <div className="flex-grow-1">
+                          <h5 className="total">
+                            {item?.price * item?.quantity} 000
                           </h5>
-                          
                         </div>
                       </div>
-                      <div className="flex-grow-1">
-                        <h5 className="total">
-                          {item?.price * item?.quantity} 000
-                        </h5>
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-            <div className="border-bottom py-4">
-              <div className="d-flex justify-content-between align-items-center">
-                <p className="total">Tổng phụ</p>
-                <p className="total-price">
-                  {totalAmount ? totalAmount : "0"} 000
-                </p>
+                    );
+                  })}
               </div>
-              <div className="d-flex justify-content-between align-items-center">
-                <p className="mb-0 total">Phí vận chuyển</p>
-                <p className="mb-0 total-price">100 000</p>
+              <div className="border-bottom py-4">
+                <div className="d-flex justify-content-between align-items-center">
+                  <p className="total">Tổng phụ</p>
+                  <p className="total-price">
+                    {totalAmount ? totalAmount : "0"} 000
+                  </p>
+                </div>
+                <div className="d-flex justify-content-between align-items-center">
+                  <p className="mb-0 total">Phí vận chuyển</p>
+                  <p className="mb-0 total-price">100 000</p>
+                </div>
               </div>
-            </div>
-            <div className="d-flex justify-content-between align-items-center border-bootom py-4">
-              <h4 className="total">Tổng</h4>
-              <h5 className="total-price">
-                {totalAmount ? totalAmount + 100 : "0"} 000
-              </h5>
+              <div className="d-flex justify-content-between align-items-center border-bootom py-4">
+                <h4 className="total">Tổng</h4>
+                <h5 className="total-price">
+                  {totalAmount ? totalAmount + 100 : "0"} 000
+                </h5>
+              </div>
             </div>
           </div>
         </div>

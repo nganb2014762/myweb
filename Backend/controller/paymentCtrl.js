@@ -29,23 +29,21 @@ const paypalCheckout = async (req, res) => {
       },
     ],
     redirect_urls: {
-      return_url: 'http://localhost:3000/success', 
-      cancel_url: 'http://localhost:3000/cancel',  
+      return_url: 'http://localhost:3000/success', // Thay đổi khi deploy
+      cancel_url: 'http://localhost:3000/cancel',
     },
   };
 
-  paypal.payment.create(create_payment_json, function (error, payment) {
+  paypal.payment.create(create_payment_json, (error, payment) => {
     if (error) {
-      console.error('Error creating payment:', error);
-      res.status(500).json({ error });
-    } else {
-      const approvalUrl = payment.links.find(link => link.rel === 'approval_url');
-      res.status(200).json({ success: true, approvalUrl: approvalUrl.href }); 
+      console.error('Error creating payment:', error.response);
+      return res.status(500).json({ success: false, error: error.response });
     }
+
+    // Trả về paymentId cho frontend để xử lý
+    res.status(200).json({ success: true, paymentId: payment.id });
   });
 };
-
-
 // Hàm xử lý xác nhận thanh toán
 const paypalPaymentVerification = async (req, res) => {
   const { paymentId, PayerID } = req.body;
@@ -82,8 +80,27 @@ const paypalPaymentVerification = async (req, res) => {
   });
 };
 
+const capturePayPalOrder = async (req, res) => {
+  const { paymentId, payerId } = req.body;
+
+  const execute_payment_json = {
+    payer_id: payerId,
+  };
+
+  paypal.payment.execute(paymentId, execute_payment_json, (error, payment) => {
+    if (error) {
+      console.error('Error capturing payment:', error.response);
+      return res.status(500).json({ success: false, error: error.response });
+    }
+
+    // Xử lý dữ liệu sau khi thanh toán thành công
+    res.status(200).json({ success: true, payment });
+  });
+};
+
 
 module.exports = {
   paypalCheckout,
   paypalPaymentVerification,
+  capturePayPalOrder
 };

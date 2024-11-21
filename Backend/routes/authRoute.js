@@ -35,7 +35,7 @@ const {
 } = require("../controller/userCtrl");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 
-const { paypalCheckout, paypalPaymentVerification } = require("../controller/paymentCtrl");
+const { paypalCheckout, paypalPaymentVerification, capturePayPalOrder } = require("../controller/paymentCtrl");
 
 const router = express.Router();
 
@@ -50,6 +50,7 @@ router.post("/cart", authMiddleware, userCart);
 
 router.post("/order/create-paypal-order", authMiddleware, paypalCheckout);
 router.post("/order/payment-verification", authMiddleware, paypalPaymentVerification);
+router.post("/order/capturePayPalOrder", authMiddleware, capturePayPalOrder);
 
 
 router.post("/cart/create-order", authMiddleware, createOrder);
