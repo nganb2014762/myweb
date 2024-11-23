@@ -22,7 +22,6 @@ import { addProdToCart, getUserCart } from "../features/user/userSlice";
 
 const SingleProduct = () => {
   const [color, setColor] = useState(null);
-
   const [quantity, setQuantity] = useState(1);
   const [alreadyAdded, setAlreadyAdded] = useState(false);
   const location = useLocation();
@@ -34,13 +33,18 @@ const SingleProduct = () => {
   const cartState = useSelector((state) => state?.auth?.cartProducts);
   const rat = productState?.totalrating;
   const wishlistState = useSelector((state) => state?.auth?.wishlist?.wishlist);
-  console.log(wishlistState);
+  const [loading, setLoading] = useState(true);  // Loading state
+
+  const [star, setStar] = useState(null);
+  const [comment, setComment] = useState(null);
+  const [isFilled, setIsFilled] = useState(false);
 
   useEffect(() => {
-    dispatch(getAProduct(getProductId));
+    setLoading(true); // Set loading to true before fetching data
+    dispatch(getAProduct(getProductId)).finally(() => setLoading(false)); // Fetch product and set loading to false when done
     dispatch(getUserCart());
     dispatch(getAllProducts());
-  }, []);
+  }, [getProductId]);  // Ensure it fetches when productId changes
 
   useEffect(() => {
     for (let index = 0; index < cartState?.length; index++) {
@@ -48,7 +52,7 @@ const SingleProduct = () => {
         setAlreadyAdded(true);
       }
     }
-  });
+  }, [cartState, getProductId]); // Recalculate "alreadyAdded" when cartState or productId changes
 
   const uploadCart = () => {
     dispatch(
@@ -60,51 +64,16 @@ const SingleProduct = () => {
       navigate("/cart")
     );
   };
-  
+
   const props = {
     width: 594,
     height: 600,
     zoomWidth: 600,
-
-    img: productState?.images[0].url
-      ? productState?.images[0].url
+    img: productState?.images[0]?.url
+      ? productState?.images[0]?.url
       : "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg",
   };
-
   const [orderedProduct, setorderedProduct] = useState(true);
-  const copyToClipboard = (text) => {
-    console.log("text", text);
-    var textField = document.createElement("textarea");
-    textField.innerText = text;
-    document.body.appendChild(textField);
-    textField.select();
-    document.execCommand("copy");
-    textField.remove();
-  };
-
-  const closeModal = () => {};
-  const [popularProduct, setPopularProduct] = useState([]);
-
-  useEffect(() => {
-    let data = [];
-    for (let index = 0; index < productsState.length; index++) {
-      const element = productsState[index];
-      if (element.tags === "popular") {
-        data.push(element);
-      } else {
-        setPopularProduct(data);
-      }
-    }
-  }, [productState]);
-
-  const [star, setStar] = useState(null);
-  const [comment, setComment] = useState(null);
-  const [like, setLike] = useState(false);
-  const [isFilled, setIsFilled] = useState(false);
-
-  const handleToggle = () => {
-    setIsFilled(!isFilled);
-  };
 
   const addRatingToProduct = () => {
     if (star === null) {
@@ -124,6 +93,10 @@ const SingleProduct = () => {
     return false;
   };
 
+  if (loading) {
+    return <div>Loading...</div>;  // Show loading while fetching data
+  }
+
   return (
     <>
       <Meta title={"Product Name"} />
@@ -139,7 +112,7 @@ const SingleProduct = () => {
             <div className="other-product-images d-flex flex-wrap gap-15">
               {productState?.images.map((item, index) => {
                 return (
-                  <div>
+                  <div key={index}>
                     <img src={item?.url} className="img-fluid" alt="" />
                   </div>
                 );
@@ -157,7 +130,7 @@ const SingleProduct = () => {
                   <ReactStars
                     count={5}
                     size={24}
-                    value={productState?.totalrating.toString()}
+                    value={productState?.totalrating ? parseFloat(productState.totalrating).toString() : 0} 
                     edit={false}
                     activeColor="#ffd700"
                   />
@@ -169,8 +142,7 @@ const SingleProduct = () => {
                   Viết bình luận
                 </a>
               </div>
-              <div className=" py-3">
-                
+              <div className="py-3">
                 <div className="d-flex gap-10 align-items-center my-2">
                   <h3 className="product-heading">Thương hiệu :</h3>
                   <p className="product-data">{productState?.brand}</p>
@@ -179,13 +151,10 @@ const SingleProduct = () => {
                   <h3 className="product-heading">Phân loại :</h3>
                   <p className="product-data">{productState?.category}</p>
                 </div>
-                
                 <div className="d-flex gap-10 align-items-center my-2">
                   <h3 className="product-heading">Trạng thái :</h3>
                   <p className="product-data">Còn hàng</p>
                 </div>
-                
-
                 <div className="d-flex align-items-center gap-15 flex-row mt-2 mb-3">
                   <h3 className="product-heading">Số lượng :</h3>
                   {alreadyAdded === false && (
@@ -219,7 +188,6 @@ const SingleProduct = () => {
                     >
                       {alreadyAdded ? "Đi đến giỏ hàng" : "Thêm vào giỏ hàng "}
                     </button>
-                    {/* <button className="button signup">Buy It Now</button> */}
                   </div>
                 </div>
                 <div className="d-flex align-items-center gap-15">
@@ -227,24 +195,16 @@ const SingleProduct = () => {
                     {isFilled ? (
                       <AiFillHeart
                         className="fs-5 me-2"
-                        onClick={handleToggle}
+                        onClick={() => setIsFilled(!isFilled)}
                       />
                     ) : (
                       <AiOutlineHeart
                         className="fs-5 me-2"
-                        onClick={handleToggle}
+                        onClick={() => setIsFilled(!isFilled)}
                       />
                     )}
                   </div>
                 </div>
-                <div className="d-flex gap-10 flex-column  my-3">
-                  <h3 className="product-heading">Giao hàng và đổi trả :</h3>
-                  <p className="product-data">
-                    Miễn ship với hóa đơn trên 1 triệu <br /> Giao hàng toàn quốc trong vòng 
-                    <b> 3-7 ngày!</b>
-                  </p>
-                </div>
-                
               </div>
             </div>
           </div>
@@ -353,18 +313,6 @@ const SingleProduct = () => {
           </div>
         </div>
       </Container>
-      <Container class1="popular-wrapper py-5 home-wrapper-2">
-        <div className="row">
-          <div className="col-12">
-            <h3 className="section-heading">Đang phổ biến</h3>
-          </div>
-        </div>
-        <div className="row">
-          <ProductCard data={popularProduct} />
-        </div>
-      </Container>
-
-      
     </>
   );
 };

@@ -11,35 +11,41 @@ const columns = [
   {
     title: "STT",
     dataIndex: "key",
+    width: 50, // Đặt chiều rộng cho cột này
   },
   {
     title: "Tên sản phẩm",
     dataIndex: "title",
     sorter: (a, b) => a.title.length - b.title.length,
+    width: 200, // Đặt chiều rộng cho cột này
   },
   {
     title: "Thương hiệu",
     dataIndex: "brand",
     sorter: (a, b) => a.brand.length - b.brand.length,
+    width: 150, // Đặt chiều rộng cho cột này
   },
   {
     title: "Loại",
     dataIndex: "category",
     sorter: (a, b) => a.category.length - b.category.length,
+    width: 150, // Đặt chiều rộng cho cột này
   },
-
   {
     title: "Số lượng",
     dataIndex: "quantity",
+    width: 100, // Đặt chiều rộng cho cột này
   },
   {
     title: "Giá",
     dataIndex: "price",
     sorter: (a, b) => a.price - b.price,
+    width: 100, // Đặt chiều rộng cho cột này
   },
   {
     title: "Thêm/Xóa",
     dataIndex: "action",
+    width: 150, // Đặt chiều rộng cho cột này
   },
 ];
 

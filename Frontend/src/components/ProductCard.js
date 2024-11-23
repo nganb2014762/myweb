@@ -3,10 +3,6 @@ import ReactStars from "react-rating-stars-component";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import wish from "../images/wish.svg";
-// import wishlist from "../images/wishlist.svg";
-// import watch from "../images/watch.jpg";
-// import watch2 from "../images/watch-1.avif";
-// import addcart from "../images/add-cart.svg";
 import view from "../images/view.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { addToWishlist } from "../features/products/productSlilce";
@@ -81,14 +77,7 @@ const ProductCard = (props) => {
                   width={"100%"}
                   onClick={() => navigate("/product/" + item?._id)}
                 />
-                <img
-                  src={item?.images[0]?.url}
-                  // className="img-fluid d"
-                  alt="product image"
-                  height={"250px"}
-                  width={"100%"}
-                  onClick={() => navigate("/product/" + item?._id)}
-                />
+                
               </div>
               <div className="product-details">
                 <h6 className="brand">{item?.brand}</h6>

@@ -20,10 +20,12 @@ const getProducts = async (data) => {
 
 const getSingleProduct = async (id) => {
   const response = await axios.get(`${base_url}product/${id}`);
+  console.log("Product API response:", response.data);
   if (response.data) {
-    return response.data;
+    return response.data; // Đảm bảo ratings nằm trong response này
   }
 };
+
 
 const addToWishlist = async (prodId) => {
   const response = await axios.put(

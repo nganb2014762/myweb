@@ -82,22 +82,31 @@ const Orders = () => {
                             colSpan="3"
                             style={{
                               fontWeight: "bold",
-                              borderBottom: "none", 
+                              borderBottom: "none",
                             }}
                           >
                             STT: {index + 1}
                           </th>
                         </tr>
                         <tr>
-    <td colSpan="3" style={{ fontWeight: "bold" }}>
-      Ngày đặt hàng: {new Date(item?.createdAt).toLocaleDateString("vi-VN")}
-    </td>
-  </tr>
+                          <td colSpan="3" style={{ fontWeight: "bold" }}>
+                            Ngày đặt hàng:{" "}
+                            {new Date(item?.createdAt).toLocaleDateString(
+                              "vi-VN"
+                            )}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colSpan="3" style={{ fontWeight: "bold" }}>
+                            Phương thức thanh toán: {item?.paymentInfo?.method}
+                            
+                          </td>
+                        </tr>
                         <tr>
                           <th
                             style={{
                               width: "70%",
-                              borderBottom: "none", 
+                              borderBottom: "none",
                             }}
                           >
                             Tên sản phẩm
@@ -105,7 +114,7 @@ const Orders = () => {
                           <th
                             style={{
                               width: "15%",
-                              borderBottom: "none", 
+                              borderBottom: "none",
                             }}
                           >
                             Số lượng
@@ -119,8 +128,6 @@ const Orders = () => {
                             Giá
                           </th>
                         </tr>
-                        
-                        
                       </thead>
 
                       <tbody>

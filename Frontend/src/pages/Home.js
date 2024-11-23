@@ -133,70 +133,56 @@ const Home = () => {
             <h3 className="section-heading">Bán chạy nhất</h3>
           </div>
           {productState &&
-            productState?.map((item, index) => {
-              if (item.tags === "Bán chạy nhất") {
-                return (
-                  <div key={index} className={"col-3"}>
-                    <div className="product-card position-relative">
-                      <div className="wishlist-icon position-absolute">
-                        <button className="border-0 bg-transparent">
-                          <img
-                            src={wish}
-                            alt="wishlist"
-                            onClick={(e) => {
-                              addToWish(item?._id);
-                            }}
-                          />
-                        </button>
-                      </div>
-                      <div className="product-image">
-                        {item?.images?.[0]?.url ? (
-                          <img
-                            src={item.images[0].url}
-                            alt="product image"
-                            height={"250px"}
-                            width={"260px"}
-                            onClick={() => navigate("/product/" + item?._id)}
-                          />
-                        ) : (
-                          <p>Hình ảnh không khả dụng</p> // Hoặc hình ảnh mặc định
-                        )}
-
-                        {item?.images?.[0]?.url ? (
-                          <img
-                            src={item.images[0].url}
-                            alt="product image"
-                            height={"250px"}
-                            width={"260px"}
-                            onClick={() => navigate("/product/" + item?._id)}
-                          />
-                        ) : (
-                          <p>Hình ảnh không khả dụng</p> // Hoặc hình ảnh mặc định
-                        )}
-                      </div>
-                      <div className="product-details">
-                        <h6 className="brand">{item?.brand}</h6>
-                        <h5 className="product-title">
-                          {item?.title?.substr(0, 70) + "..."}
-                        </h5>
-                        <ReactStars
-                          count={5}
-                          size={24}
-                          value={item?.totalrating}
-                          edit={false}
-                          activeColor="#ffd700"
+            productState
+              .filter((item) => item.tags === "Bán chạy nhất") // Filter by tag
+              .slice(0, 4) // Limit to 4 products
+              .map((item, index) => (
+                <div key={index} className={"col-3"}>
+                  <div className="product-card position-relative">
+                    <div className="wishlist-icon position-absolute">
+                      <button className="border-0 bg-transparent">
+                        <img
+                          src={wish}
+                          alt="wishlist"
+                          onClick={(e) => {
+                            addToWish(item?._id);
+                          }}
                         />
-
-                        <p className="price">Giá {item?.price} 000 VND</p>
-                      </div>
-                      <div className="action-bar position-absolute">
-                        <div className="d-flex flex-column gap-15"></div>
-                      </div>
+                      </button>
+                    </div>
+                    <div className="product-image">
+                      {item?.images?.[0]?.url ? (
+                        <img
+                          src={item.images[0].url}
+                          alt="product image"
+                          height={"250px"}
+                          width={"260px"}
+                          onClick={() => navigate("/product/" + item?._id)}
+                        />
+                      ) : (
+                        <p>Hình ảnh không khả dụng</p>
+                      )}
+                    </div>
+                    <div className="product-details">
+                      <h6 className="brand">{item?.brand}</h6>
+                      <h5 className="product-title">
+                        {item?.title?.substr(0, 70) + "..."}
+                      </h5>
+                      <ReactStars
+                        count={5}
+                        size={24}
+                        value={item?.totalrating}
+                        edit={false}
+                        activeColor="#ffd700"
+                      />
+                      <p className="price">Giá {item?.price} 000 VND</p>
+                    </div>
+                    <div className="action-bar position-absolute">
+                      <div className="d-flex flex-column gap-15"></div>
                     </div>
                   </div>
-                );
-              }
-            })}
+                </div>
+              ))}
         </div>
       </Container>
 
@@ -208,72 +194,59 @@ const Home = () => {
         </div>
         <div className="row">
           {productState &&
-            productState?.map((item, index) => {
-              if (item.tags === "Được tìm kiếm nhiều nhất") {
-                return (
-                  <div key={index} className={"col-3"}>
-                    <div className="product-card position-relative">
-                      <div className="wishlist-icon position-absolute">
-                        <button className="border-0 bg-transparent">
-                          <img
-                            src={wish}
-                            alt="wishlist"
-                            onClick={(e) => {
-                              addToWish(item?._id);
-                            }}
-                          />
-                        </button>
-                      </div>
-                      <div className="product-image">
-                        {item?.images?.[0]?.url ? (
-                          <img
-                            src={item.images[0].url}
-                            alt="product image"
-                            height={"250px"}
-                            width={"260px"}
-                            onClick={() => navigate("/product/" + item?._id)}
-                          />
-                        ) : (
-                          <p>Hình ảnh không khả dụng</p> // Hoặc hình ảnh mặc định
-                        )}
-
-                        {item?.images?.[0]?.url ? (
-                          <img
-                            src={item.images[0].url}
-                            alt="product image"
-                            height={"250px"}
-                            width={"260px"}
-                            onClick={() => navigate("/product/" + item?._id)}
-                          />
-                        ) : (
-                          <p>Hình ảnh không khả dụng</p> // Hoặc hình ảnh mặc định
-                        )}
-                      </div>
-                      <div className="product-details">
-                        <h6 className="brand">{item?.brand}</h6>
-                        <h5 className="product-title">
-                          {item?.title?.substr(0, 70) + "..."}
-                        </h5>
-                        <ReactStars
-                          count={5}
-                          size={24}
-                          value={item?.totalrating}
-                          edit={false}
-                          activeColor="#ffd700"
+            productState
+              .filter((item) => item.tags === "Được tìm kiếm nhiều nhất") // Filter by tag
+              .slice(0, 4) // Limit to 4 products
+              .map((item, index) => (
+                <div key={index} className={"col-3"}>
+                  <div className="product-card position-relative">
+                    <div className="wishlist-icon position-absolute">
+                      <button className="border-0 bg-transparent">
+                        <img
+                          src={wish}
+                          alt="wishlist"
+                          onClick={(e) => {
+                            addToWish(item?._id);
+                          }}
                         />
-
-                        <p className="price">Giá {item?.price} 000 VND</p>
-                      </div>
-                      <div className="action-bar position-absolute">
-                        <div className="d-flex flex-column gap-15"></div>
-                      </div>
+                      </button>
+                    </div>
+                    <div className="product-image">
+                      {item?.images?.[0]?.url ? (
+                        <img
+                          src={item.images[0].url}
+                          alt="product image"
+                          height={"250px"}
+                          width={"260px"}
+                          onClick={() => navigate("/product/" + item?._id)}
+                        />
+                      ) : (
+                        <p>Hình ảnh không khả dụng</p>
+                      )}
+                    </div>
+                    <div className="product-details">
+                      <h6 className="brand">{item?.brand}</h6>
+                      <h5 className="product-title">
+                        {item?.title?.substr(0, 70) + "..."}
+                      </h5>
+                      <ReactStars
+                        count={5}
+                        size={24}
+                        value={item?.totalrating}
+                        edit={false}
+                        activeColor="#ffd700"
+                      />
+                      <p className="price">Giá {item?.price} 000 VND</p>
+                    </div>
+                    <div className="action-bar position-absolute">
+                      <div className="d-flex flex-column gap-15"></div>
                     </div>
                   </div>
-                );
-              }
-            })}
+                </div>
+              ))}
         </div>
       </Container>
+
       <Container class1="popular-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
@@ -282,72 +255,59 @@ const Home = () => {
         </div>
         <div className="row">
           {productState &&
-            productState?.map((item, index) => {
-              if (item.tags === "Phổ biến") {
-                return (
-                  <div key={index} className={"col-3"}>
-                    <div className="product-card position-relative">
-                      <div className="wishlist-icon position-absolute">
-                        <button className="border-0 bg-transparent">
-                          <img
-                            src={wish}
-                            alt="wishlist"
-                            onClick={(e) => {
-                              addToWish(item?._id);
-                            }}
-                          />
-                        </button>
-                      </div>
-                      <div className="product-image">
-                        {item?.images?.[0]?.url ? (
-                          <img
-                            src={item.images[0].url}
-                            alt="product image"
-                            height={"250px"}
-                            width={"260px"}
-                            onClick={() => navigate("/product/" + item?._id)}
-                          />
-                        ) : (
-                          <p>Hình ảnh không khả dụng</p> // Hoặc hình ảnh mặc định
-                        )}
-
-                        {item?.images?.[0]?.url ? (
-                          <img
-                            src={item.images[0].url}
-                            alt="product image"
-                            height={"250px"}
-                            width={"260px"}
-                            onClick={() => navigate("/product/" + item?._id)}
-                          />
-                        ) : (
-                          <p>Hình ảnh không khả dụng</p> // Hoặc hình ảnh mặc định
-                        )}
-                      </div>
-                      <div className="product-details">
-                        <h6 className="brand">{item?.brand}</h6>
-                        <h5 className="product-title">
-                          {item?.title?.substr(0, 70) + "..."}
-                        </h5>
-                        <ReactStars
-                          count={5}
-                          size={24}
-                          value={item?.totalrating}
-                          edit={false}
-                          activeColor="#ffd700"
+            productState
+              .filter((item) => item.tags === "Phổ biến") // Filter by tag
+              .slice(0, 4) // Limit to 4 products
+              .map((item, index) => (
+                <div key={index} className={"col-3"}>
+                  <div className="product-card position-relative">
+                    <div className="wishlist-icon position-absolute">
+                      <button className="border-0 bg-transparent">
+                        <img
+                          src={wish}
+                          alt="wishlist"
+                          onClick={(e) => {
+                            addToWish(item?._id);
+                          }}
                         />
-
-                        <p className="price">Giá {item?.price} 000 VND</p>
-                      </div>
-                      <div className="action-bar position-absolute">
-                        <div className="d-flex flex-column gap-15"></div>
-                      </div>
+                      </button>
+                    </div>
+                    <div className="product-image">
+                      {item?.images?.[0]?.url ? (
+                        <img
+                          src={item.images[0].url}
+                          alt="product image"
+                          height={"250px"}
+                          width={"260px"}
+                          onClick={() => navigate("/product/" + item?._id)}
+                        />
+                      ) : (
+                        <p>Hình ảnh không khả dụng</p>
+                      )}
+                    </div>
+                    <div className="product-details">
+                      <h6 className="brand">{item?.brand}</h6>
+                      <h5 className="product-title">
+                        {item?.title?.substr(0, 70) + "..."}
+                      </h5>
+                      <ReactStars
+                        count={5}
+                        size={24}
+                        value={item?.totalrating}
+                        edit={false}
+                        activeColor="#ffd700"
+                      />
+                      <p className="price">Giá {item?.price} 000 VND</p>
+                    </div>
+                    <div className="action-bar position-absolute">
+                      <div className="d-flex flex-column gap-15"></div>
                     </div>
                   </div>
-                );
-              }
-            })}
+                </div>
+              ))}
         </div>
       </Container>
+
       <Container class1="marque-wrapper home-wrapper-2 py-5">
         <div className="row">
           <div className="col-12">

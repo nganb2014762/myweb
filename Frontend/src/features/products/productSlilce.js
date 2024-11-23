@@ -57,7 +57,16 @@ export const addRating = createAsyncThunk(
 export const productSlice = createSlice({
   name: "product",
   initialState: productState,
-  reducers: {},
+  reducers: {
+    resetProductState: (state) => {
+      state.singleproduct = null; // Reset thông tin sản phẩm
+      state.rating = null;        // Reset thông tin đánh giá
+      state.isError = false;
+      state.isSuccess = false;
+      state.message = "";
+    },
+  },
+  
   extraReducers: (builder) => {
     builder
       .addCase(getAllProducts.pending, (state) => {
@@ -73,23 +82,7 @@ export const productSlice = createSlice({
         state.isError = true;
         state.isLoading = false;
         state.isSuccess = false;
-        state.message = action.error;
-      })
-      .addCase(addToWishlist.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(addToWishlist.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.isSuccess = true;
-        state.addToWishlist = action.payload;
-        state.message = "Product Added to Wishlist!";
-      })
-      .addCase(addToWishlist.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.isSuccess = false;
-        state.message = action.error;
+        state.message = action.error.message;
       })
       .addCase(getAProduct.pending, (state) => {
         state.isLoading = true;
@@ -105,10 +98,7 @@ export const productSlice = createSlice({
         state.isError = true;
         state.isLoading = false;
         state.isSuccess = false;
-        state.message = action.error;
-      })
-      .addCase(addRating.pending, (state) => {
-        state.isLoading = true;
+        state.message = action.error.message;
       })
       .addCase(addRating.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -116,17 +106,12 @@ export const productSlice = createSlice({
         state.isSuccess = true;
         state.rating = action.payload;
         state.message = "Rating Added Successfully";
-        if (state.isSuccess) {
-          toast.success("Rating Added Successfully");
-        }
-      })
-      .addCase(addRating.rejected, (state, action) => {
-        state.isError = true;
-        state.isLoading = false;
-        state.isSuccess = false;
-        state.message = action.error;
+        toast.success("Rating Added Successfully");
       });
   },
 });
 
+export const { resetProductState } = productSlice.actions;
 export default productSlice.reducer;
+
+

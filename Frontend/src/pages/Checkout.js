@@ -362,13 +362,13 @@ const Checkout = () => {
                 </div>
                 <div className="d-flex justify-content-between align-items-center">
                   <p className="mb-0 total">Phí vận chuyển</p>
-                  <p className="mb-0 total-price">100 000</p>
+                  <p className="mb-0 total-price">30 000</p>
                 </div>
               </div>
               <div className="d-flex justify-content-between align-items-center border-bootom py-4">
                 <h4 className="total">Tổng</h4>
                 <h5 className="total-price">
-                  {totalAmount ? totalAmount + 100 : "0"} 000
+                  {totalAmount ? totalAmount + 30 : "0"} 000
                 </h5>
               </div>
             </div>
