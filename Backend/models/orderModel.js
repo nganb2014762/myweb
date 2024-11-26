@@ -1,4 +1,4 @@
-const mongoose = require("mongoose"); // Erase if already required
+const mongoose = require("mongoose");
 
 // Khai báo Schema của mô hình Mongo
 var orderSchema = new mongoose.Schema(
@@ -9,7 +9,6 @@ var orderSchema = new mongoose.Schema(
       required: true,
     },
     shippingInfo: {
-      
       name: {
         type: String,
         required: true,
@@ -22,14 +21,13 @@ var orderSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
-      
       pincode: {
         type: Number,
         required: true,
       },
     },
     paymentInfo: {
-      method: { // Thêm phương thức thanh toán
+      method: {
         type: String,
         enum: ["PayPal", "COD"],
         required: true,
@@ -48,11 +46,11 @@ var orderSchema = new mongoose.Schema(
       },
       paymentStatus: {
         type: String,
-        default: "Pending", 
+        default: "Pending",
       },
       currency: {
         type: String,
-        default: "USD",
+        default: "VND",
       },
     },
     orderItems: [
@@ -62,7 +60,6 @@ var orderSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
-        
         quantity: {
           type: Number,
           required: true,
@@ -97,6 +94,13 @@ var orderSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+orderSchema.pre("save", function (next) {
+  if (this.paymentInfo.method === "PayPal") {
+    this.paymentInfo.currency = "USD"; 
+  }
+  next(); 
+});
 
 // Xuất mô hình
 module.exports = mongoose.model("Order", orderSchema);

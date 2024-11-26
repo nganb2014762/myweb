@@ -15,7 +15,6 @@ import {
 } from "../features/user/userSlice";
 
 let shippingSchema = yup.object({
-
   name: yup.string().required("Vui lòng nhập dữ liệu"),
   address: yup.string().required("Vui lòng nhập dữ liệu"),
   city: yup.string().required("Vui lòng nhập dữ liệu"),
@@ -89,7 +88,6 @@ const Checkout = () => {
 
   const formik = useFormik({
     initialValues: {
-
       name: "",
       address: "",
       city: "",
@@ -122,25 +120,31 @@ const Checkout = () => {
   }, [cartState]);
 
   const checkOutHandler = async () => {
+    // Nếu phương thức thanh toán là PayPal, nhân tổng tiền với 0.000039 và làm tròn đến 2 chữ số thập phân
+    let finalAmount = totalAmount + 30000;
+    if (paymentMethod === "PayPal") {
+      finalAmount = (finalAmount * 0.000039).toFixed(2); // Làm tròn đến 2 chữ số thập phân
+    }
+  
     if (!isPayPalReady) {
       console.error("PayPal SDK chưa được tải");
       return;
     }
-
+  
     try {
       const result = await axios.post(
         "http://localhost:5000/api/user/order/create-paypal-order",
-        { amount: (totalAmount + 30000).toString() },
+        { amount: finalAmount }, // Gửi số tiền đã được làm tròn
         config
       );
-
+  
       if (!result.data.success) {
         alert("Something went wrong");
         return;
       }
-
+  
       const { orderId } = result.data;
-
+  
       if (document.getElementById("paypal-button-container")) {
         window.paypal
           .Buttons({
@@ -149,7 +153,7 @@ const Checkout = () => {
                 purchase_units: [
                   {
                     amount: {
-                      value: (totalAmount + 30000).toString(),
+                      value: finalAmount, // Gửi số tiền đã làm tròn
                     },
                   },
                 ],
@@ -157,15 +161,15 @@ const Checkout = () => {
             },
             onApprove: async (data, actions) => {
               const details = await actions.order.capture();
-
+  
               dispatch(
                 createAnOrder({
-                  totalPrice: totalAmount + 30000,
-                  totalPriceAfterDiscount: totalAmount + 30000,
+                  totalPrice: finalAmount, // Sử dụng số tiền đã làm tròn
+                  totalPriceAfterDiscount: finalAmount,
                   orderItems: cartProductState,
                   paymentInfo: {
-                    method: "PayPal", // Thêm trường này
-                    ...details, // Các thông tin khác từ PayPal
+                    method: "PayPal",
+                    ...details,
                   },
                   shippingInfo: JSON.parse(localStorage.getItem("address")),
                 })
@@ -188,6 +192,7 @@ const Checkout = () => {
       alert("Something went wrong");
     }
   };
+  
 
   const handleCODOrder = () => {
     dispatch(
@@ -201,13 +206,11 @@ const Checkout = () => {
         shippingInfo: JSON.parse(localStorage.getItem("address")),
       })
     );
-    
-  
+
     dispatch(deleteUserCart(config2));
     localStorage.removeItem("address");
     dispatch(resetState());
   };
-  
 
   return (
     <>
@@ -220,7 +223,6 @@ const Checkout = () => {
                 onSubmit={formik.handleSubmit}
                 className="d-flex gap-15 flex-wrap justify-content-between"
               >
-                
                 <div className="flex-grow-1">
                   <input
                     type="text"
@@ -332,7 +334,7 @@ const Checkout = () => {
                         </div>
                         <div className="flex-grow-1">
                           <h5 className="total">
-                            {item?.price * item?.quantity} 
+                            {item?.price * item?.quantity}
                           </h5>
                         </div>
                       </div>
@@ -343,7 +345,7 @@ const Checkout = () => {
                 <div className="d-flex justify-content-between align-items-center">
                   <p className="total">Tổng phụ</p>
                   <p className="total-price">
-                    {totalAmount ? totalAmount : "0"} 
+                    {totalAmount ? totalAmount : "0"}
                   </p>
                 </div>
                 <div className="d-flex justify-content-between align-items-center">
@@ -354,7 +356,9 @@ const Checkout = () => {
               <div className="d-flex justify-content-between align-items-center border-bootom py-4">
                 <h4 className="total">Tổng</h4>
                 <h5 className="total-price">
-                  {totalAmount ? totalAmount + 30000 : "0"} 
+                  {paymentMethod === "PayPal"
+                    ? (totalAmount + 30000) * 0.000039
+                    : totalAmount + 30000}
                 </h5>
               </div>
             </div>

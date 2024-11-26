@@ -504,21 +504,10 @@ const updateOrder = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
-
 const getMonthWiseOrderIncome = asyncHandler(async (req, res) => {
   let monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
   ];
   let d = new Date();
   let endDate = "";
@@ -527,6 +516,7 @@ const getMonthWiseOrderIncome = asyncHandler(async (req, res) => {
     d.setMonth(d.getMonth() - 1);
     endDate = monthNames[d.getMonth()] + " " + d.getFullYear();
   }
+
   const data = await Order.aggregate([
     {
       $match: {
@@ -534,6 +524,13 @@ const getMonthWiseOrderIncome = asyncHandler(async (req, res) => {
           $lte: new Date(),
           $gte: new Date(endDate),
         },
+      },
+    },
+    {
+      $project: {
+        month: 1,
+        totalPriceAfterDiscount: 1,
+        paymentInfo: 1, // Lấy thông tin phương thức thanh toán
       },
     },
     {
@@ -541,28 +538,34 @@ const getMonthWiseOrderIncome = asyncHandler(async (req, res) => {
         _id: {
           month: "$month",
         },
-        amount: { $sum: "$totalPriceAfterDiscount" },
+        amount: {
+          $sum: {
+            $cond: {
+              if: { $eq: ["$paymentInfo.method", "PayPal"] }, // Kiểm tra phương thức thanh toán
+              then: { $divide: ["$totalPriceAfterDiscount", 0.000039] }, // Nếu là PayPal, chia giá trị
+              else: "$totalPriceAfterDiscount", // Nếu không phải PayPal, giữ nguyên giá trị
+            },
+          },
+        },
         count: { $sum: 1 },
       },
     },
+    {
+      $project: {
+        amount: { $round: ["$amount", 2] },  // Làm tròn giá trị `amount` đến 2 chữ số thập phân
+        count: 1,
+      },
+    },
   ]);
+
   res.json(data);
 });
 
+
 const getYearlyTotalOrder = asyncHandler(async (req, res) => {
   let monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
   ];
   let d = new Date();
   let endDate = "";
@@ -571,6 +574,7 @@ const getYearlyTotalOrder = asyncHandler(async (req, res) => {
     d.setMonth(d.getMonth() - 1);
     endDate = monthNames[d.getMonth()] + " " + d.getFullYear();
   }
+
   const data = await Order.aggregate([
     {
       $match: {
@@ -581,17 +585,30 @@ const getYearlyTotalOrder = asyncHandler(async (req, res) => {
       },
     },
     {
+      $project: {
+        totalPriceAfterDiscount: 1,
+        paymentInfo: 1, // Lấy thông tin phương thức thanh toán
+      },
+    },
+    {
       $group: {
         _id: null,
-        amount: { $sum: 1 },
-        amount: { $sum: "$totalPriceAfterDiscount" },
+        amount: {
+          $sum: {
+            $cond: {
+              if: { $eq: ["$paymentInfo.method", "PayPal"] }, // Kiểm tra phương thức thanh toán
+              then: { $divide: ["$totalPriceAfterDiscount", 0.000039] }, // Chia giá trị nếu là PayPal
+              else: "$totalPriceAfterDiscount", // Giữ nguyên nếu không phải PayPal
+            },
+          },
+        },
         count: { $sum: 1 },
       },
     },
   ]);
+
   res.json(data);
 });
-
 
 
 module.exports = {

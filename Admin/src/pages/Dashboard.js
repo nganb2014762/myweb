@@ -69,11 +69,22 @@ const Dashboard = () => {
 
   useEffect(() => {
     let monthNames = [
-      "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12",
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "T6",
+      "T7",
+      "T8",
+      "T9",
+      "T10",
+      "T11",
+      "T12",
     ];
     let data = [];
     let monthlyOrderCount = [];
-  
+
     // Dữ liệu doanh thu theo tháng
     for (let index = 0; index < monthlyDataState?.length; index++) {
       const element = monthlyDataState[index];
@@ -86,34 +97,34 @@ const Dashboard = () => {
         income: element?.count,
       });
     }
-  
+
     setDataMonthly(data);
     setDataMonthlySales(monthlyOrderCount);
-  
+
     // Dữ liệu đơn hàng, bao gồm thông tin về phương thức thanh toán PayPal
     const data1 = [];
-  
+
     for (let i = 0; i < orderState?.length; i++) {
       const order = orderState[i];
-  
+
       // Kiểm tra nếu phương thức thanh toán là PayPal
-      const adjustedPrice = order.paymentInfo === "paypal"
-        ? order.totalPriceAfterDiscount / 0.000039
-        : order.totalPriceAfterDiscount;
-  
+      const adjustedPrice =
+        order.paymentInfo.method === "PayPal"
+          ? (order.totalPriceAfterDiscount / 0.000039).toFixed(2) // Làm tròn đến 2 chữ số thập phân
+          : order.totalPriceAfterDiscount.toFixed(2); // Làm tròn đến 2 chữ số thập phân nếu không phải PayPal
+
       data1.push({
         key: i + 1,
         name: order.user.name,
         product: order.orderItems?.length,
-        price: order.totalPrice,
-        dprice: adjustedPrice,  // Hiển thị giá đã điều chỉnh nếu thanh toán bằng PayPal
+        price: order.totalPrice.toFixed(2), // Làm tròn giá gốc đến 2 chữ số thập phân
+        dprice: adjustedPrice, // Hiển thị giá đã điều chỉnh nếu thanh toán bằng PayPal
         staus: order.orderStatus,
       });
     }
-  
+
     setOrderData(data1);
   }, [monthlyDataState, yearlyDataState, orderState]);
-  
 
   const config = {
     data: dataMonthly,
@@ -183,10 +194,11 @@ const Dashboard = () => {
           <div>
             <p className="desc">Tổng doanh thu</p>
             <h4 className="mb-0 sub-title">
-              {yearlyDataState && yearlyDataState[0]?.amount}
+              {yearlyDataState && yearlyDataState[0]?.amount
+                ? yearlyDataState[0]?.amount.toFixed(2) // Làm tròn đến 2 chữ số thập phân
+                : 0}
             </h4>
           </div>
-          
         </div>
         <div className="d-flex p-3 justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
           <div>
@@ -195,7 +207,6 @@ const Dashboard = () => {
               {yearlyDataState && yearlyDataState[0]?.count}
             </h4>
           </div>
-          
         </div>
       </div>
       <div className="d-flex justify-content-between align-items gap-3">
@@ -206,7 +217,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="mt-4 flex-grow-1 ">
-          <h3 className="mb-5 title">Biểu đồ đơn hàng  </h3>
+          <h3 className="mb-5 title">Biểu đồ đơn hàng </h3>
           <div>
             <Column {...config2} />
           </div>
