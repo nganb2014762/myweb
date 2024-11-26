@@ -15,7 +15,8 @@ import Brandlist from "./pages/Brandlist";
 import Productlist from "./pages/Productlist";
 import Addblog from "./pages/Addblog";
 import Addblogcat from "./pages/Addblogcat";
-
+import AddStock from "./pages/Addstock";
+import StockHistory from "./pages/StockHistory";
 import Addcat from "./pages/Addcat";
 import Addbrand from "./pages/Addbrand";
 import Addproduct from "./pages/Addproduct";
@@ -52,6 +53,11 @@ function App() {
           <Route path="enquiries/:id" element={<ViewEnq />} />
           <Route path="blog-list" element={<Bloglist />} />
           <Route path="blog" element={<Addblog />} />
+
+          <Route path="add-stock" element={<AddStock />} />
+          <Route path="stock-history" element={<StockHistory />} />
+
+
           <Route path="blog/:id" element={<Addblog />} />
           <Route path="coupon-list" element={<Couponlist />} />
           <Route path="coupon" element={<AddCoupon />} />

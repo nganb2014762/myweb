@@ -6,6 +6,8 @@ import {
   AiOutlineUser,
   AiOutlineBgColors,
   AiOutlineLogout,
+  AiOutlineMenu,
+  AiOutlineShopping, AiOutlinePlus
 } from "react-icons/ai";
 import { RiCouponLine } from "react-icons/ri";
 import { ToastContainer } from "react-toastify";
@@ -70,13 +72,27 @@ const MainLayout = () => {
               children: [
                 {
                   key: "product",
-                  icon: <AiOutlineShoppingCart className="fs-4" />,
+                  icon: <AiOutlinePlus className="fs-4" />,
                   label: "Thêm sản phẩm",
                 },
+
+                
                 {
                   key: "list-product",
-                  icon: <AiOutlineShoppingCart className="fs-4" />,
+                  icon: <AiOutlinePlus className="fs-4" />,
                   label: "Danh sách sản phẩm",
+                },
+
+                {
+                  key: "add-stock",
+                  icon: <AiOutlineMenu className="fs-4" />,
+                  label: "Thêm phiếu nhập kho",
+                },
+
+                {
+                  key: "stock-history",
+                  icon: <AiOutlineMenu className="fs-4" />,
+                  label: "Xem lịch sử nhập kho",
                 },
                 {
                   key: "brand",
@@ -103,7 +119,7 @@ const MainLayout = () => {
             },
             {
               key: "orders",
-              icon: <FaClipboardList className="fs-4" />,
+              icon: <AiOutlineShopping className="fs-4" />,
               label: "Đơn hàng",
             },
             {

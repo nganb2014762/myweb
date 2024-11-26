@@ -19,6 +19,7 @@ const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const cors = require("cors");
 const orderRoute = require("./routes/orderRoute");
+const stockRoutes = require("./routes/stockRoute");
 
 dbConnect();
 
@@ -34,6 +35,8 @@ app.use("/api/category", categoryRouter);
 app.use("/api/blogcategory", blogcategoryRouter);
 app.use("/api/brand", brandRouter);
 app.use("/api/coupon", couponRouter);
+
+app.use("/api/stock", stockRoutes);
 
 app.use("/api/enquiry", enqRouter);
 app.use("/api/upload", uploadRouter);
