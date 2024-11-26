@@ -29,22 +29,21 @@ const SingleProduct = () => {
   const getProductId = location.pathname.split("/")[2];
   const dispatch = useDispatch();
   const productState = useSelector((state) => state?.product?.singleproduct);
-  const productsState = useSelector((state) => state?.product?.product);
   const cartState = useSelector((state) => state?.auth?.cartProducts);
   const rat = productState?.totalrating;
   const wishlistState = useSelector((state) => state?.auth?.wishlist?.wishlist);
-  const [loading, setLoading] = useState(true);  // Loading state
+  const [loading, setLoading] = useState(true); 
 
   const [star, setStar] = useState(null);
   const [comment, setComment] = useState(null);
   const [isFilled, setIsFilled] = useState(false);
 
   useEffect(() => {
-    setLoading(true); // Set loading to true before fetching data
-    dispatch(getAProduct(getProductId)).finally(() => setLoading(false)); // Fetch product and set loading to false when done
+    setLoading(true); 
+    dispatch(getAProduct(getProductId)).finally(() => setLoading(false)); 
     dispatch(getUserCart());
     dispatch(getAllProducts());
-  }, [getProductId]);  // Ensure it fetches when productId changes
+  }, [getProductId]); 
 
   useEffect(() => {
     for (let index = 0; index < cartState?.length; index++) {
@@ -52,17 +51,22 @@ const SingleProduct = () => {
         setAlreadyAdded(true);
       }
     }
-  }, [cartState, getProductId]); // Recalculate "alreadyAdded" when cartState or productId changes
-
+  }, [cartState, getProductId]);
   const uploadCart = () => {
+    if (quantity > productState?.quantity) {
+      toast.error("Số lượng sản phẩm trong kho không đủ");
+      return;
+    }
+
     dispatch(
       addProdToCart({
         productId: productState?._id,
         quantity,
         price: productState?.price,
-      }),
-      navigate("/cart")
+      })
     );
+
+    navigate("/cart");
   };
 
   const props = {
@@ -94,7 +98,7 @@ const SingleProduct = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;  // Show loading while fetching data
+    return <div>Loading...</div>; 
   }
 
   return (
@@ -130,7 +134,11 @@ const SingleProduct = () => {
                   <ReactStars
                     count={5}
                     size={24}
-                    value={productState?.totalrating ? parseFloat(productState.totalrating).toString() : 0} 
+                    value={
+                      productState?.totalrating
+                        ? parseFloat(productState.totalrating).toString()
+                        : 0
+                    }
                     edit={false}
                     activeColor="#ffd700"
                   />
@@ -153,8 +161,13 @@ const SingleProduct = () => {
                 </div>
                 <div className="d-flex gap-10 align-items-center my-2">
                   <h3 className="product-heading">Trạng thái :</h3>
-                  <p className="product-data">Còn hàng</p>
+                  <p className="product-data">
+                    {productState?.quantity > 0
+                      ? `Còn ${productState?.quantity} sản phẩm`
+                      : "Hết hàng"}
+                  </p>
                 </div>
+
                 <div className="d-flex align-items-center gap-15 flex-row mt-2 mb-3">
                   <h3 className="product-heading">Số lượng :</h3>
                   {alreadyAdded === false && (
@@ -163,11 +176,20 @@ const SingleProduct = () => {
                         type="number"
                         name=""
                         min={1}
-                        max={10}
+                        max={productState?.quantity || 1} // Đặt max là số lượng trong kho
                         className="form-control"
                         style={{ width: "70px" }}
                         id=""
-                        onChange={(e) => setQuantity(e.target.value)}
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value, 10);
+
+                          // Kiểm tra số lượng lớn hơn số lượng tồn kho
+                          if (value > productState?.quantity) {
+                            toast.error("Số lượng sản phẩm trong kho không đủ");
+                          } else {
+                            setQuantity(value); // Nếu số lượng hợp lệ, cập nhật state quantity
+                          }
+                        }}
                         value={quantity}
                       />
                     </div>

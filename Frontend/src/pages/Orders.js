@@ -2,7 +2,11 @@ import React, { useEffect } from "react";
 import Container from "../components/Container";
 import BreadCrumb from "../components/BreadCrumb";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrders, cancelOrder } from "../features/user/userSlice";
+import {
+  getOrders,
+  cancelOrder,
+  successOrder,
+} from "../features/user/userSlice";
 
 const Orders = () => {
   const dispatch = useDispatch();
@@ -57,6 +61,21 @@ const Orders = () => {
       });
   };
 
+  const handleSuccessOrder = (orderId) => {
+    dispatch(successOrder({ orderId, config: config2 }))
+      .then((response) => {
+        if (response.type.endsWith("/fulfilled")) {
+          alert("Xác nhận đã nhận hàng thành công!");
+        } else {
+          alert(response.payload.message || "Xác nhận nhận hàng thất bại!");
+        }
+        dispatch(getOrders(config2)); 
+      })
+      .catch((error) => {
+        console.error("Xác nhận nhận hàng thất bại:", error);
+      });
+  };
+
   return (
     <>
       <BreadCrumb title="Đơn hàng của tôi" />
@@ -91,15 +110,12 @@ const Orders = () => {
                         <tr>
                           <td colSpan="3" style={{ fontWeight: "bold" }}>
                             Ngày đặt hàng:{" "}
-                            {new Date(item?.createdAt).toLocaleDateString(
-                              "vi-VN"
-                            )}
+                            {new Date(item.createdAt).toLocaleString("vi-VN")}
                           </td>
                         </tr>
                         <tr>
                           <td colSpan="3" style={{ fontWeight: "bold" }}>
                             Phương thức thanh toán: {item?.paymentInfo?.method}
-                            
                           </td>
                         </tr>
                         <tr>
@@ -194,6 +210,19 @@ const Orders = () => {
                             ) : (
                               <button className="btn btn-secondary" disabled>
                                 Không thể hủy
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td colSpan="2">
+                            {item?.orderStatus === "Shipped" && (
+                              <button
+                                className="btn btn-success"
+                                onClick={() => handleSuccessOrder(item._id)}
+                              >
+                                Đã nhận được hàng
                               </button>
                             )}
                           </td>

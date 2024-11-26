@@ -1,7 +1,7 @@
 const Order = require("../models/orderModel");
 const asyncHandler = require("express-async-handler");
+const Product = require('../models/productModel'); 
 
-// Tạo đơn hàng mới
 const createOrder = asyncHandler(async (req, res) => {
     const {
       shippingInfo,
@@ -31,7 +31,6 @@ const createOrder = asyncHandler(async (req, res) => {
     res.status(201).json(createdOrder);
   });
 
-// Cập nhật trạng thái đơn hàng (admin)
 const updateOrderStatus = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
@@ -49,9 +48,8 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   }
 });
 
-// Hủy đơn hàng
 const cancelOrder = asyncHandler(async (req, res) => {
-  const order = await Order.findById(req.params.orderId); // Sử dụng req.params.orderId
+  const order = await Order.findById(req.params.orderId); 
 
   if (order) {
     if (order.orderStatus === "Delivered") {
@@ -66,9 +64,48 @@ const cancelOrder = asyncHandler(async (req, res) => {
   }
 });
 
+const successOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const order = await Order.findById(orderId).populate('orderItems.product');
+
+    if (!order) {
+      return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
+    }
+
+    if (order.orderStatus === 'Delivered') {
+      return res.status(400).json({ message: 'Đơn hàng đã hoàn tất' });
+    }
+
+    for (const item of order.orderItems) {
+      const product = await Product.findById(item.product._id);
+      if (product) {
+        if (product.quantity < item.quantity) {
+          return res.status(400).json({
+            message: `Sản phẩm ${product.title} không đủ hàng trong kho. Chỉ còn ${product.quantity}`,
+          });
+        }
+
+        product.quantity -= item.quantity;
+        product.sold += item.quantity;
+        await product.save();
+      }
+    }
+
+    order.orderStatus = 'Delivered';
+    await order.save();
+
+    res.status(200).json({ message: 'Cập nhật đơn hàng thành công', order });
+  } catch (error) {
+    console.error('Lỗi khi xác nhận đơn hàng:', error);
+    res.status(500).json({ message: 'Lỗi hệ thống', error });
+  }
+};
+
 
 module.exports = {
   createOrder,
+  successOrder,
 
   updateOrderStatus,
   cancelOrder,
