@@ -69,11 +69,18 @@ const Orders = () => {
         } else {
           alert(response.payload.message || "Xác nhận nhận hàng thất bại!");
         }
-        dispatch(getOrders(config2)); 
+        dispatch(getOrders(config2));
       })
       .catch((error) => {
         console.error("Xác nhận nhận hàng thất bại:", error);
       });
+  };
+
+  const formatVND = (value) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(value);
   };
 
   return (
@@ -158,7 +165,11 @@ const Orders = () => {
                               {i?.product?.title}
                             </td>
                             <td>{i?.quantity}</td>
-                            <td>{i?.price} 000</td>
+                            <td>
+                              {item?.paymentInfo?.method === "PayPal"
+                                ? i?.price
+                                : formatVND(i?.price)}
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -175,20 +186,25 @@ const Orders = () => {
                       <tbody>
                         <tr>
                           <td style={{ fontWeight: "bold", width: "30%" }}>
-                            Tổng giá:
+                            Tạm tính:
                           </td>
                           <td style={{ width: "70%" }}>
-                            {item?.totalPrice} 000
+                            {item?.paymentInfo?.method === "PayPal"
+                              ? item?.totalPriceAfterDiscount
+                              : formatVND(item?.totalPriceAfterDiscount)}
                           </td>
                         </tr>
                         <tr>
                           <td style={{ fontWeight: "bold", width: "30%" }}>
-                            Giá sau giảm:
+                            Tổng giá:
                           </td>
                           <td style={{ width: "70%" }}>
-                            {item?.totalPriceAfterDiscount} 000
+                            {item?.paymentInfo?.method === "PayPal"
+                              ? item?.totalPrice
+                              : formatVND(item?.totalPrice)}
                           </td>
                         </tr>
+
                         <tr>
                           <td style={{ fontWeight: "bold", width: "30%" }}>
                             Trạng thái:

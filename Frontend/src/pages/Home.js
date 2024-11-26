@@ -175,7 +175,12 @@ const Home = () => {
                         edit={false}
                         activeColor="#ffd700"
                       />
-                      <p className="price">Giá {item?.price} 000 VND</p>
+                      <p className="price">
+                        {new Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        }).format(item?.price)}
+                      </p>
                     </div>
                     <div className="action-bar position-absolute">
                       <div className="d-flex flex-column gap-15"></div>
@@ -236,7 +241,12 @@ const Home = () => {
                         edit={false}
                         activeColor="#ffd700"
                       />
-                      <p className="price">Giá {item?.price} 000 VND</p>
+                      <p className="price">
+                        {new Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        }).format(item?.price)}
+                      </p>
                     </div>
                     <div className="action-bar position-absolute">
                       <div className="d-flex flex-column gap-15"></div>
@@ -297,7 +307,12 @@ const Home = () => {
                         edit={false}
                         activeColor="#ffd700"
                       />
-                      <p className="price">Giá {item?.price} 000 VND</p>
+                      <p className="price">
+                        {new Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        }).format(item?.price)}
+                      </p>
                     </div>
                     <div className="action-bar position-absolute">
                       <div className="d-flex flex-column gap-15"></div>

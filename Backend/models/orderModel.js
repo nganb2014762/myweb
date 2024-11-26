@@ -9,11 +9,8 @@ var orderSchema = new mongoose.Schema(
       required: true,
     },
     shippingInfo: {
-      firstname: {
-        type: String,
-        required: true,
-      },
-      lastname: {
+      
+      name: {
         type: String,
         required: true,
       },

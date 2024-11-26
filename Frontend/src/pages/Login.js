@@ -12,10 +12,10 @@ import { loginUser } from "../features/user/userSlice";
 let loginSchema = yup.object({
   email: yup
     .string()
-    .required("Email is Required")
-    .email("Email Should be valid"),
+    .required("Vui lòng nhập dữ liệu!")
+    .email("Vui lòng nhập dữ liệu!"),
 
-  password: yup.string().required("Password is Required"),
+  password: yup.string().required("Vui lòng nhập dữ liệu!"),
 });
 
 const Login = () => {

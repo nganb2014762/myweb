@@ -72,6 +72,11 @@ const Cart = () => {
     });
   };
 
+  // Format currency as VND
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+  };
+
   return (
     <>
       <Meta title={"Cart"} />
@@ -111,7 +116,9 @@ const Cart = () => {
                       </div>
                     </div>
                     <div className="cart-col-2">
-                      <h5 className="price">{item?.price} 000 VND</h5>
+                      <h5 className="price">
+                        {formatCurrency(item?.price)} {/* Format individual price */}
+                      </h5>
                     </div>
                     <div className="cart-col-3 d-flex align-items-center gap-15">
                       <div>
@@ -136,7 +143,7 @@ const Cart = () => {
                     </div>
                     <div className="cart-col-4">
                       <h5 className="price">
-                        {item.quantity * item.price} 000 VND
+                        {formatCurrency(item.quantity * item.price)} {/* Format total price per item */}
                       </h5>
                     </div>
                   </div>
@@ -150,7 +157,7 @@ const Cart = () => {
               </Link>
               {totalAmount !== null && (
                 <div className="d-flex flex-column align-items-end">
-                  <h4>Tổng: {totalAmount || 0} 000 VND</h4>
+                  <h4>Tổng: {formatCurrency(totalAmount || 0)}</h4> {/* Format total amount */}
                   <Link to="/checkout" className="button">
                     Mua hàng
                   </Link>

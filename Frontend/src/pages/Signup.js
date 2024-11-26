@@ -10,14 +10,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../features/user/userSlice";
 
 let signUpSchema = yup.object({
-  firstname: yup.string().required("First Name is Required"),
-  lastname: yup.string().required("Last Name is Required"),
+
+  name: yup.string().required("Vui lòng nhập dữ liệu!"),
   email: yup
     .string()
-    .required("Email is Required")
-    .email("Email Should be valid"),
-  mobile: yup.number().required().positive().integer("Mobile No is Required"),
-  password: yup.string().required("Password is Required"),
+    .required("Vui lòng nhập dữ liệu!")
+    .email("Vui lòng nhập dữ liệu!"),
+  mobile: yup.number().required().positive().integer("Vui lòng nhập dữ liệu!"),
+  password: yup.string().required("Vui lòng nhập dữ liệu!"),
 });
 
 const Signup = () => {
@@ -26,8 +26,7 @@ const Signup = () => {
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
-      firstname: "",
-      lastname: "",
+      name: "",
       email: "",
       mobile: "",
       password: "",
@@ -53,7 +52,7 @@ const Signup = () => {
                 className="d-flex flex-column gap-15"
                 onSubmit={formik.handleSubmit}
               >
-                <CustomInput
+                {/* <CustomInput
                   type="text"
                   name="firstname"
                   placeholder="Họ"
@@ -63,17 +62,17 @@ const Signup = () => {
                 />
                 <div className="error">
                   {formik.touched.firstname && formik.errors.firstname}
-                </div>
+                </div> */}
                 <CustomInput
                   type="text"
-                  name="lastname"
+                  name="name"
                   placeholder="Tên"
-                  value={formik.values.lastname}
-                  onChange={formik.handleChange("lastname")}
-                  onBlur={formik.handleBlur("lastname")}
+                  value={formik.values.name}
+                  onChange={formik.handleChange("name")}
+                  onBlur={formik.handleBlur("name")}
                 />
                 <div className="error">
-                  {formik.touched.lastname && formik.errors.lastname}
+                  {formik.touched.name && formik.errors.name}
                 </div>
                 <CustomInput
                   type="email"

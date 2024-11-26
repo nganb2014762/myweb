@@ -60,14 +60,13 @@ const loginUserCtrl = asyncHandler(async (req, res) => {
     });
     res.json({
       _id: findUser?._id,
-      firstname: findUser?.firstname,
-      lastname: findUser?.lastname,
+      name: findUser?.name,
       email: findUser?.email,
       mobile: findUser?.mobile,
       token: generateToken(findUser?._id),
     });
   } else {
-    throw new Error("Invalid Credentials");
+    throw new Error("Lỗi đăng nhập");
   }
 });
 
@@ -93,14 +92,13 @@ const loginAdmin = asyncHandler(async (req, res) => {
     });
     res.json({
       _id: findAdmin?._id,
-      firstname: findAdmin?.firstname,
-      lastname: findAdmin?.lastname,
+      name: findAdmin?.name,
       email: findAdmin?.email,
       mobile: findAdmin?.mobile,
       token: generateToken(findAdmin?._id),
     });
   } else {
-    throw new Error("Invalid Credentials");
+    throw new Error("Lỗi đăng nhập");
   }
 });
 
@@ -155,8 +153,8 @@ const updatedUser = asyncHandler(async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       _id,
       {
-        firstname: req?.body?.firstname,
-        lastname: req?.body?.lastname,
+        
+        name: req?.body?.name,
         email: req?.body?.email,
         mobile: req?.body?.mobile,
       },
@@ -294,17 +292,17 @@ const updatePassword = asyncHandler(async (req, res) => {
 const forgotPasswordToken = asyncHandler(async (req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email });
-  if (!user) throw new Error("User not found with this email");
+  if (!user) throw new Error("Không tìm thấy tài khoản email");
   try {
     const token = await user.createPasswordResetToken();
 
     await user.save();
     console.log(token);
-    const resetURL = `Hi, Please follow this link to reset Your Password. This link is valid till 10 minutes from now. <a href='http://localhost:3000/reset-password/${token}'>Click Here</>`;
+    const resetURL = `Vui lòng nhấn vào đây để đổi mật khẩu. Có hiệu lực trong 10 phút. <a href='http://localhost:3000/reset-password/${token}'>Tại đây</>`;
 
     const data = {
       to: email,
-      text: "Hey User",
+      text: "Xin chào User",
       subject: "Forgot Password Link",
       htm: resetURL,
     };
@@ -323,7 +321,7 @@ const resetPassword = asyncHandler(async (req, res) => {
     passwordResetToken: hashedToken,
     passwordResetExpires: { $gt: Date.now() },
   });
-  if (!user) throw new Error(" Token Expired, Please try again later");
+  if (!user) throw new Error(" Phiên đăng nhập đã hết hạn. Vui lòng thử lại");
   user.password = password;
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;

@@ -77,7 +77,6 @@ const ProductCard = (props) => {
                   width={"100%"}
                   onClick={() => navigate("/product/" + item?._id)}
                 />
-                
               </div>
               <div className="product-details">
                 <h6 className="brand">{item?.brand}</h6>
@@ -94,12 +93,15 @@ const ProductCard = (props) => {
                   activeColor="#ffd700"
                 />
 
-                <p className="price">{item?.price} 000</p>
+                <p className="price">
+                  {new Intl.NumberFormat("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  }).format(item?.price)}
+                </p>
               </div>
               <div className="action-bar position-absolute">
-                <div className="d-flex flex-column gap-15">
-                  
-                </div>
+                <div className="d-flex flex-column gap-15"></div>
               </div>
             </div>
           </div>

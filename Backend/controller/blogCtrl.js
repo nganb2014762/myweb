@@ -9,7 +9,7 @@ const createBlog = asyncHandler(async (req, res) => {
     const newBlog = await Blog.create(req.body);
     res.json(newBlog);
   } catch (error) {
-    console.log("Error creating blog:", error);
+    console.log("Lỗi:", error);
     throw new Error(error);
   }
 });
@@ -167,7 +167,7 @@ const uploadImages = asyncHandler(async (req, res) => {
     const urls = [];
     const files = req.files;
 
-    console.log("Starting image upload..."); 
+    console.log("Đang tải"); 
     for (const file of files) {
       const { path } = file;
       const newpath = await uploader(path);
@@ -188,10 +188,10 @@ const uploadImages = asyncHandler(async (req, res) => {
       }
     );
     
-    console.log("Images uploaded and blog updated.");
+    console.log("Tải lên thành công.");
     res.json(findBlog);
   } catch (error) {
-    console.error("Error during image upload:", error);
+    console.error("Lỗi khi tải ảnh:", error);
     throw new Error(error);
   }
 });

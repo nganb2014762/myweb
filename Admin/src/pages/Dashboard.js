@@ -69,22 +69,12 @@ const Dashboard = () => {
 
   useEffect(() => {
     let monthNames = [
-      "T1",
-      "T2",
-      "T3",
-      "T4",
-      "T5",
-      "T6",
-      "T7",
-      "T8",
-      "T9",
-      "T10",
-      "T11",
-      "T12",
+      "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12",
     ];
     let data = [];
-
     let monthlyOrderCount = [];
+  
+    // Dữ liệu doanh thu theo tháng
     for (let index = 0; index < monthlyDataState?.length; index++) {
       const element = monthlyDataState[index];
       data.push({
@@ -96,24 +86,34 @@ const Dashboard = () => {
         income: element?.count,
       });
     }
-
+  
     setDataMonthly(data);
     setDataMonthlySales(monthlyOrderCount);
-
+  
+    // Dữ liệu đơn hàng, bao gồm thông tin về phương thức thanh toán PayPal
     const data1 = [];
-
+  
     for (let i = 0; i < orderState?.length; i++) {
+      const order = orderState[i];
+  
+      // Kiểm tra nếu phương thức thanh toán là PayPal
+      const adjustedPrice = order.paymentInfo === "paypal"
+        ? order.totalPriceAfterDiscount / 0.000039
+        : order.totalPriceAfterDiscount;
+  
       data1.push({
-        key: i+1,
-        name: orderState[i].user.firstname + " " + orderState[i].user.lastname,
-        product: orderState[i].orderItems?.length,
-        price: orderState[i]?.totalPrice,
-        dprice: orderState[i]?.totalPriceAfterDiscount,
-        staus: orderState[i]?.orderStatus,
+        key: i + 1,
+        name: order.user.name,
+        product: order.orderItems?.length,
+        price: order.totalPrice,
+        dprice: adjustedPrice,  // Hiển thị giá đã điều chỉnh nếu thanh toán bằng PayPal
+        staus: order.orderStatus,
       });
     }
+  
     setOrderData(data1);
-  }, [monthlyDataState, yearlyDataState]);
+  }, [monthlyDataState, yearlyDataState, orderState]);
+  
 
   const config = {
     data: dataMonthly,
@@ -183,12 +183,10 @@ const Dashboard = () => {
           <div>
             <p className="desc">Tổng doanh thu</p>
             <h4 className="mb-0 sub-title">
-              {yearlyDataState && yearlyDataState[0]?.amount}000
+              {yearlyDataState && yearlyDataState[0]?.amount}
             </h4>
           </div>
-          {/* <div className="d-flex flex-column align-items-end">
-            <p className="mb-0  desc">Thu nhập năm ngoái tính từ hôm nay</p>
-          </div> */}
+          
         </div>
         <div className="d-flex p-3 justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
           <div>
@@ -197,9 +195,7 @@ const Dashboard = () => {
               {yearlyDataState && yearlyDataState[0]?.count}
             </h4>
           </div>
-          {/* <div className="d-flex flex-column align-items-end">
-            <p className="mb-0  desc">Doanh thu năm ngoái tính từ hôm nay</p>
-          </div> */}
+          
         </div>
       </div>
       <div className="d-flex justify-content-between align-items gap-3">

@@ -15,8 +15,8 @@ import {
 } from "../features/user/userSlice";
 
 let shippingSchema = yup.object({
-  firstname: yup.string().required("Vui lòng nhập dữ liệu"),
-  lastname: yup.string().required("Vui lòng nhập dữ liệu"),
+
+  name: yup.string().required("Vui lòng nhập dữ liệu"),
   address: yup.string().required("Vui lòng nhập dữ liệu"),
   city: yup.string().required("Vui lòng nhập dữ liệu"),
   pincode: yup.number("Vui lòng nhập dữ liệu").required().positive().integer(),
@@ -89,8 +89,8 @@ const Checkout = () => {
 
   const formik = useFormik({
     initialValues: {
-      firstname: "",
-      lastname: "",
+
+      name: "",
       address: "",
       city: "",
       pincode: "",
@@ -130,7 +130,7 @@ const Checkout = () => {
     try {
       const result = await axios.post(
         "http://localhost:5000/api/user/order/create-paypal-order",
-        { amount: (totalAmount + 100).toString() },
+        { amount: (totalAmount + 30000).toString() },
         config
       );
 
@@ -149,7 +149,7 @@ const Checkout = () => {
                 purchase_units: [
                   {
                     amount: {
-                      value: (totalAmount + 100).toString(),
+                      value: (totalAmount + 30000).toString(),
                     },
                   },
                 ],
@@ -160,8 +160,8 @@ const Checkout = () => {
 
               dispatch(
                 createAnOrder({
-                  totalPrice: totalAmount + 100,
-                  totalPriceAfterDiscount: totalAmount + 100,
+                  totalPrice: totalAmount + 30000,
+                  totalPriceAfterDiscount: totalAmount + 30000,
                   orderItems: cartProductState,
                   paymentInfo: {
                     method: "PayPal", // Thêm trường này
@@ -192,8 +192,8 @@ const Checkout = () => {
   const handleCODOrder = () => {
     dispatch(
       createAnOrder({
-        totalPrice: totalAmount + 100,
-        totalPriceAfterDiscount: totalAmount + 100,
+        totalPrice: totalAmount + 30000,
+        totalPriceAfterDiscount: totalAmount + 30000,
         orderItems: cartProductState,
         paymentInfo: {
           method: "COD", // Định nghĩa phương thức thanh toán
@@ -220,33 +220,19 @@ const Checkout = () => {
                 onSubmit={formik.handleSubmit}
                 className="d-flex gap-15 flex-wrap justify-content-between"
               >
-                {/* Các trường nhập thông tin */}
-                <div className="flex-grow-1">
-                  <input
-                    type="text"
-                    placeholder="Họ"
-                    className="form-control"
-                    name="firstname"
-                    value={formik.values.firstname}
-                    onChange={formik.handleChange("firstname")}
-                    onBlur={formik.handleBlur("firstname")}
-                  />
-                  <div className="error ms-2 my-1">
-                    {formik.touched.firstname && formik.errors.firstname}
-                  </div>
-                </div>
+                
                 <div className="flex-grow-1">
                   <input
                     type="text"
                     placeholder="Tên"
                     className="form-control"
-                    name="lastname"
-                    value={formik.values.lastname}
-                    onChange={formik.handleChange("lastname")}
-                    onBlur={formik.handleBlur("lastname")}
+                    name="name"
+                    value={formik.values.tname}
+                    onChange={formik.handleChange("name")}
+                    onBlur={formik.handleBlur("name")}
                   />
                   <div className="error ms-2 my-1">
-                    {formik.touched.lastname && formik.errors.lastname}
+                    {formik.touched.name && formik.errors.name}
                   </div>
                 </div>
 
@@ -346,7 +332,7 @@ const Checkout = () => {
                         </div>
                         <div className="flex-grow-1">
                           <h5 className="total">
-                            {item?.price * item?.quantity} 000
+                            {item?.price * item?.quantity} 
                           </h5>
                         </div>
                       </div>
@@ -357,7 +343,7 @@ const Checkout = () => {
                 <div className="d-flex justify-content-between align-items-center">
                   <p className="total">Tổng phụ</p>
                   <p className="total-price">
-                    {totalAmount ? totalAmount : "0"} 000
+                    {totalAmount ? totalAmount : "0"} 
                   </p>
                 </div>
                 <div className="d-flex justify-content-between align-items-center">
@@ -368,7 +354,7 @@ const Checkout = () => {
               <div className="d-flex justify-content-between align-items-center border-bootom py-4">
                 <h4 className="total">Tổng</h4>
                 <h5 className="total-price">
-                  {totalAmount ? totalAmount + 30 : "0"} 000
+                  {totalAmount ? totalAmount + 30000 : "0"} 
                 </h5>
               </div>
             </div>

@@ -127,7 +127,7 @@ const Header = () => {
                       </p>
                     ) : (
                       <p className="mb-0">
-                        {authState?.user?.firstname}
+                        {authState?.user?.name}
                       </p>
                     )}
                   </Link>
@@ -143,7 +143,7 @@ const Header = () => {
                         {cartState?.length ? cartState?.length : 0}
                       </span>
                       <p className="mb-0">
-                        {!cartState?.length ? 0 : total ? total : 0}000 VND
+                        {!cartState?.length ? 0 : total ? total : 0}
                       </p>
                     </div>
                   </Link>

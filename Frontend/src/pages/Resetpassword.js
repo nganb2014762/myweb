@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { resetPassword } from "../features/user/userSlice";
 
 let passwordSchema = yup.object({
-  password: yup.string().required("Password is Required"),
+  password: yup.string().required("Vui lòng nhập dữ liệu!"),
 });
 
 const Resetpassword = () => {

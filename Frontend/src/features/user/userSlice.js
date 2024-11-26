@@ -14,7 +14,7 @@ export const cancelOrder = createAsyncThunk(
     });
 
     if (!response.ok) {
-      throw new Error("Failed to cancel order");
+      throw new Error("Không thể hủy đơn hàng");
     }
 
     return await response.json();
@@ -210,7 +210,7 @@ export const authSlice = createSlice({
         state.isSuccess = true;
         state.createdUser = action.payload;
         if (state.isSuccess === true) {
-          toast.info("User Created Successfully");
+          toast.info("Đăng kí thành công!");
         }
       })
       .addCase(registerUser.rejected, (state, action) => {

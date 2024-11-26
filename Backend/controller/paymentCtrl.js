@@ -50,7 +50,7 @@ const paypalPaymentVerification = async (req, res) => {
 
   paypal.payment.get(paymentId, function (error, payment) {
     if (error) {
-      console.error('Error getting payment details:', error);
+      console.error('Lỗi:', error);
       res.status(500).json({ error });
       return;
     }
@@ -71,7 +71,7 @@ const paypalPaymentVerification = async (req, res) => {
 
     paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
       if (error) {
-        console.error('Error executing payment:', error);
+        console.error('Lỗi:', error);
         res.status(500).json({ error });
       } else {
         res.status(200).json({ success: true, payment });
@@ -89,7 +89,7 @@ const capturePayPalOrder = async (req, res) => {
 
   paypal.payment.execute(paymentId, execute_payment_json, (error, payment) => {
     if (error) {
-      console.error('Error capturing payment:', error.response);
+      console.error('Lỗi:', error.response);
       return res.status(500).json({ success: false, error: error.response });
     }
 

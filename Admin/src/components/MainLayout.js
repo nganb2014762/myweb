@@ -211,7 +211,7 @@ const MainLayout = () => {
                 aria-expanded="false"
               >
                 {/* Hiển thị tên và email người dùng */}
-                <h5 className="mb-0">{authState?.user?.firstname || "Guest"}</h5>
+                <h5 className="mb-0">{authState?.user?.name || "Guest"}</h5>
                 <p className="mb-0">{authState?.user?.email || "guest@example.com"}</p>
               </div>
               <div className="dropdown-menu" aria-labelledby="dropdownMenuLink">

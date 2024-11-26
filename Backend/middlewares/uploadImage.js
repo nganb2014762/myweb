@@ -57,14 +57,14 @@ const blogImgResize = async (req, res, next) => {
         setTimeout(async () => {
           try {
             await fs.promises.unlink(file.path);
-            console.log(`Successfully deleted file: ${file.path}`);
+            console.log(`Thành công xóa file: ${file.path}`);
           } catch (err) {
-            console.error(`Failed to delete file: ${file.path}`, err);
+            console.error(`Không thể xóa file: ${file.path}`, err);
           }
         }, 500); // Trì hoãn 500ms trước khi xóa tệp
 
       } catch (err) {
-        console.error(`Failed to process file: ${file.path}`, err);
+        console.error(`Lỗi: ${file.path}`, err);
       }
     })
   );

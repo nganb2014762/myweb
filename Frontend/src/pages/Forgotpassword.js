@@ -12,8 +12,8 @@ import { forgotPasswordToken } from "../features/user/userSlice";
 let emailSchema = yup.object({
   email: yup
     .string()
-    .required("Email is Required")
-    .email("Email Should be valid"),
+    .required("Vui lòng nhập dữ liệu!")
+    .email("Vui lòng nhập dữ liệu!"),
 });
 
 const Forgotpassword = () => {
@@ -31,15 +31,15 @@ const Forgotpassword = () => {
   });
   return (
     <>
-      <Meta title={"Forgot Password"} />
-      <BreadCrumb title="Forgot Password" />
+      <Meta title={"Quên mật khẩu"} />
+      <BreadCrumb title="Quên mật khẩu" />
       <Container class1="login-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
             <div className="auth-card">
               <h3 className="text-center mb-3">Đặt lại mật khẩu</h3>
               <p className="text-center mt-2 mb-3">
-                We will send you an email to reset your password
+                Chúng tôi sẽ gửi mã xác nhận đến email của bạn.
               </p>
               <form
                 action=""

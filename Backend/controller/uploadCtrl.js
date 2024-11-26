@@ -18,14 +18,14 @@ const uploadImages = asyncHandler(async (req, res) => {
       urls.push(newpath);
 
       fs.unlink(path, (err) => {
-        if (err) console.error(`Failed to delete file: ${path}`, err);
+        if (err) console.error(`Không thể xóa: ${path}`, err);
       });
     }
 
     res.json(urls);
   } catch (error) {
     console.error(error);  // In chi tiết lỗi ra console
-    res.status(500).json({ message: "Image upload failed", error: error.message });
+    res.status(500).json({ message: "Tải ảnh thất bại", error: error.message });
   }
 });
 
