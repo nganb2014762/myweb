@@ -23,11 +23,11 @@ const columns = [
     dataIndex: "product",
   },
   {
-    title: "Giá gốc",
+    title: "Tạm tính",
     dataIndex: "price",
   },
   {
-    title: "Giá sau khuyến mãi",
+    title: "Tổng",
     dataIndex: "dprice",
   },
   {
@@ -69,22 +69,14 @@ const Dashboard = () => {
 
   useEffect(() => {
     let monthNames = [
-      "T1",
-      "T2",
-      "T3",
-      "T4",
-      "T5",
-      "T6",
-      "T7",
-      "T8",
-      "T9",
-      "T10",
-      "T11",
-      "T12",
+      "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12"
     ];
     let data = [];
     let monthlyOrderCount = [];
-
+  
+    // Tính tổng doanh thu
+    let totalRevenue = 0;
+  
     // Dữ liệu doanh thu theo tháng
     for (let index = 0; index < monthlyDataState?.length; index++) {
       const element = monthlyDataState[index];
@@ -97,22 +89,24 @@ const Dashboard = () => {
         income: element?.count,
       });
     }
-
+  
     setDataMonthly(data);
     setDataMonthlySales(monthlyOrderCount);
-
+  
     // Dữ liệu đơn hàng, bao gồm thông tin về phương thức thanh toán PayPal
     const data1 = [];
-
+  
     for (let i = 0; i < orderState?.length; i++) {
       const order = orderState[i];
-
+  
       // Kiểm tra nếu phương thức thanh toán là PayPal
-      const adjustedPrice =
-        order.paymentInfo.method === "PayPal"
-          ? (order.totalPriceAfterDiscount / 0.000039).toFixed(2) // Làm tròn đến 2 chữ số thập phân
-          : order.totalPriceAfterDiscount.toFixed(2); // Làm tròn đến 2 chữ số thập phân nếu không phải PayPal
-
+      const adjustedPrice = order.paymentInfo.method === "PayPal"
+        ? (order.totalPriceAfterDiscount / 0.000039).toFixed(2) // Làm tròn đến 2 chữ số thập phân
+        : order.totalPriceAfterDiscount.toFixed(2); // Làm tròn đến 2 chữ số thập phân nếu không phải PayPal
+  
+      // Cộng dồn tổng doanh thu
+      totalRevenue += order.totalPriceAfterDiscount;
+  
       data1.push({
         key: i + 1,
         name: order.user.name,
@@ -122,10 +116,13 @@ const Dashboard = () => {
         staus: order.orderStatus,
       });
     }
-
+  
     setOrderData(data1);
+  
+    // Cập nhật tổng doanh thu vào state
+    setTotalRevenue(totalRevenue.toFixed(2)); // Làm tròn tổng doanh thu
   }, [monthlyDataState, yearlyDataState, orderState]);
-
+  
   const config = {
     data: dataMonthly,
     xField: "type",
@@ -186,43 +183,27 @@ const Dashboard = () => {
     },
   };
 
+  const [totalRevenue, setTotalRevenue] = useState(0); 
+
   return (
     <div>
-      <h3 className="mb-4 title">Doanh thu</h3>
-      <div className="d-flex justify-content-between align-items-center gap-3">
-        <div className="d-flex p-3 justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
-          <div>
-            <p className="desc">Tổng doanh thu</p>
-            <h4 className="mb-0 sub-title">
-              {yearlyDataState && yearlyDataState[0]?.amount
-                ? yearlyDataState[0]?.amount.toFixed(2) // Làm tròn đến 2 chữ số thập phân
-                : 0}
-            </h4>
-          </div>
-        </div>
-        <div className="d-flex p-3 justify-content-between align-items-end flex-grow-1 bg-white p-3 roudned-3">
-          <div>
-            <p className="desc">Tổng đơn hàng</p>
-            <h4 className="mb-0 sub-title">
-              {yearlyDataState && yearlyDataState[0]?.count}
-            </h4>
-          </div>
-        </div>
-      </div>
+      
+  
       <div className="d-flex justify-content-between align-items gap-3">
         <div className="mt-4 flex-grow-1 w-50">
-          <h3 className="mb-5 title">Biểu đồ doanh thu </h3>
+          <h3 className="mb-5 title">Doanh thu </h3>
           <div>
             <Column {...config} />
           </div>
         </div>
-        <div className="mt-4 flex-grow-1 ">
-          <h3 className="mb-5 title">Biểu đồ đơn hàng </h3>
+        <div className="mt-4 flex-grow-1">
+          <h3 className="mb-5 title">Đơn hàng </h3>
           <div>
             <Column {...config2} />
           </div>
         </div>
       </div>
+  
       <div className="mt-4">
         <h3 className="mb-5 title">Đơn hàng</h3>
         <div>
@@ -231,6 +212,8 @@ const Dashboard = () => {
       </div>
     </div>
   );
+  
+  
 };
 
 export default Dashboard;

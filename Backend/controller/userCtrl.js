@@ -524,6 +524,7 @@ const getMonthWiseOrderIncome = asyncHandler(async (req, res) => {
           $lte: new Date(),
           $gte: new Date(endDate),
         },
+        orderStatus: "Delivered",  // Thêm điều kiện kiểm tra orderStatus là "Delivered"
       },
     },
     {
@@ -609,7 +610,6 @@ const getYearlyTotalOrder = asyncHandler(async (req, res) => {
 
   res.json(data);
 });
-
 
 module.exports = {
   createUser,
