@@ -7,7 +7,7 @@ import {
   AiOutlineBgColors,
   AiOutlineLogout,
   AiOutlineMenu,
-  AiOutlineShopping, AiOutlinePlus
+  AiOutlineShopping, AiOutlinePlus, AiFillAmazonCircle 
 } from "react-icons/ai";
 import { RiCouponLine } from "react-icons/ri";
 import { ToastContainer } from "react-toastify";
@@ -66,6 +66,11 @@ const MainLayout = () => {
               label: "Khách hàng",
             },
             {
+              key: "admins",
+              icon: <AiFillAmazonCircle   className="fs-4" />,
+              label: "Nhân viên",
+            },
+            {
               key: "Catalog",
               icon: <AiOutlineShoppingCart className="fs-4" />,
               label: "Danh mục",
@@ -122,23 +127,7 @@ const MainLayout = () => {
               icon: <AiOutlineShopping className="fs-4" />,
               label: "Đơn hàng",
             },
-            {
-              key: "marketing",
-              icon: <RiCouponLine className="fs-4" />,
-              label: "Marketing",
-              children: [
-                {
-                  key: "coupon",
-                  icon: <ImBlog className="fs-4" />,
-                  label: "Thêm phiếu giảm giá",
-                },
-                {
-                  key: "coupon-list",
-                  icon: <RiCouponLine className="fs-4" />,
-                  label: "Danh sách phiếu giảm giá",
-                },
-              ],
-            },
+            
             {
               key: "blogs",
               icon: <FaBloggerB className="fs-4" />,
