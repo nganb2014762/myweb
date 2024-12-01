@@ -130,7 +130,7 @@ const Home = () => {
       <Container class1="featured-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 className="section-heading">Bán chạy nhất</h3>
+            <h3 className="section-heading text-center">Bán chạy nhất</h3>
           </div>
           {productState &&
             productState
@@ -194,7 +194,7 @@ const Home = () => {
       <Container class1="special-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 className="section-heading">Được tìm kiếm nhiều nhất</h3>
+            <h3 className="section-heading text-center">Được tìm kiếm nhiều nhất</h3>
           </div>
         </div>
         <div className="row">
@@ -260,7 +260,7 @@ const Home = () => {
       <Container class1="popular-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 className="section-heading">Phổ biến nhất</h3>
+            <h3 className="section-heading text-center">Phổ biến nhất</h3>
           </div>
         </div>
         <div className="row">
@@ -361,7 +361,7 @@ const Home = () => {
       <Container class1="blog-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 className="section-heading">Tin tức</h3>
+            <h3 className="section-heading text-center">Tin tức</h3>
           </div>
         </div>
         <div className="row">

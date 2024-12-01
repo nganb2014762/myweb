@@ -3,10 +3,7 @@ import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../features/cutomers/customerSlice";
 const columns = [
-  {
-    title: "STT",
-    dataIndex: "key",
-  },
+
   {
     title: "Tên",
     dataIndex: "name",
@@ -32,7 +29,7 @@ const Customers = () => {
   for (let i = 0; i < customerstate.length; i++) {
     if (customerstate[i].role !== "admin") {
       data1.push({
-        key: i + 1,
+
         name: customerstate[i].name,
         email: customerstate[i].email,
         mobile: customerstate[i].mobile,

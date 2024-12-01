@@ -52,7 +52,7 @@ const Profile = () => {
         <div className="row">
           <div className="col-12">
             <div className="d-flex justify-content-between align-items-center">
-              <h3 className="my-3">Update Profile</h3>
+              <h3 className="my-3">Thông tin cá nhân</h3>
 
               <FiEdit className="fs-3" onClick={() => setEdit(false)} />
             </div>
@@ -60,27 +60,10 @@ const Profile = () => {
           <div className="col-12">
             <form action="" onSubmit={formik.handleSubmit}>
               <div className="mb-3">
-                <div className="mb-3">
-                  {/* <label htmlFor="example1" className="form-label">
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    name="firstname"
-                    className="form-control"
-                    id="example1"
-                    disabled={edit}
-                    value={formik.values.firstname}
-                    onChange={formik.handleChange("firstname")}
-                    onBlur={formik.handleBlur("firstname")}
-                  />
-                  <div className="error">
-                    {formik.touched.firstname && formik.errors.firstname}
-                  </div> */}
-                </div>
+                
                 <div className="mb-3">
                   <label htmlFor="example2" className="form-label">
-                    Name
+                    Họ tên
                   </label>
                   <input
                     type="text"
@@ -97,7 +80,7 @@ const Profile = () => {
                   </div>
                 </div>
                 <label htmlFor="exampleInputEmail1" className="form-label">
-                  Email address
+                  Email 
                 </label>
                 <input
                   type="email"
@@ -115,7 +98,7 @@ const Profile = () => {
                 </div>
                 <div className="mb-3">
                   <label htmlFor="example3" className="form-label">
-                    Mobile No
+                    Số điện thoại
                   </label>
                   <input
                     type="number"
@@ -135,7 +118,7 @@ const Profile = () => {
 
               {edit === false && (
                 <button type="submit" className="btn btn-primary">
-                  Save
+                  Lưu
                 </button>
               )}
             </form>

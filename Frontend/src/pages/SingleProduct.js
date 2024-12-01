@@ -32,18 +32,18 @@ const SingleProduct = () => {
   const cartState = useSelector((state) => state?.auth?.cartProducts);
   const rat = productState?.totalrating;
   const wishlistState = useSelector((state) => state?.auth?.wishlist?.wishlist);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   const [star, setStar] = useState(null);
   const [comment, setComment] = useState(null);
   const [isFilled, setIsFilled] = useState(false);
 
   useEffect(() => {
-    setLoading(true); 
-    dispatch(getAProduct(getProductId)).finally(() => setLoading(false)); 
+    setLoading(true);
+    dispatch(getAProduct(getProductId)).finally(() => setLoading(false));
     dispatch(getUserCart());
     dispatch(getAllProducts());
-  }, [getProductId]); 
+  }, [getProductId]);
 
   useEffect(() => {
     for (let index = 0; index < cartState?.length; index++) {
@@ -70,9 +70,9 @@ const SingleProduct = () => {
   };
 
   const props = {
-    width: 594,
-    height: 600,
-    zoomWidth: 600,
+    width: 500,
+    height: 400,
+    zoomWidth: 400,
     img: productState?.images[0]?.url
       ? productState?.images[0]?.url
       : "https://images.pexels.com/photos/190819/pexels-photo-190819.jpeg?cs=srgb&dl=pexels-fernando-arcos-190819.jpg&fm=jpg",
@@ -98,7 +98,7 @@ const SingleProduct = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
   return (
@@ -107,31 +107,26 @@ const SingleProduct = () => {
       <BreadCrumb title={productState?.title} />
       <Container class1="main-product-wrapper py-5 home-wrapper-2">
         <div className="row">
-          <div className="col-6">
+          <div className="col-4">
             <div className="main-product-image">
               <div>
                 <ReactImageZoom {...props} />
               </div>
             </div>
-            <div className="other-product-images d-flex flex-wrap gap-15">
-              {productState?.images.map((item, index) => {
-                return (
-                  <div key={index}>
-                    <img src={item?.url} className="img-fluid" alt="" />
-                  </div>
-                );
-              })}
-            </div>
+            
           </div>
-          <div className="col-6">
+          <div className="col-8">
             <div className="main-product-details">
               <div className="border-bottom">
                 <h3 className="title">{productState?.title}</h3>
               </div>
               <div className="border-bottom py-3">
-              <p className="price">
-  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(productState?.price)}
-</p>
+                <p className="price">
+                  {new Intl.NumberFormat("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  }).format(productState?.price)}
+                </p>
 
                 <div className="d-flex align-items-center gap-10">
                   <ReactStars

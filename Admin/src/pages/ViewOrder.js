@@ -49,26 +49,12 @@ const ViewOrder = () => {
       brand: orderState?.orderItems[i]?.product?.brand,
       count: orderState?.orderItems[i]?.quantity,
       amount: orderState?.orderItems[i]?.price,
-      // color: (
-      //   <div className="col-3">
-      //     <ul
-      //       className="colors ps-0"
-      //       style={{
-      //         width: "30px",
-      //         height: "30px",
-      //         borderRadius: "50%",
-      //         marginBottom: "10px",
-
-      //         backgroundColor: orderState?.orderItems[i]?.color?.title,
-      //       }}
-      //     ></ul>
-      //   </div>
-      // ),
+      
     });
   }
   return (
     <div>
-      <h3 className="mb-4 title">View Order</h3>
+      <h3 className="mb-4 title">Chi tiết đơn</h3>
       <div>
         <Table columns={columns} dataSource={data1} />
       </div>

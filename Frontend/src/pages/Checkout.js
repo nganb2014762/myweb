@@ -296,7 +296,7 @@ const Checkout = () => {
                   </select>
                 </div>
                 <button type="submit" className="btn btn-primary">
-                  Nhấn để tiếp tục
+                  Đặt hàng
                 </button>
               </form>
             </div>

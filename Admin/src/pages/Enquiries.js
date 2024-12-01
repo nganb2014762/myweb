@@ -14,11 +14,11 @@ import CustomModal from "../components/CustomModal";
 
 const columns = [
   {
-    title: "SNo",
+    title: "STT",
     dataIndex: "key",
   },
   {
-    title: "Name",
+    title: "Tên",
     dataIndex: "name",
   },
   {
@@ -26,16 +26,16 @@ const columns = [
     dataIndex: "email",
   },
   {
-    title: "Mobile",
+    title: "SĐT",
     dataIndex: "mobile",
   },
   {
-    title: "Staus",
+    title: "Trạng thái",
     dataIndex: "status",
   },
 
   {
-    title: "Action",
+    title: "Thao tác",
     dataIndex: "action",
   },
 ];
@@ -57,48 +57,37 @@ const Enquiries = () => {
     dispatch(getEnquiries());
   }, []);
   const enqState = useSelector((state) => state.enquiry.enquiries);
-  const data1 = [];
-  for (let i = 0; i < enqState.length; i++) {
-    data1.push({
-      key: i + 1,
-      name: enqState[i].name,
-      email: enqState[i].email,
-      mobile: enqState[i].mobile,
-      status: (
-        <>
-          <select
-            name=""
-            defaultValue={enqState[i].status ? enqState[i].status : "Submitted"}
-            className="form-control form-select"
-            id=""
-            onChange={(e) => setEnquiryStatus(e.target.value, enqState[i]._id)}
-          >
-            <option value="Submitted">Submitted</option>
-            <option value="Contacted">Contacted</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Resolved">Resolved</option>
-          </select>
-        </>
-      ),
-
-      action: (
-        <>
-          <Link
-            className="ms-3 fs-3 text-danger"
-            to={`/admin/enquiries/${enqState[i]._id}`}
-          >
-            <AiOutlineEye />
-          </Link>
-          <button
-            className="ms-3 fs-3 text-danger bg-transparent border-0"
-            onClick={() => showModal(enqState[i]._id)}
-          >
-            <AiFillDelete />
-          </button>
-        </>
-      ),
-    });
-  }
+  const statusMapping = {
+    Submitted: "Đã tiếp nhận",
+    Contacted: "Đã liên hệ",
+    InProgress: "Đang tiến hành",
+    Resolved: "Đã giải quyết",
+  };
+  
+  const data1 = enqState.map((enquiry, index) => ({
+    key: index + 1,
+    name: enquiry.name,
+    email: enquiry.email,
+    mobile: enquiry.mobile,
+    status: statusMapping[enquiry.status] || enquiry.status, // Hiển thị nhãn thân thiện
+    action: (
+      <>
+        <Link
+          className="ms-3 fs-3 text-danger"
+          to={`/admin/enquiries/${enquiry._id}`}
+        >
+          <AiOutlineEye />
+        </Link>
+        <button
+          className="ms-3 fs-3 text-danger bg-transparent border-0"
+          onClick={() => showModal(enquiry._id)}
+        >
+          <AiFillDelete />
+        </button>
+      </>
+    ),
+  }));
+  
   const setEnquiryStatus = (e, i) => {
     console.log(e, i);
     const data = { id: i, enqData: e };
@@ -113,7 +102,7 @@ const Enquiries = () => {
   };
   return (
     <div>
-      <h3 className="mb-4 title">Enquiries</h3>
+      <h3 className="mb-4 title">Yêu cầu từ khách hàng</h3>
       <div>
         <Table columns={columns} dataSource={data1} />
       </div>
@@ -123,7 +112,7 @@ const Enquiries = () => {
         performAction={() => {
           deleteEnq(enqId);
         }}
-        title="Are you sure you want to delete this enquiry?"
+        title="Bạn có chắc chắn muốn xóa?"
       />
     </div>
   );

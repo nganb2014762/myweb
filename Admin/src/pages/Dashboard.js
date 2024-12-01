@@ -10,10 +10,7 @@ import {
 } from "../features/auth/authSlice";
 
 const columns = [
-  {
-    title: "STT",
-    dataIndex: "key",
-  },
+
   {
     title: "Tên khách hàng",
     dataIndex: "name",

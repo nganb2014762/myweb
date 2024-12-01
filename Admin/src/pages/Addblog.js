@@ -101,14 +101,14 @@ const Addblog = () => {
   return (
     <div>
       <h3 className="mb-4 title">
-        {getBlogId !== undefined ? "Edit" : "Add"} Blog
+        {getBlogId !== undefined ? "Chỉnh sửa" : "Thêm"} Blog
       </h3>
 
       <form onSubmit={formik.handleSubmit}>
         <div className="mt-4">
           <CustomInput
             type="text"
-            label="Enter Blog Title"
+            label="Tiêu đề"
             name="title"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -121,7 +121,7 @@ const Addblog = () => {
         <div className="mt-4">
           <ReactQuill
             theme="snow"
-            label="Description"
+            label="Mô tả"
             name="description"
             onChange={(content) => formik.setFieldValue("description", content)}
             value={formik.values.description}
@@ -138,7 +138,7 @@ const Addblog = () => {
           value={formik.values.category}
           className="form-control py-3 mb-3"
         >
-          <option value="">Select Category</option>
+          <option value="">Chọn thể loại</option>
           {bCatState.map((i, j) => (
             <option key={j} value={i.title}>
               {i.title}
@@ -164,7 +164,7 @@ const Addblog = () => {
               <section>
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <p>Upload images</p>
+                  <p>Tải ảnh</p>
                 </div>
               </section>
             )}
@@ -194,7 +194,7 @@ const Addblog = () => {
           className="btn btn-success border-0 rounded-3 my-5"
           type="submit"
         >
-          {getBlogId !== undefined ? "Update" : "Add"} Blog
+          {getBlogId !== undefined ? "Cập nhật" : "Thêm"} Blog
         </button>
       </form>
     </div>
