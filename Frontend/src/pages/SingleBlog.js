@@ -37,7 +37,7 @@ const SingleBlog = () => {
                     ? blogState?.images[0]?.url
                     : blogState?.image
                 }
-                className="img-fluid w-100 my-4"
+                className="img-fluid w-100 my-4"  
                 alt="blog"
               />
 

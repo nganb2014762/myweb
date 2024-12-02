@@ -231,7 +231,8 @@ footer .input-group-text {
 
 .blog-card {
   background-color: white;
-
+  width: 400px; /* Hoặc chiều rộng cụ thể, ví dụ: 300px */
+  height: 600px;
   border-radius: 10px;
 }
 .blog-card img {

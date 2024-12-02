@@ -5,6 +5,7 @@ import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { getOrders, updateAOrder } from "../features/auth/authSlice";
+
 const columns = [
   {
     title: "STT",
@@ -26,7 +27,6 @@ const columns = [
     title: "Ngày đặt",
     dataIndex: "date",
   },
-
   {
     title: "Trạng thái",
     dataIndex: "action",
@@ -35,54 +35,58 @@ const columns = [
 
 const Orders = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getOrders());
-  }, []);
-  const orderState = useSelector((state) => state?.auth?.orders.orders);
+  const orderState = useSelector((state) => state?.auth?.orders?.orders);
 
-  const data1 = [];
-  for (let i = 0; i < orderState?.length; i++) {
-    data1.push({
-      key: i + 1,
-      name: orderState[i]?.user?.name,
+  const getTokenFromLocalStorage = localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))
+    : null;
 
-      product: (
-        <Link to={`/admin/order/${orderState[i]?._id}`}>Chi tiết</Link>
-      ),
-      amount: orderState[i]?.totalPrice ,
-      date: new Date(orderState[i]?.createdAt).toLocaleString(),
-      action: (
-        <>
-          <select
-            name=""
-            defaultValue={orderState[i]?.orderStatus}
-            onChange={(e) =>
-              updateOrderStatus(orderState[i]?._id, e.target.value)
-            }
-            className="form-control form-select"
-            id=""
-          >
-            <option value="Ordered" disabled selected>
-              Đã đặt
-            </option>
-
-            <option value="Processed">Đang chuẩn bị hàng</option>
-            <option value="Shipped">Đang vận chuyển</option>
-            <option value="Cancelled">Hủy</option>
-            <option value="Delivered">Thành công</option>
-          </select>
-        </>
-      ),
-    });
-  }
-
-  const updateOrderStatus = (a, b) => {
-    dispatch(updateAOrder({ id: a, status: b }));
+  const config3 = {
+    headers: {
+      Authorization: `Bearer ${
+        getTokenFromLocalStorage !== null ? getTokenFromLocalStorage.token : ""
+      }`,
+      Accept: "application/json",
+    },
   };
+
+  useEffect(() => {
+    dispatch(getOrders(config3));
+  }, [dispatch]);
+
+  const updateOrderStatus = (orderId, newStatus) => {
+    dispatch(updateAOrder({ id: orderId, status: newStatus }));
+  };
+
+  const data1 = orderState?.map((order, index) => ({
+    key: index + 1,
+    name: order?.user?.name,
+    product: <Link to={`/admin/order/${order?._id}`}>Chi tiết</Link>,
+    amount: order?.totalPrice.toFixed(2),
+    date: new Date(order?.createdAt).toLocaleString(),
+    action: (
+      <select
+        defaultValue={order?.orderStatus}
+        onChange={(e) => updateOrderStatus(order?._id, e.target.value)}
+        className="form-control form-select"
+      >
+        <option value="Ordered" disabled>
+          Đã đặt
+        </option>
+        <option value="Processed">Đang chuẩn bị hàng</option>
+        <option value="Shipped">Đang vận chuyển</option>
+        <option value="Cancelled">Hủy</option>
+        <option value="Delivered">Thành công</option>
+      </select>
+    ),
+  }));
+
   return (
     <div>
       <h3 className="mb-4 title">Đơn hàng</h3>
-      <div>{<Table columns={columns} dataSource={data1} />}</div>
+      <div>
+        <Table columns={columns} dataSource={data1} />
+      </div>
     </div>
   );
 };

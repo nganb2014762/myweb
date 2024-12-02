@@ -30,7 +30,7 @@ const Addblog = () => {
   const getBlogId = location.pathname.split("/")[3];
   const imgState = useSelector((state) => state?.upload?.images);
   const bCatState = useSelector((state) => state.bCategory.bCategories);
-  const blogState = useSelector((state) => state.blogs);
+  const newblog = useSelector((state) => state.blogs);
 
   const {
     isSuccess,
@@ -42,7 +42,7 @@ const Addblog = () => {
     blogCategory,
     blogImages,
     updatedBlog,
-  } = blogState;
+  } = newblog;
 
   useEffect(() => {
     if (getBlogId !== undefined) {
@@ -54,49 +54,79 @@ const Addblog = () => {
   }, [getBlogId, dispatch]);
 
   useEffect(() => {
-    if (isSuccess && createdBlog) {
-      toast.success("Blog Added Successfully!");
+    if (isSuccess) {
+      if (createdBlog) {
+        toast.success("Thêm blog thành công!");
+        setTimeout(() => navigate("/admin/blog-list"), 1000);
+      }
+      if (updatedBlog) {
+        toast.success("Cập nhật blog thành công!");
+        setTimeout(() => navigate("/admin/blog-list"), 1000);
+      }
     }
-    if (isSuccess && updatedBlog) {
-      toast.success("Blog Updated Successfully!");
-      navigate("/admin/blog-list");
-    }
+  
     if (isError) {
-      toast.error("Something Went Wrong!");
+      toast.error("Lỗi!");
     }
-  }, [isSuccess, isError, isLoading]);
+  }, [isSuccess, isError, createdBlog, updatedBlog, navigate]);
+  
 
-  const [images, setImages] = useState([]);
+  const img = [];
+  imgState?.forEach((i) => {
+    img.push({
+      public_id: i.public_id,
+      url: i.url,
+    });
+  });
+
+  const imgshow = [];
+  blogImages?.forEach((i) => {
+    imgshow.push({
+      public_id: i.public_id,
+      url: i.url,
+    });
+  });
+
+  useEffect(() => {
+    if (blogImages) {
+      formik.setValues({
+        ...formik.values,
+        images: imgshow, // Update formik's images value
+        title: blogName || "",
+        description: blogDesc || "",
+        category: blogCategory || "",
+      });
+    }
+  }, [blogName, blogDesc, blogCategory]);
 
   const formik = useFormik({
-    enableReinitialize: true,
     initialValues: {
-      title: blogName || "",
-      description: blogDesc || "",
-      category: blogCategory || "",
+      title: "",
+      description: "",
+      category: "",
       images: [],
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      console.log("onSubmit function called");
-      console.log("Title: ", values.title);
-      if (getBlogId !== undefined) {
-        const data = { id: getBlogId, blogData: values };
+      console.log("Dữ liệu gửi lên server: ", values);
+      const dataToSend = {
+        ...values, // Các thông tin khác của sản phẩm
+        images: img, // Hình ảnh đã upload
+      };
+
+      if (getBlogId) {
+        const data = { id: getBlogId, blogData: dataToSend };
         dispatch(updateABlog(data));
       } else {
-        dispatch(createBlogs(values));
+        dispatch(createBlogs(dataToSend));
         formik.resetForm();
-        setImages([]);
+
         setTimeout(() => {
           dispatch(resetState());
-        }, 300);
+        }, 3000);
       }
     },
   });
-
-  useEffect(() => {
-    formik.setFieldValue("images", images);
-  }, [images]);
 
   return (
     <div>
@@ -110,9 +140,9 @@ const Addblog = () => {
             type="text"
             label="Tiêu đề"
             name="title"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.title}
+            onChng={formik.handleChange}
+            onBlr={formik.handleBlur}
+            val={formik.values.title}
           />
           <div className="error">
             {formik.touched.title && formik.errors.title}
@@ -151,20 +181,13 @@ const Addblog = () => {
 
         <div className="bg-white border-1 p-5 text-center">
           <Dropzone
-            onDrop={(acceptedFiles) => {
-              const newImages = acceptedFiles.map((file) => ({
-                public_id: file.name,
-                url: URL.createObjectURL(file),
-              }));
-              setImages((prevImages) => [...prevImages, ...newImages]);
-              dispatch(uploadImg(acceptedFiles));
-            }}
+            onDrop={(acceptedFiles) => dispatch(uploadImg(acceptedFiles))}
           >
             {({ getRootProps, getInputProps }) => (
               <section>
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <p>Tải ảnh</p>
+                  <p>Upload hình ảnh</p>
                 </div>
               </section>
             )}
@@ -172,29 +195,29 @@ const Addblog = () => {
         </div>
         <br />
         <div className="showimages d-flex flex-wrap gap-3">
-          {images.map((i, j) => (
-            <div className="position-relative" key={j}>
-              <button
-                type="button"
-                onClick={() => {
-                  dispatch(delImg(i.public_id));
-                  setImages((prevImages) =>
-                    prevImages.filter((img) => img.public_id !== i.public_id)
-                  );
-                }}
-                className="btn-close position-absolute"
-                style={{ top: "10px", right: "10px" }}
-              ></button>
-              <img src={i.url} alt="" width={200} height={200} />
-            </div>
-          ))}
+          {img.length > 0
+            ? img.map((i) => (
+                <div key={i.public_id} className="position-relative">
+                  <img
+                    src={i.url}
+                    alt="uploaded"
+                    className="img-fluid rounded-3"
+                    width={120}
+                  />
+                </div>
+              ))
+            : null}
         </div>
 
         <button
-          className="btn btn-success border-0 rounded-3 my-5"
+          className="btn btn-primary border-0 rounded-3 mt-5"
           type="submit"
         >
-          {getBlogId !== undefined ? "Cập nhật" : "Thêm"} Blog
+          {isLoading
+            ? "Đang xử lý..."
+            : getBlogId
+            ? "Cập nhật blog"
+            : "Thêm blog"}
         </button>
       </form>
     </div>

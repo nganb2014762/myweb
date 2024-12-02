@@ -25,20 +25,20 @@ const Blog = () => {
       <Container class1="blog-wrapper home-wrapper-2 py-5">
         <div className="row">
           
-          <div className="col-9">
+          <div className="col-12">
             <div className="row">
               {blogState &&
                 blogState?.map((item, index) => {
                   return (
-                    <div className="col-6 mb-3" key={index}>
+                    <div className="col-4 mb-3" key={index}>
                       <BlogCard
+                        style={{ width: '300px', height: '400px', border: '1px solid #ccc' }}
                         id={item?._id}
                         title={item?.title}
                         description={item?.description}
                         image={item?.images[0]?.url}
-                        date={moment(item?.createdAt).format(
-                          "MMMM Do YYYY, h:mm a"
-                        )}
+                        date={moment(item?.createdAt).format("DD [tháng] MM [năm] YYYY")}
+
                       />
                     </div>
                   );
