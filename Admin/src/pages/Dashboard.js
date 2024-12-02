@@ -1,49 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { BsArrowDownRight, BsArrowUpRight } from "react-icons/bs";
 import { Column } from "@ant-design/plots";
 import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getMonthlyData,
-  getOrders,
-  getYearlyData,
-} from "../features/auth/authSlice";
+import { getMonthlyData, getOrders } from "../features/auth/authSlice";
 
 const columns = [
-
-  {
-    title: "Tên khách hàng",
-    dataIndex: "name",
-  },
-  {
-    title: "Số lượng",
-    dataIndex: "product",
-  },
-  {
-    title: "Tạm tính",
-    dataIndex: "price",
-  },
-  {
-    title: "Tổng",
-    dataIndex: "dprice",
-  },
-  {
-    title: "Trạng thái",
-    dataIndex: "staus",
-  },
+  { title: "Tên khách hàng", dataIndex: "name" },
+  { title: "Số lượng", dataIndex: "product" },
+  { title: "Tạm tính", dataIndex: "price" },
+  { title: "Tổng", dataIndex: "dprice" },
+  { title: "Trạng thái", dataIndex: "staus" },
 ];
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-
   const monthlyDataState = useSelector((state) => state?.auth?.monthlyData);
-  const yearlyDataState = useSelector((state) => state?.auth?.yearlyData);
   const orderState = useSelector((state) => state?.auth?.orders?.orders);
-  console.log(orderState);
 
   const [dataMonthly, setDataMonthly] = useState([]);
   const [dataMonthlySales, setDataMonthlySales] = useState([]);
   const [orderData, setOrderData] = useState([]);
+  const [totalRevenue, setTotalRevenue] = useState(0);
 
   const getTokenFromLocalStorage = localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user"))
@@ -60,79 +37,89 @@ const Dashboard = () => {
 
   useEffect(() => {
     dispatch(getMonthlyData(config3));
-    dispatch(getYearlyData(config3));
     dispatch(getOrders(config3));
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     let monthNames = [
-      "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12"
+      "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12",
     ];
-    let data = [];
-    let monthlyOrderCount = [];
   
-    // Tính tổng doanh thu
+    // Xử lý số lượng đơn hàng và doanh thu theo tháng từ orderState
+    let monthlyOrderCount = Array(12).fill(0);
+    let monthlyRevenueCount = Array(12).fill(0);
+  
+    orderState?.forEach((order) => {
+      const month = new Date(order.createdAt).getMonth(); // Tháng từ 0 đến 11
+  
+      if (order.orderStatus === "Delivered") {
+        // Tăng số lượng đơn hàng theo tháng
+        monthlyOrderCount[month] += 1;
+  
+        // Cộng doanh thu vào tháng tương ứng, áp dụng điều kiện PayPal
+        let revenue = order.totalPriceAfterDiscount;
+        if (order.paymentInfo.method === "PayPal") {
+          revenue = (order.totalPriceAfterDiscount / 0.000039).toFixed(2);
+        }
+        monthlyRevenueCount[month] += parseFloat(revenue); // Chuyển đổi sang số để cộng dồn
+      }
+    });
+  
+    // Cập nhật dữ liệu cho biểu đồ số đơn hàng
+    const dataMonthlySales = monthNames.map((month, index) => {
+      return {
+        type: month,
+        income: monthlyOrderCount[index] || 0,
+      };
+    });
+    setDataMonthlySales(dataMonthlySales);
+  
+    // Cập nhật dữ liệu cho biểu đồ doanh thu
+    const dataMonthlyRevenue = monthNames.map((month, index) => {
+      return {
+        type: month,
+        income: monthlyRevenueCount[index] || 0,
+      };
+    });
+    setDataMonthly(dataMonthlyRevenue);
+  
+    // Xử lý chi tiết đơn hàng
     let totalRevenue = 0;
+    const orderList = orderState?.map((order, index) => {
+      let adjustedPrice =
+        order.paymentInfo.method === "PayPal"
+          ? (order.totalPriceAfterDiscount / 0.000039).toFixed(2)
+          : order.totalPriceAfterDiscount.toFixed(2);
   
-    // Dữ liệu doanh thu theo tháng
-    for (let index = 0; index < monthlyDataState?.length; index++) {
-      const element = monthlyDataState[index];
-      data.push({
-        type: monthNames[element?._id?.month],
-        income: element?.amount,
-      });
-      monthlyOrderCount.push({
-        type: monthNames[element?._id?.month],
-        income: element?.count,
-      });
-    }
+      if (order.orderStatus === "Delivered") {
+        totalRevenue += order.totalPriceAfterDiscount;
+      }
   
-    setDataMonthly(data);
-    setDataMonthlySales(monthlyOrderCount);
-  
-    // Dữ liệu đơn hàng, bao gồm thông tin về phương thức thanh toán PayPal
-    const data1 = [];
-  
-    for (let i = 0; i < orderState?.length; i++) {
-      const order = orderState[i];
-  
-      // Kiểm tra nếu phương thức thanh toán là PayPal
-      const adjustedPrice = order.paymentInfo.method === "PayPal"
-        ? (order.totalPriceAfterDiscount / 0.000039).toFixed(2) // Làm tròn đến 2 chữ số thập phân
-        : order.totalPriceAfterDiscount.toFixed(2); // Làm tròn đến 2 chữ số thập phân nếu không phải PayPal
-  
-      // Cộng dồn tổng doanh thu
-      totalRevenue += order.totalPriceAfterDiscount;
-  
-      data1.push({
-        key: i + 1,
+      return {
+        key: index + 1,
         name: order.user.name,
         product: order.orderItems?.length,
-        price: order.totalPrice.toFixed(2), // Làm tròn giá gốc đến 2 chữ số thập phân
-        dprice: adjustedPrice, // Hiển thị giá đã điều chỉnh nếu thanh toán bằng PayPal
+        price: order.totalPrice.toFixed(2),
+        dprice: adjustedPrice,
         staus: order.orderStatus,
-      });
-    }
+      };
+    });
   
-    setOrderData(data1);
+    setOrderData(orderList || []);
+    setTotalRevenue(totalRevenue.toFixed(2));
+  }, [orderState]);
   
-    // Cập nhật tổng doanh thu vào state
-    setTotalRevenue(totalRevenue.toFixed(2)); // Làm tròn tổng doanh thu
-  }, [monthlyDataState, yearlyDataState, orderState]);
-  
-  const config = {
+   
+
+  // Config cho biểu đồ doanh thu
+  const configRevenue = {
     data: dataMonthly,
     xField: "type",
     yField: "income",
-    color: ({ type }) => {
-      return "#ffd333";
-    },
+    color: "#ffd333",
     label: {
       position: "middle",
-      style: {
-        fill: "#FFFFFF",
-        opacity: 1,
-      },
+      style: { fill: "#121111", opacity: 1 },
     },
     xAxis: {
       label: {
@@ -140,29 +127,17 @@ const Dashboard = () => {
         autoRotate: false,
       },
     },
-    meta: {
-      type: {
-        alias: "Month",
-      },
-      sales: {
-        alias: "Income",
-      },
-    },
   };
 
-  const config2 = {
+  // Config cho biểu đồ số đơn hàng
+  const configOrders = {
     data: dataMonthlySales,
     xField: "type",
     yField: "income",
-    color: ({ type }) => {
-      return "#ffd333";
-    },
+    color: "#ffd333",
     label: {
       position: "middle",
-      style: {
-        fill: "#FFFFFF",
-        opacity: 1,
-      },
+      style: { fill: "#121111", opacity: 1 },
     },
     xAxis: {
       label: {
@@ -170,47 +145,27 @@ const Dashboard = () => {
         autoRotate: false,
       },
     },
-    meta: {
-      type: {
-        alias: "Month",
-      },
-      sales: {
-        alias: "Income",
-      },
-    },
   };
-
-  const [totalRevenue, setTotalRevenue] = useState(0); 
 
   return (
     <div>
-      
-  
       <div className="d-flex justify-content-between align-items gap-3">
         <div className="mt-4 flex-grow-1 w-50">
-          <h3 className="mb-5 title">Doanh thu </h3>
-          <div>
-            <Column {...config} />
-          </div>
+          <h3 className="mb-5 title">Doanh thu</h3>
+          <Column {...configRevenue} />
         </div>
         <div className="mt-4 flex-grow-1">
-          <h3 className="mb-5 title">Đơn hàng </h3>
-          <div>
-            <Column {...config2} />
-          </div>
+          <h3 className="mb-5 title">Đơn hàng</h3>
+          <Column {...configOrders} />
         </div>
       </div>
-  
+
       <div className="mt-4">
-        <h3 className="mb-5 title">Đơn hàng</h3>
-        <div>
-          <Table columns={columns} dataSource={orderData} />
-        </div>
+        <h3 className="mb-5 title">Chi tiết đơn hàng</h3>
+        <Table columns={columns} dataSource={orderData} />
       </div>
     </div>
   );
-  
-  
 };
 
 export default Dashboard;
