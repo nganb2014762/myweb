@@ -30,6 +30,7 @@ const Cart = () => {
   const [totalAmount, setTotalAmount] = useState(null);
   const userCartState = useSelector((state) => state.auth.cartProducts);
   const isFirstRender = React.useRef(true);
+  const productState = useSelector((state) => state?.product?.singleproduct);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -126,7 +127,7 @@ const Cart = () => {
                           className="form-control"
                           type="number"
                           min={1}
-                          max={10}
+                          max={productState?.quantity || 1}
                           value={updatedQuantity[item._id] || item.quantity}
                           onChange={(e) =>
                             handleQuantityChange(item._id, e.target.value)
