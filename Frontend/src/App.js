@@ -27,6 +27,7 @@ import Orders from "./pages/Orders";
 import Profile from "./pages/Profile";
 import Success from './pages/Success';
 import Cancel from './pages/Cancel';
+import ChatWidget from "./components/ChatWidget";
 
 function App() {
   return (
@@ -109,6 +110,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      <ChatWidget />
     </>
   );
 }

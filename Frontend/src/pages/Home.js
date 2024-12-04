@@ -369,15 +369,14 @@ const Home = () => {
             blogState?.map((item, index) => {
               if (index < 4) {
                 return (
-                  <div className="col-3 " key={index}>
+                  <div className="col-4 py-2" key={index}>
                     <BlogCard
                       id={item?._id}
                       title={item?.title}
                       description={item?.description}
                       image={item?.images[0]?.url}
-                      date={moment(item?.createdAt).format(
-                        "MMMM Do YYYY, h:mm a"
-                      )}
+                      date={moment(item?.createdAt).format("DD [tháng] MM [năm] YYYY")}
+
                     />
                   </div>
                 );
