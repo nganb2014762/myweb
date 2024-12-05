@@ -428,12 +428,31 @@ const createOrder = async (req, res) => {
   }
 
   try {
+    // Tạo mảng orderItems với thông tin chi tiết sản phẩm
+    const processedItems = await Promise.all(
+      orderItems.map(async (item) => {
+        const product = await Product.findById(item.product); // Lấy thông tin sản phẩm từ CSDL
+        if (!product) {
+          throw new Error(`Sản phẩm với ID ${item.product} không tồn tại`);
+        }
+
+        return {
+          product: product._id, // ID sản phẩm
+          title: product.title, // Tên sản phẩm
+          brand: product.brand, 
+          category: product.category,
+          price: product.price, // Giá sản phẩm
+          quantity: item.quantity, // Số lượng đặt hàng
+        };
+      })
+    );
+
     // Tạo đơn hàng
     const newOrder = await Order.create({
       user: req.user._id,
       shippingInfo,
       paymentInfo,
-      orderItems,
+      orderItems: processedItems, // Lưu thông tin tĩnh vào đơn hàng
       totalPrice,
       totalPriceAfterDiscount,
       paidAt: paymentInfo.method === "PayPal" ? new Date() : null,
@@ -441,8 +460,8 @@ const createOrder = async (req, res) => {
     });
 
     // Giảm số lượng kho cho từng sản phẩm trong đơn hàng
-    for (const item of newOrder.orderItems) {
-      const product = await Product.findById(item.product._id);
+    for (const item of processedItems) {
+      const product = await Product.findById(item.product);
       if (product) {
         if (product.quantity >= item.quantity) {
           product.quantity -= item.quantity; // Giảm số lượng kho
@@ -454,8 +473,6 @@ const createOrder = async (req, res) => {
             message: `Sản phẩm ${product.title} không đủ hàng trong kho. Chỉ còn ${product.quantity}`,
           });
         }
-      } else {
-        return res.status(404).json({ success: false, message: "Sản phẩm không tồn tại" });
       }
     }
 
@@ -465,8 +482,6 @@ const createOrder = async (req, res) => {
     res.status(500).json({ success: false, message: "Không thể tạo đơn hàng" });
   }
 };
-
-
 
 const getMyOrders = asyncHandler(async (req, res) => {
   const { _id } = req.user;

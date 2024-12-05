@@ -210,21 +210,7 @@ const SingleProduct = () => {
                     </button>
                   </div>
                 </div>
-                <div className="d-flex align-items-center gap-15">
-                  <div>
-                    {isFilled ? (
-                      <AiFillHeart
-                        className="fs-5 me-2"
-                        onClick={() => setIsFilled(!isFilled)}
-                      />
-                    ) : (
-                      <AiOutlineHeart
-                        className="fs-5 me-2"
-                        onClick={() => setIsFilled(!isFilled)}
-                      />
-                    )}
-                  </div>
-                </div>
+                
               </div>
             </div>
           </div>

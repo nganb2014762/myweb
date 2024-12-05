@@ -38,12 +38,16 @@ export const getaOrder = createAsyncThunk(
   "order/get-order",
   async (id, thunkAPI) => {
     try {
-      return await authService.getOrder(id);
+      const orderData = await authService.getOrder(id);
+      console.log("Dữ liệu trả về từ API:", orderData); // Kiểm tra dữ liệu
+      return orderData;
     } catch (error) {
+      console.error("Lỗi gọi API:", error);
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
+
 
 export const updateAOrder = createAsyncThunk(
   "order/update-order",

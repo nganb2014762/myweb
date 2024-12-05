@@ -188,7 +188,7 @@ const Orders = () => {
                                 whiteSpace: "normal",
                               }}
                             >
-                              {i?.product?.title}
+                              {i?.title}
                             </td>
                             <td>{i?.quantity}</td>
                             <td>

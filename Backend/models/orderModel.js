@@ -60,16 +60,27 @@ var orderSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
-        quantity: {
-          type: Number,
+        title: {
+          type: String,
           required: true,
         },
         price: {
           type: Number,
           required: true,
         },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+        brand: {
+          type: String,
+        },
+        category: {
+          type: String,
+        },
       },
     ],
+    
     paidAt: {
       type: Date,
     },
@@ -101,6 +112,7 @@ orderSchema.pre("save", function (next) {
   }
   next(); 
 });
+
 
 // Xuất mô hình
 module.exports = mongoose.model("Order", orderSchema);

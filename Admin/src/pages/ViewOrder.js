@@ -19,13 +19,14 @@ const columns = [
     dataIndex: "brand",
   },
   {
+    title: "Phân loại",
+    dataIndex: "category",
+  },
+  {
     title: "Số lượng",
     dataIndex: "count",
   },
-  // {
-  //   title: "Color",
-  //   dataIndex: "color",
-  // },
+  
   {
     title: "Giá tiền",
     dataIndex: "amount",
@@ -45,8 +46,9 @@ const ViewOrder = () => {
   for (let i = 0; i < orderState?.orderItems?.length; i++) {
     data1.push({
       key: i + 1,
-      name: orderState?.orderItems[i]?.product?.title,
-      brand: orderState?.orderItems[i]?.product?.brand,
+      name: orderState?.orderItems[i]?.title,
+      brand: orderState?.orderItems[i]?.brand,
+      category: orderState?.orderItems[i]?.category,
       count: orderState?.orderItems[i]?.quantity,
       amount: orderState?.orderItems[i]?.price,
       

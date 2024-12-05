@@ -110,10 +110,14 @@ const Checkout = () => {
   useEffect(() => {
     let items = [];
     for (let index = 0; index < cartState?.length; index++) {
+      const product = cartState[index].productId; // Đảm bảo lấy thông tin từ productId
       items.push({
-        product: cartState[index].productId._id,
+        product: product._id, // ID sản phẩm
+        title: product.title,
+        brand: product.brand,
+        category: product.category, // Tiêu đề sản phẩm
         quantity: cartState[index].quantity,
-        price: cartState[index].price,
+        price: product.price, // Giá từ productId
       });
     }
     setCartProductState(items);
@@ -125,26 +129,26 @@ const Checkout = () => {
     if (paymentMethod === "PayPal") {
       finalAmount = (finalAmount * 0.000039).toFixed(2); // Làm tròn đến 2 chữ số thập phân
     }
-  
+
     if (!isPayPalReady) {
       console.error("PayPal SDK chưa được tải");
       return;
     }
-  
+
     try {
       const result = await axios.post(
         "http://localhost:5000/api/user/order/create-paypal-order",
         { amount: finalAmount }, // Gửi số tiền đã được làm tròn
         config
       );
-  
+
       if (!result.data.success) {
         alert("Something went wrong");
         return;
       }
-  
+
       const { orderId } = result.data;
-  
+
       if (document.getElementById("paypal-button-container")) {
         window.paypal
           .Buttons({
@@ -161,7 +165,7 @@ const Checkout = () => {
             },
             onApprove: async (data, actions) => {
               const details = await actions.order.capture();
-  
+
               dispatch(
                 createAnOrder({
                   totalPrice: finalAmount, // Sử dụng số tiền đã làm tròn
@@ -174,7 +178,7 @@ const Checkout = () => {
                   shippingInfo: JSON.parse(localStorage.getItem("address")),
                 })
               );
-              
+
               dispatch(deleteUserCart(config2));
               localStorage.removeItem("address");
               dispatch(resetState());
@@ -192,7 +196,6 @@ const Checkout = () => {
       alert("Something went wrong");
     }
   };
-  
 
   const handleCODOrder = () => {
     dispatch(
@@ -305,41 +308,39 @@ const Checkout = () => {
             <div id="paypal-button-container">
               <div className="border-bottom py-4">
                 {cartState &&
-                  cartState?.map((item, index) => {
-                    return (
-                      <div
-                        key={index}
-                        className="d-flex gap-10 mb-2 align-align-items-center"
-                      >
-                        <div className="w-75 d-flex gap-10">
-                          <div className="w-25 position-relative">
-                            <span
-                              style={{ top: "-10px", right: "2px" }}
-                              className="badge bg-secondary text-white rounded-circle p-2 position-absolute"
-                            >
-                              {item?.quantity}
-                            </span>
-                            <img
-                              src={item?.productId?.images[0]?.url}
-                              width={100}
-                              height={100}
-                              alt="product"
-                            />
-                          </div>
-                          <div>
-                            <h5 className="total-price">
-                              {item?.productId?.title}
-                            </h5>
-                          </div>
+                  cartState.map((item, index) => (
+                    <div
+                      key={index}
+                      className="d-flex gap-10 mb-2 align-align-items-center"
+                    >
+                      <div className="w-75 d-flex gap-10">
+                        <div className="w-25 position-relative">
+                          <span
+                            style={{ top: "-10px", right: "2px" }}
+                            className="badge bg-secondary text-white rounded-circle p-2 position-absolute"
+                          >
+                            {item?.quantity}
+                          </span>
+                          <img
+                            src={item?.productId?.images[0]?.url}
+                            width={100}
+                            height={100}
+                            alt={`${item?.productId?.title} - ${item?.productId?.brand} - ${item?.productId?.category}`} 
+                          />
                         </div>
-                        <div className="flex-grow-1">
-                          <h5 className="total">
-                            {item?.price * item?.quantity}
+                        <div>
+                          <h5 className="total-price">
+                            {item?.productId?.title}
                           </h5>
                         </div>
                       </div>
-                    );
-                  })}
+                      <div className="flex-grow-1">
+                        <h5 className="total">
+                          {item?.price * item?.quantity}
+                        </h5>
+                      </div>
+                    </div>
+                  ))}
               </div>
               <div className="border-bottom py-4">
                 <div className="d-flex justify-content-between align-items-center">
