@@ -269,7 +269,12 @@ export const authSlice = createSlice({
         state.isSuccess = true;
         state.cartProduct = action.payload;
         if (state.isSuccess) {
-          toast.success("Đã thêm vào giỏ hàng");
+          toast.success("Đã thêm!", {
+            autoClose: 1000, // Thời gian toast tự đóng là 1 giây
+            hideProgressBar: true, 
+            pauseOnHover: false,
+            draggable: false,
+          });
         }
       })
       .addCase(addProdToCart.rejected, (state, action) => {
@@ -302,7 +307,12 @@ export const authSlice = createSlice({
         state.isSuccess = true;
         state.deletedCartProduct = action.payload;
         if (state.isSuccess) {
-          toast.success("Đã xóa khỏi giỏ hàng!");
+          toast.success("Thành công!", {
+            autoClose: 1000, // Thời gian toast tự đóng là 1 giây
+            hideProgressBar: true, 
+            pauseOnHover: false,
+            draggable: false,
+          });
         }
       })
       .addCase(deleteCartProduct.rejected, (state, action) => {
@@ -403,7 +413,12 @@ export const authSlice = createSlice({
           };
           localStorage.setItem("customer", JSON.stringify(newUserData));
           state.user = newUserData;
-          toast.success("Thành công!");
+          toast.success("Thành công!", {
+            autoClose: 1000, // Thời gian toast tự đóng là 1 giây
+            hideProgressBar: true, 
+            pauseOnHover: false,
+            draggable: false,
+          });
         }
       })
       .addCase(updateProfile.rejected, (state, action) => {
@@ -446,7 +461,12 @@ export const authSlice = createSlice({
         state.isSuccess = true;
         state.pass = action.payload;
         if (state.isSuccess) {
-          toast.success("Thành công!");
+          toast.success("Thành công!", {
+            autoClose: 1000, // Thời gian toast tự đóng là 1 giây
+            hideProgressBar: true, 
+            pauseOnHover: false,
+            draggable: false,
+          });
         }
       })
       .addCase(resetPassword.rejected, (state, action) => {

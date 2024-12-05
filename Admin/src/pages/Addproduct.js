@@ -71,8 +71,8 @@ const Addproduct = () => {
     if (isSuccess && createdProduct) {
       toast.success("Thêm sản phẩm thành công!");
       setTimeout(() => {
-        navigate("/admin/list-product");  
-      }, 1000); 
+        navigate("/admin/list-product");
+      }, 1000);
     }
     if (isSuccess && updatedProduct) {
       toast.success("Sản phẩm cập nhật thành công!");
@@ -82,7 +82,7 @@ const Addproduct = () => {
       toast.error("Lỗi!");
     }
   }, [isSuccess, isError, isLoading, createdProduct, updatedProduct, navigate]);
-  
+
   const img = [];
   imgState?.forEach((i) => {
     img.push({
@@ -113,7 +113,16 @@ const Addproduct = () => {
         quantity: productQuantity || "",
       });
     }
-  }, [productName, productDesc, productPrice, productBrand, productCategory, productTag, productQuantity, productImages]);
+  }, [
+    productName,
+    productDesc,
+    productPrice,
+    productBrand,
+    productCategory,
+    productTag,
+    productQuantity,
+    productImages,
+  ]);
 
   const formik = useFormik({
     initialValues: {
@@ -128,25 +137,23 @@ const Addproduct = () => {
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      console.log("Dữ liệu gửi lên server: ", values);
       const dataToSend = {
-        ...values,  // Các thông tin khác của sản phẩm
-        images: img,  // Hình ảnh đã upload
+        ...values,
+        images: img.length > 0 ? img : productImages, // Dùng ảnh mới nếu có, ngược lại giữ nguyên ảnh cũ
       };
-    
+
       if (getProductId) {
         const data = { id: getProductId, productData: dataToSend };
         dispatch(updateAProduct(data));
       } else {
         dispatch(createProducts(dataToSend));
         formik.resetForm();
-    
+
         setTimeout(() => {
           dispatch(resetState());
-        }, 3000);
+        }, 2000);
       }
-    }
-    
+    },
   });
 
   return (
@@ -246,12 +253,12 @@ const Addproduct = () => {
             Độ phổ biến
           </option>
           <option value="Phổ biến">Phổ biến</option>
-          <option value="Được tìm kiếm nhiều nhất">Được tìm kiếm nhiều nhất</option>
+          <option value="Được tìm kiếm nhiều nhất">
+            Được tìm kiếm nhiều nhất
+          </option>
           <option value="Bán chạy nhất">Bán chạy nhất</option>
         </select>
-        <div className="error">
-          {formik.touched.tags && formik.errors.tags}
-        </div>
+        <div className="error">{formik.touched.tags && formik.errors.tags}</div>
 
         <CustomInput
           type="number"
@@ -266,7 +273,9 @@ const Addproduct = () => {
         </div>
 
         <div className="bg-white border-1 p-5 text-center">
-          <Dropzone onDrop={(acceptedFiles) => dispatch(uploadImg(acceptedFiles))}>
+          <Dropzone
+            onDrop={(acceptedFiles) => dispatch(uploadImg(acceptedFiles))}
+          >
             {({ getRootProps, getInputProps }) => (
               <section>
                 <div {...getRootProps()}>
@@ -279,22 +288,38 @@ const Addproduct = () => {
         </div>
 
         <div className="showimages d-flex flex-wrap gap-3">
-          {img.length > 0
-            ? img.map((i) => (
-                <div key={i.public_id} className="position-relative">
-                  <img
-                    src={i.url}
-                    alt="uploaded"
-                    className="img-fluid rounded-3"
-                    width={120}
-                  />
-                </div>
-              ))
-            : null}
+          {(img.length > 0 ? img : imgshow).map((i) => (
+            <div key={i.public_id} className="position-relative">
+              <button
+                type="button"
+                className="btn-close position-absolute"
+                style={{ top: "10px", right: "10px" }}
+                onClick={() => {
+                  dispatch(delImg(i.public_id));
+                  setImages((prev) =>
+                    prev.filter((img) => img.public_id !== i.public_id)
+                  );
+                }}
+              ></button>
+              <img
+                src={i.url}
+                alt="uploaded"
+                className="img-fluid rounded-3"
+                width={120}
+              />
+            </div>
+          ))}
         </div>
 
-        <button className="btn btn-primary border-0 rounded-3 mt-5" type="submit">
-          {isLoading ? "Đang xử lý..." : getProductId ? "Cập nhật sản phẩm" : "Thêm sản phẩm"}
+        <button
+          className="btn btn-primary border-0 rounded-3 mt-5"
+          type="submit"
+        >
+          {isLoading
+            ? "Đang xử lý..."
+            : getProductId
+            ? "Cập nhật sản phẩm"
+            : "Thêm sản phẩm"}
         </button>
       </form>
     </div>
