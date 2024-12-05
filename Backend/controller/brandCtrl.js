@@ -44,12 +44,13 @@ const getBrand = asyncHandler(async (req, res) => {
 });
 const getallBrand = asyncHandler(async (req, res) => {
   try {
-    const getallBrand = await Brand.find();
+    const getallBrand = await Brand.find().sort({ createdAt: -1 }); // Sắp xếp theo thời gian mới nhất
     res.json(getallBrand);
   } catch (error) {
     throw new Error(error);
   }
 });
+
 module.exports = {
   createBrand,
   updateBrand,

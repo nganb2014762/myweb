@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "../components/Container";
 import BreadCrumb from "../components/BreadCrumb";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,9 +9,14 @@ import {
 } from "../features/user/userSlice";
 
 const Orders = () => {
+  const [filterStatus, setFilterStatus] = useState("All");
   const dispatch = useDispatch();
   const orderState = useSelector(
     (state) => state?.auth?.getorderedProduct?.orders
+  );
+
+  const filteredOrders = orderState?.filter(
+    (order) => filterStatus === "All" || order.orderStatus === filterStatus
   );
 
   const getTokenFromLocalStorage = localStorage.getItem("customer")
@@ -86,10 +91,31 @@ const Orders = () => {
   return (
     <>
       <BreadCrumb title="Đơn hàng của tôi" />
+
       <Container class1="cart-wrapper home-wrapper-2 py-5">
+        <div className="filter-bar my-3">
+          <label htmlFor="order-status" style={{ marginRight: "10px" }}>
+            Lọc theo trạng thái:
+          </label>
+          <select
+            id="order-status"
+            className="form-select"
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            style={{ width: "200px", display: "inline-block" }}
+          >
+            <option value="All">Tất cả</option>
+            <option value="Ordered">Đã đặt</option>
+            <option value="Processed">Đang chuẩn bị hàng</option>
+            <option value="Shipped">Đang vận chuyển</option>
+            <option value="Cancelled">Đã hủy</option>
+            <option value="Delivered">Thành công</option>
+          </select>
+        </div>
+
         <div className="row">
-          {orderState &&
-            orderState.map((item, index) => (
+          {filteredOrders  &&
+            filteredOrders.map((item, index) => (
               <div
                 className="row pt-3 my-3"
                 key={index}
@@ -216,7 +242,9 @@ const Orders = () => {
 
                         <tr>
                           <td colSpan="2">
-                            {item?.orderStatus === "Ordered" ? (
+                            {["Ordered", "Processed"].includes(
+                              item?.orderStatus
+                            ) ? (
                               <button
                                 className="btn btn-danger"
                                 onClick={() => handleCancelOrder(item._id)}

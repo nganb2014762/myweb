@@ -453,7 +453,7 @@ const getMyOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find({ user: _id })
       .populate("user")
       .populate("orderItems.product")
-      // .populate("orderItems.color");
+      .sort({ createdAt: -1 });
     res.json({
       orders,
     });
@@ -463,18 +463,19 @@ const getMyOrders = asyncHandler(async (req, res) => {
 });
 
 const getAllOrders = asyncHandler(async (req, res) => {
-  const { _id } = req.user;
   try {
-    const orders = await Order.find().populate("user");
-    // .populate("orderItems.product")
-    // .populate("orderItems.color");
+    const orders = await Order.find()
+      .populate("user") 
+      .sort({ createdAt: -1 }); 
+
     res.json({
       orders,
     });
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error); // Xử lý lỗi nếu có
   }
 });
+
 
 const getsingleOrder = asyncHandler(async (req, res) => {
   const { id } = req.params;

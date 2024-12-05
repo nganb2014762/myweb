@@ -44,7 +44,7 @@ const getEnquiry = asyncHandler(async (req, res) => {
 });
 const getallEnquiry = asyncHandler(async (req, res) => {
   try {
-    const getallEnquiry = await Enquiry.find();
+    const getallEnquiry = await Enquiry.find().sort({ createdAt: -1 });
     res.json(getallEnquiry);
   } catch (error) {
     throw new Error(error);
