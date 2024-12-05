@@ -61,9 +61,9 @@ const ProductCard = (props) => {
                   onClick={(e) => addToWish(item?._id)}
                 >
                   {isWishlist ? (
-                    <AiFillHeart className="fs-5 me-1" />
+                    <AiFillHeart className="fs-5 text-danger" />
                   ) : (
-                    <AiOutlineHeart className="fs-5 me-1" />
+                    <AiOutlineHeart className="fs-5 text-muted" />
                   )}
                 </button>
               </div>

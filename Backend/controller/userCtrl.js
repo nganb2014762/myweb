@@ -428,6 +428,7 @@ const createOrder = async (req, res) => {
   }
 
   try {
+    // Tạo đơn hàng
     const newOrder = await Order.create({
       user: req.user._id,
       shippingInfo,
@@ -436,7 +437,27 @@ const createOrder = async (req, res) => {
       totalPrice,
       totalPriceAfterDiscount,
       paidAt: paymentInfo.method === "PayPal" ? new Date() : null,
+      orderStatus: "Ordered", // Đặt trạng thái là "Ordered" khi tạo đơn hàng
     });
+
+    // Giảm số lượng kho cho từng sản phẩm trong đơn hàng
+    for (const item of newOrder.orderItems) {
+      const product = await Product.findById(item.product._id);
+      if (product) {
+        if (product.quantity >= item.quantity) {
+          product.quantity -= item.quantity; // Giảm số lượng kho
+          product.sold += item.quantity; // Cập nhật số lượng đã bán
+          await product.save(); // Lưu thay đổi vào cơ sở dữ liệu
+        } else {
+          return res.status(400).json({
+            success: false,
+            message: `Sản phẩm ${product.title} không đủ hàng trong kho. Chỉ còn ${product.quantity}`,
+          });
+        }
+      } else {
+        return res.status(404).json({ success: false, message: "Sản phẩm không tồn tại" });
+      }
+    }
 
     res.status(201).json({ success: true, order: newOrder });
   } catch (error) {

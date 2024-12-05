@@ -9,7 +9,7 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai"; // Import các ico
 
 const Wishlist = () => {
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     getWishlistFromDb();
   }, []);
@@ -38,10 +38,19 @@ const Wishlist = () => {
           )}
           {wishlistState &&
             wishlistState?.map((item, index) => {
-              const isWishlist = wishlistState.some((wishItem) => wishItem._id === item._id);
+              const isWishlist = wishlistState.some(
+                (wishItem) => wishItem._id === item._id
+              );
               return (
                 <div className="col-3" key={index}>
-                  <div className="wishlist-card position-relative">
+                  <div
+                    className="wishlist-card position-relative "
+                    style={{
+                      backgroundColor: "#ffff",
+                      borderRadius: "8px",
+                      padding: "16px",
+                    }}
+                  >
                     <button
                       className="border-0 bg-transparent position-absolute"
                       onClick={() => {
@@ -50,12 +59,18 @@ const Wishlist = () => {
                       style={{ top: "10px", right: "10px" }}
                     >
                       {isWishlist ? (
-                        <AiFillHeart className="fs-5" style={{ color: "red" }} />
+                        <AiFillHeart
+                          className="fs-5"
+                          style={{ color: "red" }}
+                        />
                       ) : (
-                        <AiOutlineHeart className="fs-5" style={{ color: "red" }} />
+                        <AiOutlineHeart
+                          className="fs-5"
+                          style={{ color: "red" }}
+                        />
                       )}
                     </button>
-                    <div className="wishlist-card-image">
+                    <div className="wishlist-card-image py-3">
                       <img
                         src={
                           item?.images[0].url

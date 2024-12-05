@@ -67,33 +67,19 @@ const cancelOrder = asyncHandler(async (req, res) => {
 const successOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
-    const order = await Order.findById(orderId).populate('orderItems.product');
+    const order = await Order.findById(orderId);
 
     if (!order) {
       return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
     }
 
-    if (order.orderStatus === 'Delivered') {
-      return res.status(400).json({ message: 'Đơn hàng đã hoàn tất' });
-    }
+    console.log(`Trạng thái đơn hàng hiện tại: ${order.orderStatus}`);
+   
 
-    for (const item of order.orderItems) {
-      const product = await Product.findById(item.product._id);
-      if (product) {
-        if (product.quantity < item.quantity) {
-          return res.status(400).json({
-            message: `Sản phẩm ${product.title} không đủ hàng trong kho. Chỉ còn ${product.quantity}`,
-          });
-        }
-
-        product.quantity -= item.quantity;
-        product.sold += item.quantity;
-        await product.save();
-      }
-    }
-
+    // Cập nhật trạng thái đơn hàng thành "Delivered"
     order.orderStatus = 'Delivered';
     await order.save();
+    console.log(`Cập nhật trạng thái đơn hàng thành "Delivered" thành công`);
 
     res.status(200).json({ message: 'Cập nhật đơn hàng thành công', order });
   } catch (error) {
@@ -101,6 +87,7 @@ const successOrder = async (req, res) => {
     res.status(500).json({ message: 'Lỗi hệ thống', error });
   }
 };
+
 
 
 module.exports = {

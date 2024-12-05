@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Marquee from "react-fast-marquee";
 import BlogCard from "../components/BlogCard";
@@ -37,6 +37,8 @@ const settings = {
 const Home = () => {
   const blogState = useSelector((state) => state?.blog?.blog);
   const productState = useSelector((state) => state?.product?.product);
+  const [wishlist, setWishlist] = useState([]);
+  const wishlistState = useSelector((state) => state?.auth?.wishlist?.wishlist);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -53,9 +55,23 @@ const Home = () => {
     dispatch(getAllProducts());
   };
 
-  const addToWish = (id) => {
-    //alert(id);
-    dispatch(addToWishlist(id));
+  useEffect(() => {
+    setWishlist(wishlistState || []);
+  }, [wishlistState]);
+
+  const isProductInWishlist = (productId) => {
+    return wishlist?.some((item) => item._id === productId);
+  };
+
+  const addToWish = (productId) => {
+    if (isProductInWishlist(productId)) {
+      dispatch(addToWishlist(productId)); // Dispatch action để xóa
+      setWishlist(wishlist.filter((item) => item._id !== productId));
+    } else {
+      dispatch(addToWishlist(productId)); // Dispatch action để thêm
+      const product = productState.find((item) => item._id === productId);
+      setWishlist([...wishlist, product]);
+    }
   };
   return (
     <>
@@ -140,16 +156,21 @@ const Home = () => {
                 <div key={index} className={"col-3"}>
                   <div className="product-card position-relative">
                     <div className="wishlist-icon position-absolute">
-                      <button className="border-0 bg-transparent">
-                        <img
-                          src={wish}
-                          alt="wishlist"
-                          onClick={(e) => {
-                            addToWish(item?._id);
-                          }}
-                        />
+                      <button
+                        className="border-0 bg-transparent"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Ngăn chặn sự kiện nhấp chuột không mong muốn
+                          addToWish(item?._id);
+                        }}
+                      >
+                        {isProductInWishlist(item._id) ? (
+                          <AiFillHeart className="fs-5 text-danger" />
+                        ) : (
+                          <AiOutlineHeart className="fs-5 text-muted" />
+                        )}
                       </button>
                     </div>
+
                     <div className="product-image">
                       {item?.images?.[0]?.url ? (
                         <img
@@ -194,7 +215,9 @@ const Home = () => {
       <Container class1="special-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 className="section-heading text-center">Được tìm kiếm nhiều nhất</h3>
+            <h3 className="section-heading text-center">
+              Được tìm kiếm nhiều nhất
+            </h3>
           </div>
         </div>
         <div className="row">
@@ -206,16 +229,21 @@ const Home = () => {
                 <div key={index} className={"col-3"}>
                   <div className="product-card position-relative">
                     <div className="wishlist-icon position-absolute">
-                      <button className="border-0 bg-transparent">
-                        <img
-                          src={wish}
-                          alt="wishlist"
-                          onClick={(e) => {
-                            addToWish(item?._id);
-                          }}
-                        />
+                      <button
+                        className="border-0 bg-transparent"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Ngăn chặn sự kiện nhấp chuột không mong muốn
+                          addToWish(item?._id);
+                        }}
+                      >
+                        {isProductInWishlist(item._id) ? (
+                          <AiFillHeart className="fs-5 text-danger" />
+                        ) : (
+                          <AiOutlineHeart className="fs-5 text-muted" />
+                        )}
                       </button>
                     </div>
+
                     <div className="product-image">
                       {item?.images?.[0]?.url ? (
                         <img
@@ -272,16 +300,21 @@ const Home = () => {
                 <div key={index} className={"col-3"}>
                   <div className="product-card position-relative">
                     <div className="wishlist-icon position-absolute">
-                      <button className="border-0 bg-transparent">
-                        <img
-                          src={wish}
-                          alt="wishlist"
-                          onClick={(e) => {
-                            addToWish(item?._id);
-                          }}
-                        />
+                      <button
+                        className="border-0 bg-transparent"
+                        onClick={(e) => {
+                          e.stopPropagation(); // Ngăn chặn sự kiện nhấp chuột không mong muốn
+                          addToWish(item?._id);
+                        }}
+                      >
+                        {isProductInWishlist(item._id) ? (
+                          <AiFillHeart className="fs-5 text-danger" />
+                        ) : (
+                          <AiOutlineHeart className="fs-5 text-muted" />
+                        )}
                       </button>
                     </div>
+
                     <div className="product-image">
                       {item?.images?.[0]?.url ? (
                         <img
@@ -375,8 +408,9 @@ const Home = () => {
                       title={item?.title}
                       description={item?.description}
                       image={item?.images[0]?.url}
-                      date={moment(item?.createdAt).format("DD [tháng] MM [năm] YYYY")}
-
+                      date={moment(item?.createdAt).format(
+                        "DD [tháng] MM [năm] YYYY"
+                      )}
                     />
                   </div>
                 );

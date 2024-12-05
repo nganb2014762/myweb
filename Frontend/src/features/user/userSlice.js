@@ -323,7 +323,13 @@ export const authSlice = createSlice({
         state.isSuccess = true;
         state.updatedCartProduct = action.payload;
         if (state.isSuccess) {
-          toast.success("Cập nhật thành công!");
+          toast.success("Đã cập nhật giỏ hàng!", {
+            autoClose: 1000, // Thời gian toast tự đóng là 1 giây
+            hideProgressBar: true, 
+            pauseOnHover: false,
+            draggable: false,
+          });
+          
         }
       })
       .addCase(updateCartProduct.rejected, (state, action) => {
@@ -344,7 +350,12 @@ export const authSlice = createSlice({
         state.isSuccess = true;
         state.orderedProduct = action.payload;
         if (state.isSuccess) {
-          toast.success("Thành công!");
+          toast.success("Thành công!", {
+            autoClose: 1000, // Thời gian toast tự đóng là 1 giây
+            hideProgressBar: true, 
+            pauseOnHover: false,
+            draggable: false,
+          });
         }
       })
       .addCase(createAnOrder.rejected, (state, action) => {
