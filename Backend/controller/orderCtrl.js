@@ -49,20 +49,43 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
 });
 
 const cancelOrder = asyncHandler(async (req, res) => {
-  const order = await Order.findById(req.params.orderId); 
+  const order = await Order.findById(req.params.orderId).populate('orderItems.product'); // Populate để lấy thông tin sản phẩm
 
   if (order) {
     if (order.orderStatus === "Delivered") {
       return res.status(400).json({ message: "Không thể hủy đơn hàng đã giao." });
     }
 
+    // Cập nhật trạng thái đơn hàng thành "Cancelled"
     order.orderStatus = "Cancelled";
+
+    // Tăng số lượng kho cho từng sản phẩm trong đơn hàng
+    for (const item of order.orderItems) {
+      const product = await Product.findById(item.product._id);
+      if (product) {
+        console.log(`Kiểm tra sản phẩm: ${product.title} - Số lượng hiện tại: ${product.quantity}`);
+        
+        // Tăng số lượng kho và giảm số lượng đã bán
+        product.quantity += item.quantity;
+        product.sold -= item.quantity;
+
+        // Đảm bảo số lượng đã bán không giảm dưới 0
+        if (product.sold < 0) {
+          product.sold = 0;
+        }
+
+        await product.save();
+        console.log(`Cập nhật số lượng kho cho sản phẩm: ${product.title}. Số lượng hiện tại: ${product.quantity}`);
+      }
+    }
+
     const cancelledOrder = await order.save();
-    res.json(cancelledOrder);
+    res.json({ message: 'Đơn hàng đã được hủy và số lượng kho được cập nhật thành công.', cancelledOrder });
   } else {
     res.status(404).json({ message: "Không tìm thấy đơn hàng." });
   }
 });
+
 
 const successOrder = async (req, res) => {
   try {
