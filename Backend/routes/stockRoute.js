@@ -56,7 +56,7 @@ router.post("/add-stock", async (req, res) => {
 router.get("/stock-history", async (req, res) => {
   try {
     const stocks = await Stock.find()
-      .populate("products.product", "title") // Populate tên sản phẩm
+      .populate("products.product", "title") 
       .sort("-createdAt");
     res.status(200).json(stocks);
   } catch (error) {

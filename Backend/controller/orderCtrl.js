@@ -86,7 +86,6 @@ const cancelOrder = asyncHandler(async (req, res) => {
   }
 });
 
-
 const successOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
@@ -101,6 +100,7 @@ const successOrder = async (req, res) => {
 
     // Cập nhật trạng thái đơn hàng thành "Delivered"
     order.orderStatus = 'Delivered';
+    order.paymentInfo.paymentStatus = 'Đã thanh toán';
     await order.save();
     console.log(`Cập nhật trạng thái đơn hàng thành "Delivered" thành công`);
 
@@ -110,8 +110,6 @@ const successOrder = async (req, res) => {
     res.status(500).json({ message: 'Lỗi hệ thống', error });
   }
 };
-
-
 
 module.exports = {
   createOrder,

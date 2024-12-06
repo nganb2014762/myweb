@@ -10,10 +10,6 @@ const columns = [
     dataIndex: "key",
   },
   {
-    title: "ID",
-    dataIndex: "id", // Cột ID mới
-  },
-  {
     title: "Tên khách hàng",
     dataIndex: "name",
   },
@@ -26,9 +22,14 @@ const columns = [
     dataIndex: "amount",
   },
   {
+    title: "Thanh toán",
+    dataIndex: "pay",
+  },
+  {
     title: "Ngày đặt",
     dataIndex: "date",
   },
+
   {
     title: "Trạng thái",
     dataIndex: "action",
@@ -37,8 +38,8 @@ const columns = [
 
 const Orders = () => {
   const dispatch = useDispatch();
-  const [filterStatus, setFilterStatus] = useState("All"); // Lưu trạng thái được chọn để lọc
-  const [filteredOrders, setFilteredOrders] = useState([]); // State để lưu danh sách đã lọc
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [filteredOrders, setFilteredOrders] = useState([]);
   const orderState = useSelector((state) => state?.auth?.orders?.orders);
 
   const getTokenFromLocalStorage = localStorage.getItem("user")
@@ -60,7 +61,6 @@ const Orders = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    // Lọc đơn hàng dựa trên trạng thái được chọn
     const filtered = orderState?.filter(
       (order) => filterStatus === "All" || order.orderStatus === filterStatus
     );
@@ -72,20 +72,20 @@ const Orders = () => {
     dispatch(updateAOrder({ id: orderId, status: newStatus }));
   };
 
-  console.log("Trạng thái lọc:", filterStatus); // Kiểm tra trạng thái lọc
-  console.log("Dữ liệu đơn hàng ban đầu:", orderState); // Kiểm tra dữ liệu từ API
-  console.log("Dữ liệu đơn hàng sau khi lọc:", filteredOrders); // Kiểm tra dữ liệu sau khi lọc
+  console.log("Trạng thái lọc:", filterStatus);
+  console.log("Dữ liệu đơn hàng ban đầu:", orderState);
+  console.log("Dữ liệu đơn hàng sau khi lọc:", filteredOrders);
 
   const data1 = filteredOrders?.map((order, index) => ({
     key: index + 1,
-    id: order?._id,
-    name: order?.user?.name,
+    name: order?.shippingInfo?.name,
     product: <Link to={`/admin/order/${order?._id}`}>Chi tiết</Link>,
     amount: order?.totalPrice.toFixed(2),
+    pay: order?.paymentInfo?.paymentStatus,
     date: new Date(order?.createdAt).toLocaleString(),
     action: (
       <select
-        value={order?.orderStatus} // Đảm bảo luôn dùng giá trị từ dữ liệu gốc
+        value={order?.orderStatus}
         onChange={(e) => updateOrderStatus(order?._id, e.target.value)}
         className="form-control form-select"
       >

@@ -85,7 +85,7 @@ const StockHistory = () => {
                           borderBottom: "none",
                         }}
                       >
-                        Sản phẩm
+                        Tên sản phẩm
                       </th>
                       <th
                         style={{
@@ -109,8 +109,8 @@ const StockHistory = () => {
                     {Array.isArray(stock.products) && stock.products.length > 0 ? (
                       stock.products.map((product, idx) => (
                         <tr key={idx}>
-                          <td>{product.product?.title || "Không xác định"}</td>
-                          <td>{product.quantityAdded}</td>
+                          <td>{product.product?.title || "Sản phẩm đã bị xóa"}</td>
+                          <td>{product.quantityAdded } </td>
                           <td>{product.note || "Không có"}</td>
                         </tr>
                       ))

@@ -442,7 +442,8 @@ const createOrder = async (req, res) => {
           brand: product.brand, 
           category: product.category,
           price: product.price, // Giá sản phẩm
-          quantity: item.quantity, // Số lượng đặt hàng
+          quantity: item.quantity,
+          images: product.images, // Số lượng đặt hàng
         };
       })
     );

@@ -46,7 +46,7 @@ var orderSchema = new mongoose.Schema(
       },
       paymentStatus: {
         type: String,
-        default: "Pending",
+        default: "Chưa thanh toán",
       },
       currency: {
         type: String,
@@ -78,6 +78,12 @@ var orderSchema = new mongoose.Schema(
         category: {
           type: String,
         },
+        images: [
+          {
+            public_id: String,
+            url: String,
+          },
+        ],
       },
     ],
     
@@ -108,7 +114,8 @@ var orderSchema = new mongoose.Schema(
 
 orderSchema.pre("save", function (next) {
   if (this.paymentInfo.method === "PayPal") {
-    this.paymentInfo.currency = "USD"; 
+    this.paymentInfo.currency = "USD";
+    this.paymentInfo.paymentStatus = "Đã thanh toán";  
   }
   next(); 
 });

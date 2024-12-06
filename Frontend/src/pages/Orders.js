@@ -114,7 +114,7 @@ const Orders = () => {
         </div>
 
         <div className="row">
-          {filteredOrders  &&
+          {filteredOrders &&
             filteredOrders.map((item, index) => (
               <div
                 className="row pt-3 my-3"
@@ -131,7 +131,7 @@ const Orders = () => {
                       <thead>
                         <tr>
                           <th
-                            colSpan="3"
+                            colSpan="4"
                             style={{
                               fontWeight: "bold",
                               borderBottom: "none",
@@ -141,24 +141,46 @@ const Orders = () => {
                           </th>
                         </tr>
                         <tr>
-                          <td colSpan="3" style={{ fontWeight: "bold" }}>
+                          <td colSpan="4" style={{ fontWeight: "bold" }}>
                             Ngày đặt hàng:{" "}
                             {new Date(item.createdAt).toLocaleString("vi-VN")}
                           </td>
                         </tr>
                         <tr>
-                          <td colSpan="3" style={{ fontWeight: "bold" }}>
+                          <td colSpan="4" style={{ fontWeight: "bold" }}>
                             Phương thức thanh toán: {item?.paymentInfo?.method}
                           </td>
                         </tr>
                         <tr>
                           <th
                             style={{
-                              width: "70%",
+                              width: "25%",
                               borderBottom: "none",
                             }}
                           >
-                            Tên sản phẩm
+                            Sản phẩm
+                          </th>
+                          <th
+                            style={{
+                              width: "35%",
+                              borderBottom: "none",
+                            }}
+                          ></th>
+                          <th
+                            style={{
+                              width: "15%",
+                              borderBottom: "none",
+                            }}
+                          >
+                            Thương hiệu
+                          </th>
+                          <th
+                            style={{
+                              width: "15%",
+                              borderBottom: "none",
+                            }}
+                          >
+                            Phân loại
                           </th>
                           <th
                             style={{
@@ -190,6 +212,21 @@ const Orders = () => {
                             >
                               {i?.title}
                             </td>
+                            <td>
+                              {i?.images.length > 0 && (
+                                <img
+                                  src={i?.images[0]?.url}
+                                  alt={i?.title}
+                                  style={{
+                                    width: "100px",
+                                    height: "150px",
+                                    
+                                  }}
+                                />
+                              )}
+                            </td>
+                            <td>{i?.brand}</td>
+                            <td>{i?.category}</td>
                             <td>{i?.quantity}</td>
                             <td>
                               {item?.paymentInfo?.method === "PayPal"
@@ -203,7 +240,44 @@ const Orders = () => {
                   </div>
                 </div>
 
-                <div className="col-md-4">
+                <div className="col-md-6">
+                  <div className="table-responsive">
+                    <table
+                      className="table"
+                      style={{ width: "100%", tableLayout: "fixed" }}
+                    >
+                      <tbody>
+                        <tr>
+                          <td style={{ fontWeight: "bold", width: "30%" }}>
+                            Người nhận:
+                          </td>
+                          <td style={{ width: "70%" }}>
+                            {item?.shippingInfo?.name}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style={{ fontWeight: "bold", width: "30%" }}>
+                            Tỉnh/Thành phố:
+                          </td>
+                          <td style={{ width: "70%" }}>
+                            {item?.shippingInfo?.address}
+                          </td>
+                        </tr>
+
+                        <tr>
+                          <td style={{ fontWeight: "bold", width: "30%" }}>
+                            Địa chỉ nhận:
+                          </td>
+                          <td style={{ width: "70%" }}>
+                            {item?.shippingInfo?.pincode}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="col-md-6">
                   <div className="table-responsive">
                     <table
                       className="table"
