@@ -257,7 +257,7 @@ const Orders = () => {
                         </tr>
                         <tr>
                           <td style={{ fontWeight: "bold", width: "30%" }}>
-                            Tỉnh/Thành phố:
+                            Địa chỉ:
                           </td>
                           <td style={{ width: "70%" }}>
                             {item?.shippingInfo?.address}
@@ -266,7 +266,7 @@ const Orders = () => {
 
                         <tr>
                           <td style={{ fontWeight: "bold", width: "30%" }}>
-                            Địa chỉ nhận:
+                            SĐT:
                           </td>
                           <td style={{ width: "70%" }}>
                             {item?.shippingInfo?.pincode}

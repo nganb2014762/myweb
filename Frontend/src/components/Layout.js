@@ -1,12 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Footer from "./Footer";
 import Header from "./Header";
-
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Layout = () => {
+  const [showButton, setShowButton] = useState(false);
+
+  // Xử lý sự kiện cuộn
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 1000) {
+        setShowButton(true);
+      } else {
+        setShowButton(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  // Hàm cuộn lên đầu
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <>
       <Header />
@@ -24,6 +46,14 @@ const Layout = () => {
         pauseOnHover
         theme="light"
       />
+      {showButton && (
+        <button
+          className="back-to-top"
+          onClick={scrollToTop}
+        >
+          ↑
+        </button>
+      )}
     </>
   );
 };
