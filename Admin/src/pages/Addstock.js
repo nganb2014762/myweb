@@ -11,6 +11,7 @@ const AddStock = () => {
   const navigate = useNavigate();
   const [productId, setProductId] = useState("");
   const [quantityAdded, setQuantityAdded] = useState("");
+  const [price, setPrice] = useState("");
   const [note, setNote] = useState("");
   const [productList, setProductList] = useState([]); 
 
@@ -19,11 +20,10 @@ const AddStock = () => {
   useEffect(() => {
     dispatch(getProducts());
   }, [dispatch]);
-  
 
   const handleAddProduct = () => {
-    if (!productId || !quantityAdded) {
-      toast.error("Vui lòng chọn sản phẩm và nhập số lượng");
+    if (!productId || !quantityAdded || !price) {
+      toast.error("Vui lòng chọn sản phẩm, nhập số lượng và giá");
       return;
     }
 
@@ -35,12 +35,26 @@ const AddStock = () => {
       return;
     }
 
+    const selectedProduct = productState.find(
+      (product) => product._id === productId
+    );
+    if (!selectedProduct) {
+      toast.error("Không tìm thấy sản phẩm");
+      return;
+    }
+
     setProductList([
       ...productList,
-      { productId, quantityAdded: parseInt(quantityAdded) },
+      {
+        productId,
+        title: selectedProduct.title,
+        price: parseFloat(price), // Lấy giá nhập từ bàn phím
+        quantityAdded: parseInt(quantityAdded),
+      },
     ]);
     setProductId("");
     setQuantityAdded("");
+    setPrice(""); // Reset giá sau khi thêm
   };
 
   const handleRemoveProduct = (id) => {
@@ -53,22 +67,20 @@ const AddStock = () => {
       toast.error("Vui lòng thêm ít nhất một sản phẩm");
       return;
     }
-  
+
     const data = { products: productList, note };
     dispatch(addStock(data)).then((res) => {
       if (res.meta.requestStatus === "fulfilled") {
         toast.success("Nhập kho thành công!");
-  
         setTimeout(() => {
           navigate("/admin/stock-history");
-        }, 1000); 
+        }, 1000);
       } else {
         console.error("Lỗi nhập kho:", res.payload?.message || "Lỗi không xác định");
         toast.error(res.payload?.message || "Lỗi nhập kho");
       }
     });
   };
-   
 
   return (
     <div>
@@ -97,19 +109,27 @@ const AddStock = () => {
             onChange={(e) => setQuantityAdded(e.target.value)}
           />
 
+          <input
+            type="number"
+            placeholder="Giá mới"
+            className="form-control py-3 mb-3"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+
           <button
             type="button"
             onClick={handleAddProduct}
             style={{
               marginBottom: "15px",
               padding: "10px 15px",
-              fontSize: "20px", 
+              fontSize: "20px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <FaPlus size={16} /> 
+            <FaPlus size={16} />
           </button>
         </div>
 
@@ -120,9 +140,7 @@ const AddStock = () => {
               className="list-group-item d-flex justify-content-between align-items-center"
             >
               <span>
-                {productState.find((p) => p._id === item.productId)?.title ||
-                  "Không xác định"}{" "}
-                - {item.quantityAdded} sản phẩm
+                {item.title} - {item.quantityAdded} sản phẩm - Giá nhập: {item.price} VND
               </span>
               <button
                 type="button"
