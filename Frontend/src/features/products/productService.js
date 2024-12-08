@@ -45,9 +45,23 @@ const rateProduct = async (data) => {
   }
 };
 
-export const productSevice = {
+const updateTopSellingTags = async () => {
+  try {
+    const response = await axios.post(`${base_url}product/update-top-selling-tags`, {}, config);
+    if (response.data) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Error updating top selling tags:", error);
+    throw error;
+  }
+};
+
+
+export  const productSevice = {
   getProducts,
   addToWishlist,
   getSingleProduct,
   rateProduct,
+  updateTopSellingTags,
 };

@@ -256,7 +256,6 @@ const Addproduct = () => {
           <option value="Được tìm kiếm nhiều nhất">
             Được tìm kiếm nhiều nhất
           </option>
-          <option value="Bán chạy nhất">Bán chạy nhất</option>
         </select>
         <div className="error">{formik.touched.tags && formik.errors.tags}</div>
 

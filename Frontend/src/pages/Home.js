@@ -2,17 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Marquee from "react-fast-marquee";
 import BlogCard from "../components/BlogCard";
-import ProductCard from "../components/ProductCard";
-import SpecialProduct from "../components/SpecialProduct";
 import Container from "../components/Container";
 import { services } from "../utils/Data";
-import prodcompare from "../images/prodcompare.svg";
-import wish from "../images/wish.svg";
-import wishlist from "../images/wishlist.svg";
-import watch from "../images/watch.jpg";
-import watch2 from "../images/watch-1.avif";
-import addcart from "../images/add-cart.svg";
-import view from "../images/view.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllBlogs } from "../features/blogs/blogSlice";
 import moment from "moment";
@@ -23,6 +14,15 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { productSevice } from "../features/products/productService";
+const handleUpdateTopSellingTags = async () => {
+  try {
+    const result = await productSevice.updateTopSellingTags();
+    console.log(result.message);
+  } catch (error) {
+    console.error("Error updating top selling tags:", error);
+  }
+};
 
 const settings = {
   dots: true,
@@ -146,7 +146,12 @@ const Home = () => {
       <Container class1="featured-wrapper py-5 home-wrapper-2">
         <div className="row">
           <div className="col-12">
-            <h3 className="section-heading text-center">Bán chạy nhất</h3>
+            <h3
+              className="section-heading text-center"
+              onClick={handleUpdateTopSellingTags}style={{ cursor: 'pointer' }}
+            >
+              Bán chạy nhất
+            </h3>
           </div>
           {productState &&
             productState
