@@ -3,6 +3,10 @@ import { Column } from "@ant-design/plots";
 import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getMonthlyData, getOrders } from "../features/auth/authSlice";
+import {
+  getStockHistory,
+  selectMonthlyCost,
+} from "../features/stock/stockSlice"; // Import stockSlice
 
 const columns = [
   { title: "Tên khách hàng", dataIndex: "name" },
@@ -16,6 +20,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const monthlyDataState = useSelector((state) => state?.auth?.monthlyData);
   const orderState = useSelector((state) => state?.auth?.orders?.orders);
+  const monthlyCost = useSelector(selectMonthlyCost); // Lấy chi phí nhập kho từ stockSlice
 
   const [dataMonthly, setDataMonthly] = useState([]);
   const [dataMonthlySales, setDataMonthlySales] = useState([]);
@@ -35,27 +40,40 @@ const Dashboard = () => {
     },
   };
 
+  // Khai báo monthNames ở đây
+  const monthNames = [
+    "T1",
+    "T2",
+    "T3",
+    "T4",
+    "T5",
+    "T6",
+    "T7",
+    "T8",
+    "T9",
+    "T10",
+    "T11",
+    "T12",
+  ];
+
   useEffect(() => {
     dispatch(getMonthlyData(config3));
     dispatch(getOrders(config3));
+    dispatch(getStockHistory()); // Lấy danh sách phiếu nhập kho
   }, [dispatch]);
 
   useEffect(() => {
-    let monthNames = [
-      "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12",
-    ];
-  
     // Xử lý số lượng đơn hàng và doanh thu theo tháng từ orderState
     let monthlyOrderCount = Array(12).fill(0);
     let monthlyRevenueCount = Array(12).fill(0);
-  
+
     orderState?.forEach((order) => {
       const month = new Date(order.createdAt).getMonth(); // Tháng từ 0 đến 11
-  
+
       if (order.orderStatus === "Delivered") {
         // Tăng số lượng đơn hàng theo tháng
         monthlyOrderCount[month] += 1;
-  
+
         // Cộng doanh thu vào tháng tương ứng, áp dụng điều kiện PayPal
         let revenue = order.totalPriceAfterDiscount;
         if (order.paymentInfo.method === "PayPal") {
@@ -64,7 +82,7 @@ const Dashboard = () => {
         monthlyRevenueCount[month] += parseFloat(revenue); // Chuyển đổi sang số để cộng dồn
       }
     });
-  
+
     // Cập nhật dữ liệu cho biểu đồ số đơn hàng
     const dataMonthlySales = monthNames.map((month, index) => {
       return {
@@ -73,7 +91,7 @@ const Dashboard = () => {
       };
     });
     setDataMonthlySales(dataMonthlySales);
-  
+
     // Cập nhật dữ liệu cho biểu đồ doanh thu
     const dataMonthlyRevenue = monthNames.map((month, index) => {
       return {
@@ -82,7 +100,7 @@ const Dashboard = () => {
       };
     });
     setDataMonthly(dataMonthlyRevenue);
-  
+
     // Xử lý chi tiết đơn hàng
     let totalRevenue = 0;
     const orderList = orderState?.map((order, index) => {
@@ -90,11 +108,11 @@ const Dashboard = () => {
         order.paymentInfo.method === "PayPal"
           ? (order.totalPriceAfterDiscount / 0.000039).toFixed(2)
           : order.totalPriceAfterDiscount.toFixed(2);
-  
+
       if (order.orderStatus === "Delivered") {
         totalRevenue += order.totalPriceAfterDiscount;
       }
-  
+
       return {
         key: index + 1,
         name: order.user.name,
@@ -104,12 +122,31 @@ const Dashboard = () => {
         staus: order.orderStatus,
       };
     });
-  
+
     setOrderData(orderList || []);
     setTotalRevenue(totalRevenue.toFixed(2));
   }, [orderState]);
-  
-   
+
+  // Config cho biểu đồ chi phí nhập hàng
+  const configStock = {
+    data: monthNames.map((month, index) => ({
+      type: month,
+      income: monthlyCost[index], // Sử dụng dữ liệu từ selector
+    })),
+    xField: "type",
+    yField: "income",
+    color: "#00FF00", // Màu của biểu đồ
+    label: {
+      position: "middle",
+      style: { fill: "#121111", opacity: 1 },
+    },
+    xAxis: {
+      label: {
+        autoHide: true,
+        autoRotate: false,
+      },
+    },
+  };
 
   // Config cho biểu đồ doanh thu
   const configRevenue = {
@@ -149,8 +186,8 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items gap-3">
-        <div className="mt-4 flex-grow-1 w-50">
+      
+        <div className="mt-4 flex-grow-1">
           <h3 className="mb-5 title">Doanh thu</h3>
           <Column {...configRevenue} />
         </div>
@@ -158,6 +195,11 @@ const Dashboard = () => {
           <h3 className="mb-5 title">Đơn hàng</h3>
           <Column {...configOrders} />
         </div>
+      
+
+      <div className="mt-4 flex-grow-1">
+        <h3 className="mb-5 title">Chi phí nhập hàng</h3>
+        <Column {...configStock} />
       </div>
 
       <div className="mt-4">

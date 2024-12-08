@@ -61,4 +61,17 @@ const stockSlice = createSlice({
   },
 });
 
+export const selectMonthlyCost = (state) => {
+  let monthCosts = Array(12).fill(0); // Mảng chứa chi phí nhập kho cho mỗi tháng từ 0 - 11
+
+  state.stock.stocks.forEach((stock) => {
+    stock.products.forEach((product) => {
+      const month = new Date(stock.createdAt).getMonth(); // Lấy tháng từ createdAt
+      monthCosts[month] += product.sum; // Thêm chi phí của sản phẩm vào tháng tương ứng
+    });
+  });
+
+  return monthCosts;
+};
+
 export default stockSlice.reducer;

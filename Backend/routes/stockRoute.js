@@ -74,4 +74,38 @@ router.get("/stock-history", async (req, res) => {
   }
 });
 
+// Lấy tổng chi phí nhập hàng theo tháng
+router.get("/monthly-stock-cost", async (req, res) => {
+  try {
+    // Tính tổng chi phí nhập hàng theo tháng từ bảng Stock
+    const monthlyStockCost = await Stock.aggregate([
+      { $unwind: "$products" }, // Tách các sản phẩm trong phiếu nhập kho
+      {
+        $project: {
+          month: { $month: "$createdAt" }, // Lấy tháng của phiếu nhập kho
+          sum: "$products.sum", // Lấy chi phí nhập hàng từ 'sum' của mỗi sản phẩm
+        },
+      },
+      {
+        $group: {
+          _id: "$month", // Nhóm theo tháng
+          totalCost: { $sum: "$sum" }, // Cộng tổng chi phí nhập hàng cho mỗi tháng
+        },
+      },
+      { $sort: { _id: 1 } }, // Sắp xếp theo tháng
+    ]);
+
+    // Trả về tổng chi phí nhập hàng theo tháng
+    const result = Array(12).fill(0); // Khởi tạo mảng với 12 tháng
+    monthlyStockCost.forEach((item) => {
+      result[item._id - 1] = item.totalCost; // Gán chi phí vào tháng tương ứng
+    });
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: "Lỗi hệ thống khi lấy chi phí nhập hàng", error });
+  }
+});
+
+
 module.exports = router;
