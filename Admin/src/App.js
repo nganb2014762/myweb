@@ -25,6 +25,7 @@ import Addproduct from "./pages/Addproduct";
 import ViewEnq from "./pages/ViewEnq";
 import ViewOrder from "./pages/ViewOrder";
 import { OpenRoutes } from "./routing/OpenRoutes";
+import Ratings from "./pages/Rating";
 import { PrivateRoutes } from "./routing/PrivateRoutes";
 function App() {
   return (
@@ -53,7 +54,8 @@ function App() {
           <Route path="enquiries/:id" element={<ViewEnq />} />
           <Route path="blog-list" element={<Bloglist />} />
           <Route path="blog" element={<Addblog />} />
-
+          <Route path="getRatings" element={<Ratings />} />
+          <Route path="deleteRating" element={<Ratings />} />
           <Route path="add-stock" element={<AddStock />} />
           <Route path="stock-history" element={<StockHistory />} />
 

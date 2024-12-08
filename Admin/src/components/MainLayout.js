@@ -9,6 +9,7 @@ import {
   AiOutlineMenu,
   AiOutlineShopping, AiOutlinePlus, AiFillAmazonCircle 
 } from "react-icons/ai";
+import { FaRegStar } from "react-icons/fa";
 import { RiCouponLine } from "react-icons/ri";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -159,6 +160,11 @@ const MainLayout = () => {
               key: "enquiries",
               icon: <FaClipboardList className="fs-4" />,
               label: "Yêu cầu từ khách hàng",
+            },
+            {
+              key: "getRatings",
+              icon: <FaRegStar  className="fs-4" />,
+              label: "Đánh giá",
             },
             {
               key: "signout",

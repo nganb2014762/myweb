@@ -9,7 +9,8 @@ import blogReducer from "../features/blogs/blogSlice";
 import colorReducer from "../features/color/colorSlice";
 import enquiryReducer from "../features/enquiry/enquirySlice";
 import uploadReducer from "../features/upload/uploadSlice";
-import stockReducer from "../features/stock/stockSlice"; 
+import stockReducer from "../features/stock/stockSlice";
+import ratingReducer from "../features/rating/ratingSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -22,7 +23,7 @@ export const store = configureStore({
     color: colorReducer,
     enquiry: enquiryReducer,
     upload: uploadReducer,
-
+    rating: ratingReducer,
     stock: stockReducer,
   },
 });

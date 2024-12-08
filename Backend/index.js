@@ -21,6 +21,7 @@ const cors = require("cors");
 const orderRoute = require("./routes/orderRoute");
 const stockRoutes = require("./routes/stockRoute");
 const chatbot = require("./routes/chatbot")
+const ratingsRoutes = require("./routes/ratingsRoutes");
 
 dbConnect();
 
@@ -36,7 +37,7 @@ app.use("/api/category", categoryRouter);
 app.use("/api/blogcategory", blogcategoryRouter);
 app.use("/api/brand", brandRouter);
 app.use('/api/chatbot', chatbot);
-
+app.use("/api/ratings", ratingsRoutes);
 app.use("/api/stock", stockRoutes);
 
 app.use("/api/enquiry", enqRouter);
