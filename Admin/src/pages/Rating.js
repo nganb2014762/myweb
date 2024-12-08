@@ -9,35 +9,31 @@ const Ratings = () => {
   const ratings = useSelector((state) => state.rating.ratings);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRatingId, setSelectedRatingId] = useState(null);
-  const [localRatings, setLocalRatings] = useState([]); // State để quản lý danh sách đánh giá
+  const [localRatings, setLocalRatings] = useState([]); 
 
   useEffect(() => {
-    dispatch(getRatings()); // Lấy danh sách đánh giá từ API
+    dispatch(getRatings()); 
   }, [dispatch]);
 
   useEffect(() => {
-    setLocalRatings(ratings); // Đồng bộ state localRatings với Redux ratings
+    setLocalRatings(ratings); 
   }, [ratings]);
 
-  // Hiển thị modal xác nhận
   const showModal = (ratingId) => {
     setSelectedRatingId(ratingId);
     setIsModalOpen(true);
   };
 
-  // Đóng modal
   const handleCancel = () => {
     setIsModalOpen(false);
     setSelectedRatingId(null);
   };
 
-  // Xử lý xóa sau khi xác nhận
   const handleOk = () => {
     if (selectedRatingId) {
       dispatch(deleteRating(selectedRatingId))
         .then(() => {
           console.log("Rating deleted successfully");
-          // Cập nhật danh sách localRatings mà không cần reload
           setLocalRatings((prevRatings) =>
             prevRatings.filter((rating) => rating.ratingId !== selectedRatingId)
           );
@@ -80,15 +76,15 @@ const Ratings = () => {
   ];
 
   const dataSource = localRatings.map((rating, index) => ({
-    key: index + 1, // Thứ tự
-    productName: rating.product, // Tên sản phẩm
-    user: rating.user, // Người dùng
-    star: rating.star, // Số sao
-    content: rating.comment, // Nội dung
+    key: index + 1, 
+    productName: rating.product, 
+    user: rating.user, 
+    star: rating.star, 
+    content: rating.comment, 
     action: (
       <button
         className="btn btn-danger"
-        onClick={() => showModal(rating.ratingId)} // Hiển thị modal khi nhấn nút
+        onClick={() => showModal(rating.ratingId)} 
       >
         <AiFillDelete />
       </button>
@@ -100,10 +96,9 @@ const Ratings = () => {
       <h3 className="mb-4 title">Danh sách đánh giá</h3>
       <Table columns={columns} dataSource={dataSource} />
 
-      {/* Modal Xác Nhận Xóa */}
       <Modal
         title="Xác nhận xóa"
-        open={isModalOpen} // Sử dụng `open` thay vì `visible`
+        open={isModalOpen} 
         onOk={handleOk}
         onCancel={handleCancel}
         okText="Xóa"

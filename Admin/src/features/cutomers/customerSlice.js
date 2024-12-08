@@ -11,6 +11,18 @@ export const getUsers = createAsyncThunk(
     }
   }
 );
+
+export const deleteUser = createAsyncThunk(
+  "customer/delete-user",
+  async (id, { rejectWithValue }) => {
+    try {
+      await customerService.deleteUser(id); // Assume this is a method in your service that deletes the user
+      return id; // Return the id of the deleted user to remove from the state
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 const initialState = {
   customers: [],
   isError: false,
@@ -37,6 +49,15 @@ export const customerSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.customers = state.customers.filter(
+          (customer) => customer._id !== action.payload
+        );
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.isError = true;
         state.message = action.error;
       });
   },
